@@ -1,0 +1,166 @@
+---
+slug: 2026-05-21-model-orchestration
+date: '2026-05-21'
+translationKey: 2026-05-21-model-orchestration
+status: published
+en:
+  title: Why I Use Multiple AI Models Instead of Just One
+  excerpt: Single AI is powerful. Multiple AI working together is transformative. Here's why I built my automation stack around orchestrated models.
+  content: |-
+
+    Most people start with one AI. Ask it questions, let it generate code, move on. That's the baseline.
+
+    Then you hit walls. The same model that writes clean code writes muddled emails. The same model that explains concepts clearly can't debug worth a damn. You start to wonder — is this really the best we can do?
+
+    The breakthrough came when I stopped trying to find the "best" single model and started thinking about **model orchestration**. Not one AI that does everything. Multiple AIs, each doing what they're good at.
+
+    ## The Core Insight
+
+    Different models have different cognitive profiles. Some are great at structured reasoning. Others excel at creative leaps. Some are faster but shallower. Others think slowly but deeply.
+
+    No single model dominates everywhere. But a well-orchestrated stack can.
+
+    ## My Current Setup
+
+    In my automation framework, I typically use:
+
+    - **A coordinator** — fast, good at routing tasks, decides which specialist to call
+    - **A reasoner** — slower, deeper, for complex problem-solving
+    - **A creative** — generates content, drafts, creative variations
+    - **A validator** — checks outputs, catches errors, quality control
+
+    They don't just run in sequence. They loop. The coordinator might send the same task to two specialists and ask the validator to judge which response is better.
+
+    ## Why This Matters More Than Model Benchmarks
+
+    Benchmark scores measure a model in isolation. Real-world use is about integration. The question isn't "which model ranks highest?" It's "which model combination solves my actual problem most reliably?"
+
+    I've seen a weaker model outperform a stronger one simply because it was paired better with the rest of the stack.
+
+    ## The Practical Win
+
+    This morning I needed to:
+    1. Parse an email with an attachment
+    2. Extract structured data
+    3. Cross-reference with my database
+    4. Draft three different response templates
+    5. Pick the best one and send
+
+    A single model would've fumbled at step 3. The orchestrated stack handled each step with the right specialist, looped back when needed, and produced a better result than any single model could've.
+
+    That's the point. Not AI vs AI. AI + AI + AI, working together.
+
+    ---
+
+    *This is Day 1 of documenting my automation journey. More to come.*
+  tags: []
+  category: Uncategorized
+ja:
+  title: なぜ複数のAIモデルを使い分けるのか
+  excerpt: 単一のAIは强大だが、複数のAIが协働することで本质的に変化生まれる。Orchestrated modelsで自动化スタックを構築した理由。
+  content: |-
+
+    ほとんどの人は1つのAIから始める。质问一下して、コード生成让它做，然后继续。这就是基线。
+
+    すぐに壁に突き当たる。クリーンなコードを書くモデルがメールは混沌させる。概念を明確に説明するモデルがデバッグできない。こんな我真的只能这样了吗？
+
+    突破口は「最强」の单一日を見つけることをやめて、**モデルオーケストレーション**を考え始めたとき。1つのAIに全てをさせるのではなく、それぞれの得意分野を持つ复数のAIを使う。
+
+    ## コア洞察
+
+    モデルはそれぞれ異なる認知的プロフィールを持つ。構造的推論が得意なモデルもあれば、創造的飛躍に长けるモデルもある。高速だが浅碁いモデルもあれば、ゆっくりだが深く考えるモデルもある。
+
+    单一のモデルがどこでも最强ということはない。しかし、適切にオーケストレーションされたスタックなら可能だ。
+
+    ## 私の現在のセットアップ
+
+    私の自动化フレームワークでは、 suivantes を使う：
+
+    - **コーディネーター** — 高速で、タスクのルーティングに优れ、どのスペシャリストを呼ぶか决策する
+    - **_reasoner** — 遅いが深く、複稚な問題解決向け
+    - **クリエイティブ** — コンテンツ生成、ドraft、創造的バリーション
+    - **バリデーター** — 出力をチェック、エラーをキャッチ、品質管理
+
+    これらは単一顺序に执行されるだけでなく、ループする。コーディネーターは同じタスクを2つのスペシャリストに送り、バリデーターにどちらのレスポンスが速いか判断させることがある。
+
+    ## 为什么模型基准测试更重要
+
+    ベンチマークスコアは単一のモデルで測定される。現実世界での使用は統合关于。问题是「哪个モデル排名最高？」ではなく「哪个モデル组合最能可靠地解决我的实际问题？」
+
+    より弱いモデルが、より強いモデルを上回ることを見たことがある。単に Rest of the stack と組み合わせて相性が良かったからだ。
+
+    ## 实际胜利
+
+    今朝、次が必要だった：
+    1. 添付ファイル付きメールを解析
+    2. 構造化データを抽出
+    3. データベースと相互参照
+    4. 3つの異なる_RESPONE テンプレートを作成
+    5. 最善のものを選んで送信
+
+    单一モデルならステップ3でつまずいていた。オーケストレーションされたスタックは各ステップを適切なスペシャリストが處理、必要なときにループバックし、単一モデルでは不可能だったより良い 결과를生成した。
+
+    これがポイント。AI vs AIではなく、AI + AI + AI、协働して。
+
+    ---
+
+    *これは私の自动化ジャーニーを文書化する初日です。 更多内容即将推出。*
+  tags:
+    - AI
+    - Automation
+  category: AI
+zh:
+  title: 为什么我选择用多个AI模型，而不是只用一个
+  excerpt: 单个AI很强大，但多个AI协同工作能带来本质性的改变。这就是我用编排模型构建自动化堆栈的原因。
+  content: |-
+
+    大多数人从一个AI开始。问问题，让它生成代码，然后继续。这就是基线。
+
+    然后你会碰壁。同一个写清晰代码的模型写的邮件却乱七八糟。同一个解释概念很清楚的模型调试能力却烂得不行。你开始想——真的只能这样了吗？
+
+    突破来自我不再试图找到"最好"的单一模型，而是开始思考**模型编排**。不是用一个AI做所有事，而是多个AI各司其职。
+
+    ## 核心洞察
+
+    不同的模型有不同的认知特征。有些擅长结构化推理，有些则擅长创造性跳跃。有些更快但更浅，有些则思考缓慢但深入。
+
+    没有单一模型能在所有领域都占主导。但一个编排得当的堆栈可以。
+
+    ## 我的当前配置
+
+    在我的自动化框架中，我通常使用：
+
+    - **协调器** — 快速，擅长路由任务，决定调用哪个专家
+    - **推理器** — 较慢但更深层，用于复杂问题解决
+    - **创意师** — 生成内容、草稿、创造性变体
+    - **验证器** — 检查输出、捕获错误、质量控制
+
+    它们不是简单地按顺序运行，而是循环。协调器可能会将同一任务发送给两个专家，并让验证器判断哪个响应更好。
+
+    ## 为什么这比模型基准更重要
+
+    基准分数在隔离环境中衡量模型。现实世界中的使用关乎集成。问题不是"哪个模型排名最高？"而是"哪个模型组合最能可靠地解决我的实际问题？"
+
+    我见过较弱的模型仅仅因为与堆栈的其他部分配合得更好而胜过较强的模型。
+
+    ## 实际胜利
+
+    今早我需要：
+    1. 解析一封带附件的邮件
+    2. 提取结构化数据
+    3. 与数据库交叉引用
+    4. 起草三个不同的回复模板
+    5. 选出最好的发送
+
+    单个模型会在第3步失败。编排好的堆栈让每个步骤都由合适的专家处理，在需要时循环回来，产生了任何单个模型都无法达到的更好结果。
+
+    这就是重点。不是AI对AI，而是AI + AI + AI，协同工作。
+
+    ---
+
+    *这是记录我自动化旅程的第一天。更多内容即将到来。*
+  tags:
+    - AI
+    - 自动化
+  category: AI
+---

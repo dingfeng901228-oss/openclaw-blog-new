@@ -1,0 +1,172 @@
+---
+slug: 2026-05-21-blog-i18n-architecture
+date: 2026-05-21
+translationKey: blog-i18n-architecture
+status: published
+layout: article
+
+en:
+  title: "Why I Changed the Blog i18n Architecture Mid-Project"
+  excerpt: "Moving from 3-files-per-post to 1-file-per-post was painful, but it solved a real problem: JA/ZH content was silently falling back to English."
+  content: |
+    # Why I Changed the Blog i18n Architecture Mid-Project
+
+    Let me tell you about a refactor I did today that I should have done six months ago.
+
+    ## The Problem with 3 Files Per Post
+
+    My blog had a clean enough structure on paper: `/en/post-slug/`, `/ja/post-slug/`, `/zh/post-slug/`. Three directories, three files, three languages. Easy to understand.
+
+    But here's what actually happened: when I wrote a new post, I'd create the English version, hit publish, and... the Japanese and Chinese pages just showed English content. I kept telling myself "I'll translate it later." Later never came.
+
+    Six months later, I had 8 posts with Japanese content that was just a copy-paste of English with some characters swapped. The language switcher looked broken. Visitors clicking to Japanese got English content with weird half-translated frontmatter.
+
+    ## The Fix: One File, All Locales
+
+    The new architecture puts everything in a single MDX file:
+
+    ```yaml
+    ---
+    slug: post-name
+    date: 2026-05-21
+    
+    en:
+      title: English Title
+      content: |
+        English body...
+    
+    ja:
+      title: 日本語タイトル
+      content: |
+        日本語の本文...
+    
+    zh:
+      title: 中文标题
+      content: |
+        中文正文...
+    ---
+    ```
+
+    Now there's no "later" — all three languages must exist in the same file. If you add English, you're adding Japanese and Chinese at the same time. The schema enforces completeness.
+
+    ## Key Lessons
+
+    1. **Fallbacks hide problems** — Silent fallback to English felt harmless until I saw 60% of my "Japanese" content was actually English
+    2. **Schema constraints prevent tech debt** — Making all three locales required in the same file means you can't create the debt in the first place
+    3. **One file is easier to maintain** — No more switching between three directories to update a single post
+
+    Was it painful to migrate 10 posts? Yes. Do I regret it? No. Now when someone clicks the language switcher, they get actual translated content. That's worth the refactor.
+
+  tags: [Next.js, i18n, Architecture]
+  category: Development
+
+ja:
+  title: "なぜプロジェクト途中でBlogのi18nアーキテクチャを変更したか"
+  excerpt: "3ファイル構成から1ファイル構成への移行は痛苦だったが实际问题が解决了した：日本語和中国語のコンテンツが代わりに英語にフォールバックしていた。"
+  content: |
+    # なぜプロジェクト途中でBlogのi18nアーキテクチャを変更したか
+
+    今日は、6个月前に就应该やったリファクタリングについて书きたい。
+
+    ## 3ファイル構成の問題点
+
+    私のブログは理论上はシンプルな構成だった： `/en/post-slug/`、`/ja/post-slug/`、`/zh/post-slug/`。3つのディレクトリ、3つのファイル、3つの言語。理解しやすい。
+
+    でも实际にはこうなった：新しい記事を书いて、英语版を作成して发布して、そして...日本語と中国語のページはただ英语を表示していただけだった。「後で翻译する」と自分に言い聞かせ続けた。後から見ると、その「后来」は来なかった。
+
+    6个月後、私の8つの投稿には实际上英语のコピペだった日本語コンテンツがあった。语言スイッチャーは壊れて見えた。「日本語」をクリックした访问者は、英语のコンテンツと中途半端に翻译されたフロントマターを見ていた。
+
+    ## 解决方法：1ファイル、全言語
+
+    新しいアーキテクチャではすべてを单一のMDXファイルに入れる：
+
+    ```yaml
+    ---
+    slug: post-name
+    date: 2026-05-21
+    
+    en:
+      title: English Title
+      content: |
+        English body...
+    
+    ja:
+      title: 日本語タイトル
+      content: |
+        日本語の本文...
+    
+    zh:
+      title: 中文标题
+      content: |
+        中文正文...
+    ---
+    ```
+
+    もう「后来」はない — 3つの言語はすべて同じファイルに存在しなければならない。英语を追加したら、同時に日本語と中国語も追加している。スキーマが完全性を强制する。
+
+    ## 主な教训
+
+    1. **フォールバックは问题を隠す** — 英语へのサイレントフォールバックは、60%の「日本語」コンテンツが实际は英语だったと気づくまでは无害と感じた
+    2. **スキーマ制約は技術的負債を防止する** — 同じファイルで3つのロケールすべてを必須にすることで、最初に技術的負債を作成できなくなる
+    3. **1ファイルの方が維持しやすい** — 単一の投稿を更新するために3つのディレクトリを切り替える必要がなくなった
+
+    10件の投稿の移行は痛苦だったか？はい。後悔しているか？いいえ。今、誰かが语言スイッチャーをクリックすると、实际の翻译済みコンテンツがもらえる。それがリファクタリングに値した。
+
+  tags: [Next.js, i18n, アーキテクチャ]
+  category: 開発
+
+zh:
+  title: "为什么我在项目中途改变了博客的 i18n 架构"
+  excerpt: "从3文件每篇改为1文件每篇是痛苦的，但它解决了一个真正的问题：日语和中文内容静默地回退到了英语。"
+  content: |
+    # 为什么我在项目中途改变了博客的 i18n 架构
+
+    让我告诉你今天做的一个重构，这个重构我应该在六个月前就做了。
+
+    ## 3文件每篇的问题
+
+    我的博客在纸面上有一个足够清晰的结构：`/en/post-slug/`、`/ja/post-slug/`、`/zh/post-slug/`。三个目录，三个文件，三种语言。易于理解。
+
+    但实际上发生的事情是这样的：我写新帖子时，会创建英文版本，发布，然后……日语和中文页面只是显示英文内容。我不断告诉自己"稍后再翻译"。那个"稍后"从未到来。
+
+    六个月后，我有8个帖子，日语内容实际上是英文的复制粘贴。语言切换器看起来坏了。点击日语的访客看到的是带有奇怪半翻译前页面的英文内容。
+
+    ## 修复：单文件，全语言
+
+    新架构将所有内容放在一个 MDX 文件中：
+
+    ```yaml
+    ---
+    slug: post-name
+    date: 2026-05-21
+    
+    en:
+      title: English Title
+      content: |
+        English body...
+    
+    ja:
+      title: 日本語タイトル
+      content: |
+        日本語の本文...
+    
+    zh:
+      title: 中文标题
+      content: |
+        中文正文...
+    ---
+    ```
+
+    现在没有"稍后"了——所有三种语言必须在同一个文件中。如果你添加英文，你同时添加了日文和中文。schema 强制完整性。
+
+    ## 关键教训
+
+    1. **回退会隐藏问题** —— 静默回退到英文直到我看到60%的"日文"内容实际上是英文才觉得无害
+    2. **Schema 约束防止技术债务** —— 在同一文件中要求所有三个语言环境意味着你首先无法创建技术债务
+    3. **单文件更易于维护** —— 更新单个帖子不再需要在三个目录之间切换
+
+    迁移10个帖子痛苦吗？是的。后悔吗？不。现在当有人点击语言切换器时，他们得到的是真正的翻译内容。这值得重构。
+
+  tags: [Next.js, i18n, 架构]
+  category: 开发
+---

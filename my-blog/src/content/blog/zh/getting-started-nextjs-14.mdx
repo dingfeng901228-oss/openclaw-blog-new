@@ -1,0 +1,64 @@
+---
+title: 'Next.js 14和TypeScript入门'
+excerpt: '使用Next.js 14、TypeScript、Tailwind CSS构建现代Web应用的实践指南。'
+date: '2024-01-15'
+tags: ['Next.js', 'TypeScript', 'React']
+category: 'Tutorial'
+featured: false
+---
+
+Next.js 14为开发者体验带来了显著改进，包括新的App Router、服务器组件和性能优化。本指南介绍如何使用Next.js 14从头开始构建现代Web应用。
+
+## 为什么选择Next.js 14？
+
+Next.js 14引入了几个改变游戏规则的功能：
+
+- **Server Components**：编写更少的JavaScript以获得更好的性能
+- **App Router**：通过嵌套布局和加载状态改进路由
+- **Server Actions**：在不创建API路由的情况下改变数据
+- **Partial Prerendering**：无缝结合静态和动态内容
+
+## 项目设置
+
+```bash
+npx create-next-app@latest my-app --typescript --tailwind --eslint
+```
+
+此命令为生产级应用设置所需的一切。
+
+## 关键概念
+
+### Server vs Client Components
+
+在Next.js 14中，组件默认是服务器组件。这意味着：
+- 它们仅在服务器上运行
+- 可以直接访问数据库
+- 减少发送到客户端的JavaScript
+
+```typescript
+// Server Component (默认)
+async function BlogPost({ id }: { id: string }) {
+  const post = await db.post.findUnique({ where: { id } })
+  return <Article post={post} />
+}
+```
+
+### 数据获取
+
+使用服务器组件，数据获取变得简单：
+
+```typescript
+async function getPosts() {
+  const res = await fetch('https://api.example.com/posts')
+  return res.json()
+}
+
+export default async function Posts() {
+  const posts = await getPosts()
+  return <PostList posts={posts} />
+}
+```
+
+## 结论
+
+Next.js 14代表了React开发的重大飞跃。其对服务器优先架构的强调，结合TypeScript支持，使其成为构建现代Web应用的绝佳选择。

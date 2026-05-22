@@ -1,0 +1,95 @@
+{
+  "nav": {
+    "home": "首页",
+    "blog": "博客",
+    "projects": "项目",
+    "timeline": "时间线",
+    "about": "关于"
+  },
+  "hero": {
+    "badge": "AI工程师 & 独立开发者",
+    "title": "用代码",
+    "titleAccent": "构建未来",
+    "subtitle": "探索AI、Web开发和自动化。\n人在东京，面向世界。",
+    "cta_read": "开始阅读",
+    "cta_projects": "查看项目"
+  },
+  "about": {
+    "title": "关于我",
+    "subtitle": "代码背后的故事。",
+    "greeting": "你好，我是",
+    "name": "OpenClaw",
+    "intro1": "我是一名位于东京的AI工程师和独立开发者。从AI应用到现代Web体验，我热衷于打造真正有价值的产品。",
+    "intro2": "全栈开发经验，享受将复杂问题转化为优雅解决方案的过程。",
+    "intro3": "不写代码的时候，探索新技术，为开源项目做贡献，或在这个博客上记录我的学习历程。",
+    "skillsTitle": "技能 & 专长",
+    "toolsTitle": "使用工具",
+    "experienceTitle": "经验",
+    "location": "日本东京",
+    "email": "hello@openclaw.dev",
+    "codingSince": "2020年开始编程",
+    "web": "Web开发",
+    "webDesc": "Next.js、React、TypeScript、Tailwind CSS。构建现代响应式Web应用程序。",
+    "ai": "AI & 机器学习",
+    "aiDesc": "提示工程、API集成、自动化。利用AI解决现实世界的问题。",
+    "devops": "云 & DevOps",
+    "devopsDesc": "Docker、Linux、Cloudflare、Vercel。构建和维护可扩展的基础设施。",
+    "automation": "自动化",
+    "automationDesc": "脚本、工作流自动化、OpenClaw agent编排。用更少的资源做更多的事。",
+    "experience1": {
+      "company": "独立",
+      "role": "独立开发者",
+      "period": "2024 - 现在",
+      "description": "构建AI驱动产品和开发者工具。"
+    },
+    "experience2": {
+      "company": "TechCorp",
+      "role": "高级开发者",
+      "period": "2022 - 2024",
+      "description": "领导高流量应用的微服务架构开发。"
+    },
+    "experience3": {
+      "company": "StartupXYZ",
+      "role": "全栈开发者",
+      "period": "2020 - 2022",
+      "description": "从零开始构建和扩展Web应用程序。"
+    }
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "关于AI、Web开发和构建的思考。",
+    "search": "搜索文章...",
+    "categories": "分类",
+    "allCategories": "全部分类",
+    "allTags": "全部标签",
+    "noResults": "未找到文章。",
+    "clearFilters": "清除筛选",
+    "showing": "显示 {count} / {total} 篇"
+  },
+  "projects": {
+    "title": "项目",
+    "subtitle": "我做过的东西的集合。从AI工具到Web应用，每个项目都代表着我攻克的挑战和学到的教训。",
+    "code": "代码",
+    "demo": "在线演示"
+  },
+  "timeline": {
+    "title": "时间线",
+    "subtitle": "我的技术成长之路。每一个里程碑、每一个项目、每一次教训。",
+    "present": "至今"
+  },
+  "article": {
+    "back": "返回博客",
+    "share": "分享",
+    "minRead": "{min} 分钟阅读"
+  },
+  "footer": {
+    "brand": "AI工程师 / 独立开发者 / 技术创造者。用代码一行行构建未来。",
+    "navigation": "导航",
+    "contact": "联系",
+    "builtWith": "由 Next.js + Tailwind CSS + ❤️ 构建",
+    "copyright": "© OpenClaw. 保留所有权利。"
+  },
+  "home": {
+    "scrollHint": "滚动"
+  }
+}

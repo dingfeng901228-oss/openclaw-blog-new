@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.wrangler/
+*.log
+.DS_Store
+.env
+.env.local
+src/content/blog.backup/
+src/articles/

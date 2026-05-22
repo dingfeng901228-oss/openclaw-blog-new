@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="blueGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Glow effect -->
+  <rect x="4" y="4" width="24" height="24" rx="6" fill="url(#blueGrad)" opacity="0.15" filter="blur(2px)"/>
+  
+  <!-- Main F shape - proper F with vertical spine left, top+middle bars right -->
+  <path d="M8 7 L19 7 L19 11 L12 11 L12 15 L18 15 L18 19 L12 19 L12 25 L8 25 Z" fill="url(#blueGrad)"/>
+  
+  <!-- Accent line at top -->
+  <path d="M8 7 L19 7" stroke="url(#blueGrad2)" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Glow dot at bottom right -->
+  <circle cx="21" cy="21" r="2" fill="#06b6d4" opacity="0.8"/>
+</svg>

@@ -1,0 +1,29 @@
+import { setRequestLocale } from 'next-intl/server'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import Hero from '@/components/home/Hero'
+import AboutContent from '@/components/home/AboutContent'
+import TimelineSection from '@/components/home/TimelineSection'
+import ProjectsGrid from '@/components/home/ProjectsGrid'
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setRequestLocale(locale)
+
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen">
+        <Hero />
+        <AboutContent locale={locale} />
+        <TimelineSection locale={locale} />
+        <ProjectsGrid />
+      </main>
+      <Footer />
+    </>
+  )
+}

@@ -1,0 +1,310 @@
+---
+slug: building-ai-agent
+date: '2026-05-21'
+translationKey: building-ai-agent
+status: published
+en:
+  title: Building My First AI Agent with OpenClaw
+  excerpt: A practical guide to building AI agents that can autonomously complete tasks. From concept to implementation using OpenClaw framework.
+  content: |-
+
+    # Building My First AI Agent with OpenClaw
+
+    AI agents are one of the most exciting applications of large language models. Unlike simple chatbots, agents can take actions, use tools, and complete multi-step tasks autonomously.
+
+    ## What is an AI Agent?
+
+    An AI agent is a system that:
+    - Receives a goal from the user
+    - Breaks it down into steps
+    - Uses available tools to complete each step
+    - Iterates and adapts based on results
+
+    ## Getting Started with OpenClaw
+
+    OpenClaw provides a framework for building AI agents with tool use, memory, and multi-channel support.
+
+    ```typescript
+    import { Agent, Tool } from 'openclaw'
+
+    const agent = new Agent({
+      model: 'gpt-4',
+      tools: [
+        Tool.webSearch,
+        Tool.codeInterpreter,
+        Tool.fileSystem,
+      ],
+      memory: true,
+    })
+
+    const result = await agent.run('Find the latest news about AI')
+    console.log(result)
+    ```
+
+    ## Key Components
+
+    ### 1. Tools
+    Tools extend what the agent can do. OpenClaw ships with built-in tools:
+    - **Web Search** - Search the internet
+    - **Code Interpreter** - Run Python/JS code
+    - **File System** - Read/write files
+    - **API Calls** - Make HTTP requests
+
+    ### 2. Memory
+    Agents need memory to maintain context across interactions.
+
+    ```typescript
+    const agent = new Agent({
+      // ... config
+      memory: {
+        type: 'vector',
+        vectorDb: 'pinecone',
+      },
+    })
+    ```
+
+    ### 3. Planning
+    The agent breaks down complex tasks into executable steps.
+
+    ## Practical Example
+
+    Let's build an agent that can research and summarize topics:
+
+    ```typescript
+    class ResearchAgent extends Agent {
+      async research(topic: string) {
+        // Step 1: Search for relevant articles
+        const articles = await this.search(topic, { limit: 10 })
+
+        // Step 2: Fetch content from top results
+        const content = await Promise.all(
+          articles.slice(0, 5).map(a => this.fetch(a.url))
+        )
+
+        // Step 3: Generate summary
+        const summary = await this.summarize(content)
+
+        return { articles, summary }
+      }
+    }
+    ```
+
+    ## Best Practices
+
+    1. **Start Simple** - Begin with a single tool, add complexity gradually
+    2. **Error Handling** - Plan for failures at every step
+    3. **Token Budget** - Keep prompts focused to minimize costs
+    4. **Testing** - Test each tool independently before integration
+
+    ## Conclusion
+
+    Building AI agents is about combining LLMs with real-world capabilities. OpenClaw makes this accessible with a batteries-included framework.
+
+    In the next post, we'll dive deeper into tool development and memory systems.
+  tags:
+    - AI
+    - OpenClaw
+    - Node.js
+    - Automation
+  category: Tutorial
+ja:
+  title: OpenClawで最初のAIエージェントを作ってみよう
+  excerpt: AIエージェントを構築するための実践ガイド。コンセプトからOpenClawフレームワークを使った実装まで。
+  content: |-
+
+    AIエージェントは、大きな言語モデルの最も興味深い応用の1つです。単純なチャットボットとは異なり、エージェントはアクションを実行し、ツールを使用し、タスクを自律的に完了できます。
+
+    ## AIエージェントとは？
+
+    AIエージェントとは：
+    - ユーザーから目標を受け取る
+    - ステップに分解する
+    - 利用可能なツールを使用して各ステップを完了
+    - 結果に基づいて反復・適応
+
+    ## OpenClawで始める
+
+    OpenClawは、ツールの使用、メモリ、マルチチャネルサポートを備えたAIエージェント構築フレームワークを提供します。
+
+    ```typescript
+    import { Agent, Tool } from 'openclaw'
+
+    const agent = new Agent({
+      model: 'gpt-4',
+      tools: [
+        Tool.webSearch,
+        Tool.codeInterpreter,
+        Tool.fileSystem,
+      ],
+      memory: true,
+    })
+
+    const result = await agent.run('Find the latest news about AI')
+    console.log(result)
+    ```
+
+    ## 主要コンポーネント
+
+    ### 1. ツール
+    ツールはエージェントの能力を広げます。OpenClawには組み込みツールが含まれています：
+    - **Web Search** — インターネット検索
+    - **Code Interpreter** — Python/JSコード実行
+    - **File System** — ファイルの読み書き
+    - **API Calls** — HTTPリクエスト
+
+    ### 2. メモリ
+    エージェントは対話間でコンテキストを維持するためにメモリが必要です。
+
+    ```typescript
+    const agent = new Agent({
+      // ... config
+      memory: {
+        type: 'vector',
+        vectorDb: 'pinecone',
+      },
+    })
+    ```
+
+    ### 3. プランニング
+    エージェントは複雑なタスクを実行可能なステップに分解します。
+
+    ## 実践例
+
+    研究エージェントを作ってみましょう：
+
+    ```typescript
+    class ResearchAgent extends Agent {
+      async research(topic: string) {
+        // Step 1: 関連記事を検索
+        const articles = await this.search(topic, { limit: 10 })
+
+        // Step 2: 上位結果からコンテンツを取得
+        const content = await Promise.all(
+          articles.slice(0, 5).map(a => this.fetch(a.url))
+        )
+
+        // Step 3:  要約を生成
+        const summary = await this.summarize(content)
+
+        return { articles, summary }
+      }
+    }
+    ```
+
+    ## ベストプラクティス
+
+    1. **シンプルに始める** — 単一のツールから始め、少しずつ複雑に
+    2. **エラー処理** — すべてのステップで失敗を計画
+    3. **トークンバジェット** — プロンプトを集中在してコストを最小化
+    4. **テスト** — 統合前に各ツールを個別にテスト
+
+    ## まとめ
+
+    AIエージェント構築は、LLMを現実世界の機能と組み合わせることに関するものです。OpenClawは、バッテリー 포함 프레임워크でこれをアクセス可能にします。
+  tags:
+    - AI
+    - OpenClaw
+    - Node.js
+    - Automation
+  category: Tutorial
+zh:
+  title: 用OpenClaw构建我的第一个AI代理
+  excerpt: 构建能够自主完成任务的AI代理的实践指南。从概念到使用OpenClaw框架的实现。
+  content: |-
+
+    AI代理是大语言模型最令人兴奋的应用之一。与简单的聊天机器人不同，代理可以执行操作、使用工具并自主完成多步骤任务。
+
+    ## 什么是AI代理？
+
+    AI代理是：
+    - 从用户接收目标
+    - 将其分解为步骤
+    - 使用可用工具完成每个步骤
+    - 根据结果迭代和适应
+
+    ## OpenClaw入门
+
+    OpenClaw提供了一个用于构建AI代理的框架，具有工具使用、记忆和多渠道支持。
+
+    ```typescript
+    import { Agent, Tool } from 'openclaw'
+
+    const agent = new Agent({
+      model: 'gpt-4',
+      tools: [
+        Tool.webSearch,
+        Tool.codeInterpreter,
+        Tool.fileSystem,
+      ],
+      memory: true,
+    })
+
+    const result = await agent.run('Find the latest news about AI')
+    console.log(result)
+    ```
+
+    ## 关键组件
+
+    ### 1. 工具
+    工具扩展了代理的能力。OpenClaw附带内置工具：
+    - **Web Search** — 搜索互联网
+    - **Code Interpreter** — 运行Python/JS代码
+    - **File System** — 读写文件
+    - **API Calls** — 发出HTTP请求
+
+    ### 2. 记忆
+    代理需要记忆来在交互之间保持上下文。
+
+    ```typescript
+    const agent = new Agent({
+      // ... config
+      memory: {
+        type: 'vector',
+        vectorDb: 'pinecone',
+      },
+    })
+    ```
+
+    ### 3. 规划
+    代理将复杂任务分解为可执行的步骤。
+
+    ## 实践示例
+
+    让我们构建一个可以研究和总结主题的代理：
+
+    ```typescript
+    class ResearchAgent extends Agent {
+      async research(topic: string) {
+        // 步骤1：搜索相关文章
+        const articles = await this.search(topic, { limit: 10 })
+
+        // 步骤2：获取结果内容
+        const content = await Promise.all(
+          articles.slice(0, 5).map(a => this.fetch(a.url))
+        )
+
+        // 步骤3：生成摘要
+        const summary = await this.summarize(content)
+
+        return { articles, summary }
+      }
+    }
+    ```
+
+    ## 最佳实践
+
+    1. **从小开始** — 从单一工具开始，逐步增加复杂性
+    2. **错误处理** — 为每个步骤的失败做好计划
+    3. **令牌预算** — 保持提示集中以最小化成本
+    4. **测试** — 集成前单独测试每个工具
+
+    ## 结论
+
+    构建AI代理是将LLM与现实世界能力相结合。OpenClaw通过包含电池的框架使这一切变得可访问。
+  tags:
+    - AI
+    - OpenClaw
+    - Node.js
+    - Automation
+  category: Tutorial
+---

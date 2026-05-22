@@ -1,0 +1,85 @@
+import type { Metadata } from 'next'
+import { Inter, Noto_Sans_SC, Noto_Sans_JP } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages, setRequestLocale } from 'next-intl/server'
+import { notFound } from 'next/navigation'
+import '@/styles/globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const notoSansSC = Noto_Sans_SC({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-noto-sc',
+  display: 'swap',
+})
+
+const notoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-noto-jp',
+  display: 'swap',
+})
+
+const locales = ['ja', 'zh', 'en']
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
+
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+
+  if (!locales.includes(locale)) {
+    notFound()
+  }
+
+  setRequestLocale(locale)
+  const messages = await getMessages()
+
+  const titles: Record<string, { default: string; template: string }> = {
+    ja: { default: 'OpenClaw | AIエンジニア & 独立開発者', template: '%s | OpenClaw' },
+    zh: { default: 'OpenClaw | AI工程师 & 独立开发者', template: '%s | OpenClaw' },
+    en: { default: 'OpenClaw | AI Engineer & Independent Developer', template: '%s | OpenClaw' },
+  }
+  const descriptions: Record<string, string> = {
+    ja: 'AIエンジニア / 独立開発者 / テッククリエイター。AI、Web開発、自動化について探索する技術ブログ。',
+    zh: 'AI工程师 / 独立开发者 / 技术创造者。探索AI、Web开发、自动化的技术博客。',
+    en: 'AI Engineer / Independent Developer / Tech Creator. Thoughts on AI, web development, and automation.',
+  }
+  const meta = titles[locale] || titles.ja
+
+  return (
+    <html lang={locale} className={`${inter.variable} ${notoSansSC.variable} ${notoSansJP.variable}`}>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0f172a" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <link rel="alternate" hrefLang="ja" href="https://frankbot.org/ja" />
+        <link rel="alternate" hrefLang="zh" href="https://frankbot.org/zh" />
+        <link rel="alternate" hrefLang="en" href="https://frankbot.org/en" />
+        <link rel="alternate" hrefLang="x-default" href="https://frankbot.org/ja" />
+      </head>
+      <body className="min-h-screen bg-bg-primary font-sans antialiased">
+        <NextIntlClientProvider messages={messages}>
+          <div className="relative flex min-h-screen flex-col">
+            <div className="flex-1">{children}</div>
+          </div>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  )
+}

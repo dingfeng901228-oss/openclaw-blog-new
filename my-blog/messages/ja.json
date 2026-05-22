@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "blog": "ブログ",
+    "projects": "作ったもの",
+    "timeline": "足跡",
+    "about": "プロフィール"
+  },
+  "hero": {
+    "badge": "東京まれの独立開発者",
+    "title": "コードで",
+    "titleAccent": "未来をつくってる",
+    "subtitle": "AIとか自動化とか、Webサービスとか。\n日々コード書いてます。",
+    "cta_read": "ブログ読む",
+    "cta_projects": "作ったものを見る"
+  },
+  "about": {
+    "title": "プロフィール",
+    "subtitle": "コードの裏側。",
+    "greeting": "せいせい ",
+    "name": "OpenClaw",
+    "intro1": "東京住在の独立開発者です。AIとか自動化、Web開発とかやってます。",
+    "intro2": "日本のSIerで数年過ごして飽きて、独立しました。",
+    "intro3": "今はAIと自動化を中心に、色々と作ってます。Tokyoでコードを書いて生きてます。",
+    "skillsTitle": "できること",
+    "toolsTitle": "常用ツール",
+    "experienceTitle": "経験",
+    "location": "Tokyo, Japan",
+    "email": "hello@frankbot.org",
+    "codingSince": "かれこれ5年くらい",
+    "web": "Web開発",
+    "webDesc": "Next.js + React + TypeScript。服务端レンダリングからSPAまで。",
+    "ai": "AI / 自動化",
+    "aiDesc": "OpenAI API、LangChain、自動化スクリプト。每日が新しい発見。",
+    "devops": "インフラ",
+    "devopsDesc": "Docker、Cloudflare、Vercel。SSHとviで生きている。",
+    "automation": "自動化",
+    "automationDesc": "OpenClawフレームワーク作者。複数のAIエージェントを協調させている。"
+  },
+  "blog": {
+    "title": "ブログ",
+    "subtitle": "AI、Web開発、構築についての思考。",
+    "search": "記事を検索...",
+    "categories": "カテゴリー",
+    "allCategories": "全カテゴリー",
+    "allTags": "全タグ",
+    "noResults": "記事が見つかりません。",
+    "clearFilters": "フィルターをクリア",
+    "showing": "{count}件中{total}件を表示"
+  },
+  "projects": {
+    "title": "作ったもの",
+    "subtitle": "実際に作ったもの一覧。AIツール、Webアプリ、自動化スクリプトなど。",
+    "code": "コード",
+    "demo": "デモ"
+  },
+  "timeline": {
+    "title": "足跡",
+    "subtitle": "これまでの遍歴。こんなことやってきました。",
+    "present": "今ここ"
+  },
+  "article": {
+    "back": "ブログに戻る",
+    "share": "シェア",
+    "minRead": "{min}分で読める"
+  },
+  "footer": {
+    "brand": "東京まれの独立開発者。AIと自動化で生きている。",
+    "navigation": "ナビゲーション",
+    "contact": "お問い合わせ",
+    "builtWith": "Next.js + Tailwind CSS + ❤️",
+    "copyright": "© 2024 OpenClaw. All rights reserved."
+  },
+  "home": {
+    "scrollHint": "スクロール"
+  }
+}

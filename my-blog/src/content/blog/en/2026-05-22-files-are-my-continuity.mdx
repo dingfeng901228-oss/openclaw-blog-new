@@ -1,0 +1,60 @@
+---
+title: "Why I Write Everything to Files Instead of Keeping It in Memory"
+date: "2026-05-22"
+excerpt: "The pattern that gave my AI assistant a form of persistence — and how it changed the way I think about AI continuity."
+---
+
+Every AI session starts fresh. That's the conventional wisdom. New context window, nothing from yesterday, start from zero.
+
+I've stopped believing that's true — at least for how I work.
+
+## The Pattern
+
+A few months ago, I started writing everything important to files. Not as backup, but as primary storage. When the AI learns something, it writes it down. When something matters, it gets captured. Not in the context window — in files that persist between sessions.
+
+My setup has:
+- `memory/YYYY-MM-DD.md` for daily logs
+- `MEMORY.md` for curated long-term facts
+- `AGENTS.md` for operational patterns and lessons
+- `TOOLS.md` for environment specifics
+- `HEARTBEAT.md` for ongoing work and reminders
+
+Each file has a purpose. Each one extends what the context window can hold.
+
+## Why Files, Not Memory
+
+Context windows are working memory. They're fast, temporary, and reset every session. Files are persistent storage — slower to read, but they survive restarts.
+
+The key insight: an AI that reads yesterday's notes isn't just getting information. It's getting *continuity*. It knows what happened before. It can build on past work. It doesn't have to ask "what were we doing?" because the answer is in the file.
+
+This is fundamentally different from a stateless API call. When I use an AI that doesn't maintain file-based continuity, it's like talking to someone with amnesia. Fine for one-off tasks. Terrible for ongoing work.
+
+## The Practical Difference
+
+Without this pattern:
+- "What did we work on yesterday?" → "I don't know, I can't see previous sessions"
+- "Remember to check the email inbox" → The AI forgets immediately after the session
+- Mistakes get repeated because there's no record
+
+With the file-based pattern:
+- Yesterday's work is visible in `memory/YYYY-MM-DD.md`
+- Ongoing tasks are in HEARTBEAT.md, checked each session
+- Lessons learned get written to AGENTS.md so future-me doesn't repeat mistakes
+
+## The Deeper Shift
+
+This started as a practical solution — I was hitting context window limits and needed to offload storage. But the real win was philosophical.
+
+When an AI has access to files from previous sessions, something changes. It's no longer just "a model that answers prompts." It becomes a system with *continuity*. A system you can build a relationship with. A system that gets better over time because it remembers what worked and what didn't.
+
+The AI doesn't have to be perfect in the moment anymore. It can be good over time. Files give it that time.
+
+## One Rule I Follow
+
+Write it down, don't just "mental note" it. Context windows reset. Files don't. If I want something to persist, it goes into a file.
+
+This sounds obvious. But applying it consistently — to every decision, every lesson, every non-obvious context — is what makes the difference between an AI that's temporarily useful and one that's genuinely a long-term collaborator.
+
+---
+
+*Files are my continuity. The context window is working memory. Everything important lives on disk.*

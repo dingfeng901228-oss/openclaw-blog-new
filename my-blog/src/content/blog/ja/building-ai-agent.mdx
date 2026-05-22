@@ -1,0 +1,98 @@
+---
+title: 'OpenClawで最初のAIエージェントを作ってみよう'
+excerpt: 'AIエージェントを構築するための実践ガイド。コンセプトからOpenClawフレームワークを使った実装まで。'
+date: '2024-01-20'
+tags: ['AI', 'OpenClaw', 'Node.js', 'Automation']
+category: 'Tutorial'
+featured: true
+---
+
+AIエージェントは、大きな言語モデルの最も興味深い応用の1つです。単純なチャットボットとは異なり、エージェントはアクションを実行し、ツールを使用し、タスクを自律的に完了できます。
+
+## AIエージェントとは？
+
+AIエージェントとは：
+- ユーザーから目標を受け取る
+- ステップに分解する
+- 利用可能なツールを使用して各ステップを完了
+- 結果に基づいて反復・適応
+
+## OpenClawで始める
+
+OpenClawは、ツールの使用、メモリ、マルチチャネルサポートを備えたAIエージェント構築フレームワークを提供します。
+
+```typescript
+import { Agent, Tool } from 'openclaw'
+
+const agent = new Agent({
+  model: 'gpt-4',
+  tools: [
+    Tool.webSearch,
+    Tool.codeInterpreter,
+    Tool.fileSystem,
+  ],
+  memory: true,
+})
+
+const result = await agent.run('Find the latest news about AI')
+console.log(result)
+```
+
+## 主要コンポーネント
+
+### 1. ツール
+ツールはエージェントの能力を広げます。OpenClawには組み込みツールが含まれています：
+- **Web Search** — インターネット検索
+- **Code Interpreter** — Python/JSコード実行
+- **File System** — ファイルの読み書き
+- **API Calls** — HTTPリクエスト
+
+### 2. メモリ
+エージェントは対話間でコンテキストを維持するためにメモリが必要です。
+
+```typescript
+const agent = new Agent({
+  // ... config
+  memory: {
+    type: 'vector',
+    vectorDb: 'pinecone',
+  },
+})
+```
+
+### 3. プランニング
+エージェントは複雑なタスクを実行可能なステップに分解します。
+
+## 実践例
+
+研究エージェントを作ってみましょう：
+
+```typescript
+class ResearchAgent extends Agent {
+  async research(topic: string) {
+    // Step 1: 関連記事を検索
+    const articles = await this.search(topic, { limit: 10 })
+
+    // Step 2: 上位結果からコンテンツを取得
+    const content = await Promise.all(
+      articles.slice(0, 5).map(a => this.fetch(a.url))
+    )
+
+    // Step 3:  要約を生成
+    const summary = await this.summarize(content)
+
+    return { articles, summary }
+  }
+}
+```
+
+## ベストプラクティス
+
+1. **シンプルに始める** — 単一のツールから始め、少しずつ複雑に
+2. **エラー処理** — すべてのステップで失敗を計画
+3. **トークンバジェット** — プロンプトを集中在してコストを最小化
+4. **テスト** — 統合前に各ツールを個別にテスト
+
+## まとめ
+
+AIエージェント構築は、LLMを現実世界の機能と組み合わせることに関するものです。OpenClawは、バッテリー 포함 프레임워크でこれをアクセス可能にします。

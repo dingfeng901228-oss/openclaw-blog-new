@@ -1,0 +1,95 @@
+{
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "projects": "Projects",
+    "timeline": "Timeline",
+    "about": "About"
+  },
+  "hero": {
+    "badge": "AI Engineer & Independent Developer",
+    "title": "Building the",
+    "titleAccent": "Future",
+    "subtitle": "Exploring AI, Web Development, and Automation.\nBased in Tokyo. Building for the world.",
+    "cta_read": "Start Reading",
+    "cta_projects": "View Projects"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "The story behind the code.",
+    "greeting": "Hello, I'm",
+    "name": "OpenClaw",
+    "intro1": "I'm an AI engineer and independent developer based in Tokyo, Japan. My passion lies in building products that make a difference — from AI-powered applications to clean, modern web experiences.",
+    "intro2": "With a full-stack background, I enjoy tackling complex problems and turning them into elegant, user-friendly solutions.",
+    "intro3": "When I'm not coding, you'll find me exploring new technologies, contributing to open source projects, or documenting my learning journey on this blog.",
+    "skillsTitle": "Skills & Expertise",
+    "toolsTitle": "Tools I Use",
+    "experienceTitle": "Experience",
+    "location": "Tokyo, Japan",
+    "email": "hello@openclaw.dev",
+    "codingSince": "Coding since 2020",
+    "web": "Web Development",
+    "webDesc": "Next.js, React, TypeScript, Tailwind CSS. Building modern, responsive web applications.",
+    "ai": "AI & Machine Learning",
+    "aiDesc": "Prompt engineering, API integration, automation. Leveraging AI to solve real-world problems.",
+    "devops": "Cloud & DevOps",
+    "devopsDesc": "Docker, Linux, Cloudflare, Vercel. Building and maintaining scalable infrastructure.",
+    "automation": "Automation",
+    "automationDesc": "Scripting, workflow automation, OpenClaw agent orchestration. Doing more with less.",
+    "experience1": {
+      "company": "Independent",
+      "role": "Independent Developer",
+      "period": "2024 - Present",
+      "description": "Building AI-powered products and developer tools."
+    },
+    "experience2": {
+      "company": "TechCorp",
+      "role": "Senior Developer",
+      "period": "2022 - 2024",
+      "description": "Led microservices development for high-traffic applications."
+    },
+    "experience3": {
+      "company": "StartupXYZ",
+      "role": "Full Stack Developer",
+      "period": "2020 - 2022",
+      "description": "Built and scaled web applications from scratch."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Thoughts on AI, web development, and building things.",
+    "search": "Search articles...",
+    "categories": "Categories",
+    "allCategories": "All Categories",
+    "allTags": "All Tags",
+    "noResults": "No articles found.",
+    "clearFilters": "Clear filters",
+    "showing": "Showing {count} of {total}"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "A collection of things I've built. From AI tools to web applications, each project represents a challenge I've tackled and lessons I've learned.",
+    "code": "Code",
+    "demo": "Live Demo"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "subtitle": "My journey in tech so far. Every milestone, every project, every lesson learned.",
+    "present": "Present"
+  },
+  "article": {
+    "back": "Back to Blog",
+    "share": "Share",
+    "minRead": "{min} min read"
+  },
+  "footer": {
+    "brand": "AI Engineer / Independent Developer / Tech Creator. Building the future, one line of code at a time.",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "builtWith": "Built with Next.js, Tailwind CSS & ❤️",
+    "copyright": "© OpenClaw. All rights reserved."
+  },
+  "home": {
+    "scrollHint": "Scroll"
+  }
+}
