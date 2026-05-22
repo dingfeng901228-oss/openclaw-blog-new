@@ -11,47 +11,32 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          primary: '#09090b',
-          secondary: '#18181b',
-          tertiary: '#27272a',
+          primary: '#0A0A0F',
+          secondary: '#111118',
+          tertiary: '#1a1a24',
         },
         text: {
-          primary: '#fafafa',
-          secondary: '#a1a1aa',
-          muted: '#71717a',
+          primary: '#E8E8EC',
+          secondary: '#888899',
+          muted: '#555566',
         },
         accent: {
-          blue: '#3b82f6',
-          warm: '#f97316',
-          cyan: '#06b6d4',
+          DEFAULT: '#00D4C8',
         },
         border: {
-          DEFAULT: '#27272a',
-          hover: '#3f3f46',
+          DEFAULT: 'rgba(255, 255, 255, 0.06)',
+          hover: 'rgba(255, 255, 255, 0.14)',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Noto Sans SC', 'Noto Sans JP', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Noto Sans JP', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'monospace'],
+        display: ['Noto Serif JP', 'Noto Sans JP', 'serif'],
       },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.5s ease-out',
-        'glow': 'glow 2s ease-in-out infinite alternate',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        glow: {
-          '0%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
-          '100%': { boxShadow: '0 0 40px rgba(59, 130, 246, 0.6)' },
-        },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
       },
     },
   },

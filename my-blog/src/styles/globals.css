@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+JP:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,34 +6,39 @@
 
 @layer base {
   :root {
-    --bg-primary: #09090b;
-    --bg-secondary: #18181b;
-    --bg-tertiary: #27272a;
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
-    --accent-blue: #3b82f6;
-    --accent-warm: #f97316;
-    --accent-cyan: #06b6d4;
-    --border: #27272a;
-    --border-hover: #3f3f46;
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #111118;
+    --bg-tertiary: #1a1a24;
+    --text-primary: #E8E8EC;
+    --text-secondary: #888899;
+    --text-muted: #555566;
+    --accent: #00D4C8;
+    --accent-dim: rgba(0, 212, 200, 0.08);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.14);
+    --font-display: 'Noto Serif JP', 'Noto Sans JP', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
   }
 
-  * {
-    border-color: var(--border);
-  }
+  * { border-color: var(--border); }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
 
   body {
     @apply bg-bg-primary text-text-primary antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-family: var(--font-body);
+    font-weight: 300;
   }
 
   ::selection {
-    @apply bg-accent-blue/30 text-white;
+    background: rgba(0, 212, 200, 0.18);
+    color: var(--text-primary);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
   }
 }
 
@@ -42,28 +47,39 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  .text-gradient {
-    @apply bg-gradient-to-r from-accent-blue via-accent-cyan to-accent-blue bg-clip-text text-transparent;
-    background-size: 200% auto;
+  /* Ultra-minimal outlined CTA — no glow, no shadow, no noise */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    background: transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
   }
 
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-2xl
-           bg-gradient-to-r from-accent-blue to-accent-cyan text-white font-semibold text-lg
-           shadow-lg shadow-accent-blue/20
-           transition-all duration-300
-           hover:shadow-xl hover:shadow-accent-blue/30 hover:scale-105
-           active:scale-95
-           focus:outline-none focus:ring-2 focus:ring-accent-blue/50;
+  .btn-primary:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-8 py-4 rounded-2xl
-           bg-white/5 backdrop-blur-md text-text-primary font-medium text-lg
-           border border-white/10
-           transition-all duration-300
-           hover:bg-white/10 hover:border-white/20 hover:scale-105
-           focus:outline-none focus:ring-2 focus:ring-white/20;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    background: transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--border-hover);
+    color: var(--text-secondary);
   }
 
   .card {
@@ -72,35 +88,17 @@
            hover:border-border-hover hover:shadow-xl hover:shadow-black/20;
   }
 
-  .link-hover {
-    @apply transition-colors duration-200 hover:text-text-primary;
-  }
+  .link-hover { @apply transition-colors duration-200 hover:text-text-primary; }
 
-  .section-padding {
-    @apply py-20 md:py-24 lg:py-32;
-  }
+  .section-padding { @apply py-20 md:py-24 lg:py-32; }
 
-  .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
-  }
-
-  .heading-2 {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
-  }
-
-  .heading-3 {
-    @apply text-2xl md:text-3xl font-semibold;
-  }
-
-  .text-body {
-    @apply text-text-secondary leading-relaxed;
-  }
+  .heading-1 { @apply text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight; }
+  .heading-2 { @apply text-3xl md:text-4xl font-normal tracking-tight; }
+  .heading-3 { @apply text-2xl md:text-3xl font-medium; }
+  .text-body { @apply text-text-secondary leading-relaxed; }
 }
 
 @layer utilities {
-  .animate-delay-100 { animation-delay: 100ms; }
-  .animate-delay-200 { animation-delay: 200ms; }
-  .animate-delay-300 { animation-delay: 300ms; }
-  .animate-delay-400 { animation-delay: 400ms; }
-  .animate-delay-500 { animation-delay: 500ms; }
+  .font-display { font-family: var(--font-display); }
+  .font-mono { font-family: var(--font-mono); }
 }
