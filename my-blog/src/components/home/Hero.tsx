@@ -50,26 +50,34 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-bg-primary">
+        {/* Subtle Noise Texture */}
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          }}
+        />
+
         {/* Grid Pattern */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.15) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(59, 130, 246, 0.15) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.12) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(59, 130, 246, 0.12) 1px, transparent 1px)`,
             backgroundSize: '80px 80px',
           }}
         />
 
-        {/* Gradient Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent-blue/20 rounded-full blur-[150px] animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-accent-cyan/15 rounded-full blur-[120px] animate-pulse delay-1000" />
+        {/* Gradient Orbs - Softer */}
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-accent-blue/10 rounded-full blur-[200px] animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-accent-cyan/8 rounded-full blur-[150px] animate-pulse delay-1000" />
 
-        {/* Floating Particles */}
+        {/* Floating Particles - Reduced to 6 */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-accent-blue/40 rounded-full"
+              className="absolute w-1 h-1 bg-accent-blue/30 rounded-full"
               initial={{
                 x: Math.random() * 100 + '%',
                 y: Math.random() * 100 + '%',
@@ -77,10 +85,10 @@ export default function Hero() {
               animate={{
                 x: [Math.random() * 100 + '%', Math.random() * 100 + '%', Math.random() * 100 + '%'],
                 y: [Math.random() * 100 + '%', Math.random() * 100 + '%', Math.random() * 100 + '%'],
-                opacity: [0.2, 0.6, 0.2],
+                opacity: [0.15, 0.4, 0.15],
               }}
               transition={{
-                duration: 20 + Math.random() * 15,
+                duration: 25 + Math.random() * 20,
                 repeat: Infinity,
                 ease: 'linear',
               }}
@@ -99,12 +107,12 @@ export default function Hero() {
             transition={{ duration: 0.7 }}
             className="w-full text-center"
           >
-            {/* Badge */}
+            {/* Badge - Glass effect */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bg-secondary/80 backdrop-blur-sm border border-border mb-8"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 mb-8"
             >
               <span className="text-sm text-text-secondary">{t.badge}</span>
             </motion.div>
@@ -148,20 +156,20 @@ export default function Hero() {
               </Link>
             </motion.div>
 
-            {/* Social Links */}
+            {/* Social Links - Glass style */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex items-center justify-center gap-4"
+              className="flex items-center justify-center gap-3"
             >
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-bg-secondary/50 border border-border hover:border-border-hover hover:bg-bg-tertiary/50 transition-all duration-200" aria-label="GitHub">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300" aria-label="GitHub">
                 <Github className="w-5 h-5 text-text-secondary hover:text-text-primary" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-bg-secondary/50 border border-border hover:border-border-hover hover:bg-bg-tertiary/50 transition-all duration-200" aria-label="X (Twitter)">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300" aria-label="X (Twitter)">
                 <Twitter className="w-5 h-5 text-text-secondary hover:text-text-primary" />
               </a>
-              <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-bg-secondary/50 border border-border hover:border-border-hover hover:bg-bg-tertiary/50 transition-all duration-200" aria-label="Telegram">
+              <a href="https://t.me" target="_blank" rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300" aria-label="Telegram">
                 <MessageCircle className="w-5 h-5 text-text-secondary hover:text-text-primary" />
               </a>
             </motion.div>
