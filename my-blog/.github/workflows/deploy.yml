@@ -36,5 +36,5 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: openclaw-blog
           directory: my-blog/out
-          buildCommand: ''
+          buildCommand: 'echo skip'
           gitHubToken: ''
