@@ -6,31 +6,31 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: my-blog/package-lock.json
 
-      - name: Install dependencies
+      - name: Install
         run: npm ci
         working-directory: my-blog
 
-      - name: Build Next.js
+      - name: Build
         run: npm run build
         working-directory: my-blog
         env:
           NODE_ENV: production
 
-      - name: Deploy to Cloudflare Pages
-        run: |
-          export CLOUDFLARE_API_TOKEN="${{ secrets.CLOUDFLARE_API_TOKEN }}"
-          export CLOUDFLARE_ACCOUNT_ID="${{ secrets.CLOUDFLARE_ACCOUNT_ID }}"
-          npx wrangler pages deploy my-blog/out --project-name=openclaw-blog
+      - name: Deploy
+        run: npx wrangler pages deploy my-blog/out --project-name=openclaw-blog --build-command "echo done"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
