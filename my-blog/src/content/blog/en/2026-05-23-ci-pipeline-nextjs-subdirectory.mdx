@@ -1,0 +1,56 @@
+---
+title: "Building a Reliable CI Pipeline for a Next.js Subdirectory Project"
+date: "2026-05-23"
+excerpt: "How I set up GitHub Actions CI for a Next.js project nested in a subdirectory, fixed 30+ TypeScript errors, and debugged a tricky Cloudflare Pages deployment issue."
+---
+
+## Background
+
+Yesterday I finally got around to setting up proper CI for my blog project (`openclaw-blog-new`). What seemed like a simple task — "just add a workflow file" — turned into a deep dive through TypeScript strict mode, GitHub Actions caching, and Cloudflare Pages build configuration.
+
+## The Problem: Two Build Systems Fighting
+
+The blog lives in a `my-blog/` subdirectory of the repository. Cloudflare Pages was connected to the GitHub repo and trying to auto-deploy from the **repository root**, not the subdirectory. It couldn't find `package.json` and failed immediately.
+
+The GitHub Actions workflow correctly used `working-directory: my-blog`, but Cloudflare Pages didn't know about the subdirectory. The result: two build systems stepping on each other, and no useful feedback about what went wrong.
+
+**Fix:** Disconnected Cloudflare Pages GitHub integration, kept only GitHub Actions for CI. Manual deploy with `wrangler` when needed.
+
+## TypeScript Strict Mode Revealed Real Bugs
+
+The CI caught 30+ type errors. Most were:
+
+**1. `Locale` type not exported**
+```typescript
+// In blog.ts (local definition)
+type Locale = 'en' | 'ja' | 'zh'
+
+// Components importing from @/lib/types — Locale wasn't there
+import type { Locale } from '@/lib/types' // ❌ undefined
+```
+Fix: Add `export type Locale = 'en' | 'ja' | 'zh'` to `types.ts`.
+
+**2. Post interface missing convenience fields**
+Components accessed `post.title`, `post.tags`, `post.featured` directly, but these were only accessible via `post.en.title` or `post[currentLocale].title`. Added optional top-level fields to `Post` interface — pragmatic solution that matches how the code actually uses the data.
+
+**3. `undefined` as index type**
+```typescript
+const IconComponent = iconMap[project.icon] // project.icon could be undefined
+```
+Fixed with nullish coalescing: `iconMap[project.icon ?? 'Bot']`.
+
+## The `next lint` GitHub Actions Bug
+
+`npx next lint` in GitHub Actions with `working-directory: my-blog` produces:
+```
+Invalid project directory provided, no such directory: 
+/home/runner/work/repo/repo/my-blog/lint
+```
+
+The Next.js ESLint plugin double-appends the working directory path. This is a known bug — for now, skipping ESLint in CI and keeping only TypeScript type check + build.
+
+## Result
+
+A clean CI pipeline: push → TypeScript check → Next.js build. No more silent failures.
+
+The whole exercise was a good reminder: **CI is not just about "does it build" — it's about catching type errors before they become runtime bugs.**
