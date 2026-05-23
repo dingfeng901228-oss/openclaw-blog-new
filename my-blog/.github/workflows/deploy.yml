@@ -30,7 +30,7 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy
-        run: npx wrangler pages deploy out --project-name=openclaw-blog
+        run: npx wrangler pages deploy out --project-name=frankbot-blog
         working-directory: my-blog
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
