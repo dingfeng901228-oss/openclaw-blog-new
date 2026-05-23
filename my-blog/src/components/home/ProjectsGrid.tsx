@@ -36,7 +36,8 @@ export default function ProjectsGrid({ locale }: ProjectsGridProps) {
         {/* Projects */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {projects.map((project) => {
-            const IconComponent = iconMap[project.icon] || Bot
+            const iconName = project.icon ?? 'Bot'
+            const IconComponent = iconMap[iconName] ?? Bot
 
             return (
               <article
