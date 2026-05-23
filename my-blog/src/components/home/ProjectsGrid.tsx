@@ -2,7 +2,6 @@
 
 import { Github, ExternalLink, Star, Zap, Code2, Bot } from 'lucide-react'
 import { getProjects, getProjectsMeta, getCtaLabels } from '@/data/projects'
-import type { Locale } from '@/lib/types'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Bot,

@@ -21,7 +21,7 @@ export default async function HomePage({
         <Hero />
         <AboutContent locale={locale} />
         <TimelineSection locale={locale} />
-        <ProjectsGrid />
+        <ProjectsGrid locale={locale} />
       </main>
       <Footer />
     </>
