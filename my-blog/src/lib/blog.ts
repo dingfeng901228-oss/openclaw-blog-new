@@ -2,9 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
-import type { Post, LocaleContent } from './types'
-
-type Locale = 'en' | 'ja' | 'zh'
+import type { Post, LocaleContent, Locale } from './types'
 
 // Single content directory - all locales in one file
 function getContentDir(): string {
