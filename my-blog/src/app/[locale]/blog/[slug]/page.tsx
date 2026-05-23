@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getAllPosts, postExists, getAvailableLocales } from '@/lib/blog'
+import type { Locale } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
 import { ArrowLeft, Calendar, Clock, Tag, Globe } from 'lucide-react'
 import Giscus from '@/components/blog/Giscus'
@@ -44,7 +45,7 @@ export async function generateStaticParams() {
   const params: { locale: string; slug: string }[] = []
 
   for (const locale of locales) {
-    const posts = getAllPosts(locale)
+    const posts = getAllPosts(locale as Locale)
     for (const post of posts) {
       params.push({ locale, slug: post.slug })
     }
@@ -62,7 +63,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   setRequestLocale(locale)
 
-  const post = getPostBySlug(locale, slug)
+  const post = getPostBySlug(locale as Locale, slug)
   const t = labels[locale] || labels.en
 
   // Get available translations for this article
@@ -125,7 +126,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           <header className="mb-12">
             {displayPost.tags && displayPost.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
-                {displayPost.tags.map((tag) => (
+                {displayPost.tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue text-sm font-medium flex items-center gap-1"
