@@ -10,14 +10,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2,
 }
 
-interface Project {
-  slug: string
-  title: string
-  description: string
-  tags: string[]
-  link?: string
-  github?: string
-}
+import type { Project } from '@/lib/types'
 
 interface ProjectsGridProps {
   locale: string
