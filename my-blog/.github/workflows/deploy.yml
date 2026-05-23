@@ -30,7 +30,11 @@ jobs:
           NODE_ENV: production
 
       - name: Deploy
-        run: npx wrangler pages deploy my-blog/out --project-name=openclaw-blog --branch=production
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: openclaw-blog
+          directory: my-blog/out
+          buildCommand: ''
+          gitHubToken: ''
