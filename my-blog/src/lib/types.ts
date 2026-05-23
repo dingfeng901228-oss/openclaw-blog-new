@@ -53,6 +53,11 @@ export interface Project {
   link?: string
   github?: string
   image?: string
+  icon?: string
+  gradient?: string
+  stars?: string
+  problem?: string
+  challenge?: string
 }
 
 export interface TimelineItem {
