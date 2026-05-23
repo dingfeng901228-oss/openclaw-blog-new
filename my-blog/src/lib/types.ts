@@ -1,3 +1,5 @@
+export type Locale = 'en' | 'ja' | 'zh'
+
 export interface LocaleContent {
   title: string
   excerpt: string
@@ -11,7 +13,16 @@ export interface Post {
   date: string
   translationKey: string
   status: 'draft' | 'published'
-  
+
+  // Top-level fields (mirrored from current locale for convenience)
+  title?: string
+  excerpt?: string
+  tags?: string[]
+  category?: string
+  featured?: boolean
+  readingTime?: string
+  content?: string
+
   // Locale-specific content (always present after migration)
   en: LocaleContent
   ja: LocaleContent
@@ -42,6 +53,11 @@ export interface Project {
   link?: string
   github?: string
   image?: string
+  icon?: string
+  gradient?: string
+  stars?: string
+  problem?: string
+  challenge?: string
 }
 
 export interface TimelineItem {

@@ -1,5 +1,6 @@
 import { setRequestLocale } from 'next-intl/server'
 import { getAllPosts, getAllTags, getAllCategories } from '@/lib/blog'
+import type { Locale } from '@/lib/types'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import BlogList from '@/components/blog/BlogList'
@@ -12,9 +13,9 @@ export default async function BlogPage({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const posts = getAllPosts(locale)
-  const tags = getAllTags(locale)
-  const categories = getAllCategories(locale)
+  const posts = getAllPosts(locale as Locale)
+  const tags = getAllTags(locale as Locale)
+  const categories = getAllCategories(locale as Locale)
 
   return (
     <>

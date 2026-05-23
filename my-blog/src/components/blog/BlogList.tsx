@@ -58,8 +58,8 @@ export default function BlogList({ posts, tags, categories, locale }: BlogListPr
       if (post.status === 'draft') return false
       const matchesSearch =
         searchQuery === '' ||
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+        post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesTag = selectedTag === null || post.tags?.includes(selectedTag)
       const matchesCategory = selectedCategory === null || post.category === selectedCategory
       return matchesSearch && matchesTag && matchesCategory

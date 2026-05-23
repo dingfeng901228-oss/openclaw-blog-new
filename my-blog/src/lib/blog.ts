@@ -2,9 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
-import type { Post, LocaleContent } from './types'
-
-type Locale = 'en' | 'ja' | 'zh'
+import type { Post, LocaleContent, Locale } from './types'
 
 // Single content directory - all locales in one file
 function getContentDir(): string {
@@ -57,23 +55,22 @@ export function getAllPosts(locale: Locale = 'en'): Post[] {
         date: data.date || new Date().toISOString(),
         translationKey: data.translationKey || slug,
         status: data.status || 'draft',
-        
+
         // All locales
         en: getLocaleContent(data, 'en'),
         ja: getLocaleContent(data, 'ja'),
         zh: getLocaleContent(data, 'zh'),
-        
-        // Current locale (for backward compatibility)
+
+        // Top-level convenience fields (from current locale)
         title: localeContent.title,
         excerpt: localeContent.excerpt,
-        date_locale: localeContent.date,
         tags: localeContent.tags,
         category: localeContent.category,
         featured: data.featured || false,
         readingTime: stats.text,
         content: localeContent.content,
         locale,
-      } as any
+      } as Post
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
@@ -111,12 +108,12 @@ export function getPostBySlug(locale: Locale, slug: string): any | undefined {
       date: data.date || new Date().toISOString(),
       translationKey: data.translationKey || slug,
       status: data.status || 'draft',
-      
+
       // All locales
       en: getLocaleContent(data, 'en'),
       ja: getLocaleContent(data, 'ja'),
       zh: getLocaleContent(data, 'zh'),
-      
+
       // Current locale
       title: localeContent.title,
       excerpt: localeContent.excerpt,
@@ -177,8 +174,8 @@ export function localeHasContent(slug: string, locale: Locale): boolean {
   }
 
   try {
-    const fileContent = fs.existsSync(filePath) 
-      ? fs.readFileSync(filePath, 'utf-8') 
+    const fileContent = fs.existsSync(filePath)
+      ? fs.readFileSync(filePath, 'utf-8')
       : fs.readFileSync(filePathMd, 'utf-8')
     const { data } = matter(fileContent)
     return !!(data[locale]?.content?.trim())
@@ -233,7 +230,7 @@ export function validatePostComplete(slug: string): { valid: boolean; missing: s
 export function getAllSlugs(): string[] {
   const contentDir = getContentDir()
   if (!fs.existsSync(contentDir)) return []
-  
+
   return fs.readdirSync(contentDir)
     .filter(f => f.endsWith('.mdx') || f.endsWith('.md'))
     .map(f => f.replace(/\.(mdx|md)$/, ''))
