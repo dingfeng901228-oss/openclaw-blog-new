@@ -10,12 +10,21 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code2,
 }
 
+interface Project {
+  slug: string
+  title: string
+  description: string
+  tags: string[]
+  link?: string
+  github?: string
+}
+
 interface ProjectsGridProps {
   locale: string
 }
 
 export default function ProjectsGrid({ locale }: ProjectsGridProps) {
-  const projects = getProjects(locale)
+  const projects = getProjects(locale) as Project[]
   const meta = getProjectsMeta(locale)
   const cta = getCtaLabels(locale)
 
