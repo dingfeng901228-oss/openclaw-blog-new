@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPostBySlug, getAllPosts, postExists, getAvailableLocales } from '@/lib/blog'
 import { formatDate } from '@/lib/utils'
 import { ArrowLeft, Calendar, Clock, Tag, Globe } from 'lucide-react'
+import Giscus from '@/components/blog/Giscus'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { setRequestLocale } from 'next-intl/server'
@@ -166,6 +167,11 @@ export default async function BlogPostPage({ params }: PageProps) {
               {t.back}
             </Link>
           </footer>
+
+          {/* Comments via Giscus */}
+          <Giscus
+            lang={locale === 'zh' ? 'zh-CN' : locale}
+          />
         </article>
       </main>
       <Footer />
