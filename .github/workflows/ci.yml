@@ -38,7 +38,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: ESLint
-        run: npx eslint . --ext .ts,.tsx
+        run: npx next lint --dir .
 
   build:
     name: Build
