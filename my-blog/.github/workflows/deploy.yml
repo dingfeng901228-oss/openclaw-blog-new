@@ -8,9 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: my-blog
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,21 +17,20 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: my-blog/package-lock.json
 
       - name: Install
         run: npm ci
+        working-directory: my-blog
 
       - name: Build
         run: npm run build
+        working-directory: my-blog
         env:
           NODE_ENV: production
 
       - name: Deploy
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: openclaw-blog
-          directory: out
-          buildCommand: ''
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        run: npx wrangler pages deploy my-blog/out --project-name=openclaw-blog --branch=production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
