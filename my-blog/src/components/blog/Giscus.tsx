@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface GiscusProps {
   repo: string
@@ -19,15 +19,19 @@ export default function Giscus({
   repoId = 'R_kgDOSh6a4g',
   category = 'Comments',
   categoryId = 'DIC_kwDOSh6a4s4C9pw5',
-  mapping = 'pathname',
   reactionsEnabled = '1',
   emitMetadata = '0',
   inputPosition = 'bottom',
   lang = 'ja',
 }: Partial<GiscusProps>) {
   const ref = useRef<HTMLDivElement>(null)
+  const [term, setTerm] = useState('/')
 
   useEffect(() => {
+    // Strip locale prefix so /zh/blog/slug, /ja/blog/slug, /en/blog/slug share the same discussion
+    const stripped = window.location.pathname.replace(/^\/(ja|zh|en)\//, '/')
+    setTerm(stripped)
+
     if (!ref.current) return
 
     // Clear previous giscus
@@ -39,7 +43,7 @@ export default function Giscus({
     script.setAttribute('data-repo-id', repoId)
     script.setAttribute('data-category', category)
     script.setAttribute('data-category-id', categoryId)
-    script.setAttribute('data-mapping', mapping)
+    script.setAttribute('data-mapping', 'pathname')
     script.setAttribute('data-strict', '0')
     script.setAttribute('data-reactions-enabled', reactionsEnabled)
     script.setAttribute('data-emit-metadata', emitMetadata)
@@ -47,11 +51,12 @@ export default function Giscus({
     script.setAttribute('data-theme', 'preferred_color_scheme')
     script.setAttribute('data-lang', lang)
     script.setAttribute('data-loading', 'lazy')
+    script.setAttribute('data-term', stripped)
     script.crossOrigin = 'anonymous'
     script.async = true
 
     ref.current.appendChild(script)
-  }, [repo, repoId, category, categoryId, mapping, reactionsEnabled, emitMetadata, inputPosition, lang])
+  }, [repo, repoId, category, categoryId, reactionsEnabled, emitMetadata, inputPosition, lang])
 
   return <div ref={ref} className="giscus mt-16 pt-8 border-t border-border" />
 }
