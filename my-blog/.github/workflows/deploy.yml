@@ -17,9 +17,11 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: my-blog/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: my-blog
 
       - name: Build Next.js
         run: npm run build
@@ -34,3 +36,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: openclaw-blog
           directory: my-blog/out
+          skipDetection: true
