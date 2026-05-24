@@ -80,26 +80,27 @@ export default function AboutContent({ locale }: { locale: string }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="lg:col-span-2 space-y-6"
         >
-          <h3 className="text-2xl font-bold text-text-primary">
-            {t.greeting}<span className="bg-gradient-to-r from-accent-blue to-accent-cyan bg-clip-text text-transparent">{t.name}</span> 🦞
+          <h3 className="inline-flex items-center gap-3 text-2xl font-bold text-slate-50">
+            {t.greeting}<span className="bg-gradient-to-r from-accent-blue to-accent-cyan bg-clip-text text-transparent">{t.name}</span>
+            <span>🦞</span>
           </h3>
 
-          <div className="space-y-4 text-[#fff] leading-relaxed">
-            <p className="text-white/90">{t.intro1}</p>
-            <p className="text-white/80">{t.intro2}</p>
-            <p className="text-white/70">{t.intro3}</p>
+          <div className="space-y-4 text-slate-300 leading-relaxed">
+            <p>{t.intro1}</p>
+            <p>{t.intro2}</p>
+            <p>{t.intro3}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
-            <div className="flex items-center gap-3 text-sm text-white/80">
+            <div className="flex items-center gap-3 text-sm text-slate-300">
               <MapPin className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <span>{t.location}</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-white/80">
+            <div className="flex items-center gap-3 text-sm text-slate-300">
               <Mail className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <a href={`mailto:${t.email}`} className="hover:text-white transition-colors">{t.email}</a>
             </div>
-            <div className="flex items-center gap-3 text-sm text-white/80">
+            <div className="flex items-center gap-3 text-sm text-slate-300">
               <Calendar className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <span>{t.codingSince}</span>
             </div>
@@ -107,7 +108,7 @@ export default function AboutContent({ locale }: { locale: string }) {
 
           <div className="flex flex-wrap gap-2 pt-4">
             {['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'AI', 'React', 'Node.js'].map((tag) => (
-              <span key={tag} className="px-3 py-1 rounded-full bg-bg-tertiary/50 border border-border text-xs text-white/80 hover:border-accent-blue/50 hover:text-accent-blue transition-all duration-200">
+              <span key={tag} className="px-3 py-1 rounded-full bg-bg-tertiary/50 border border-border text-xs text-slate-300 hover:border-accent-blue/50 hover:text-accent-blue transition-all duration-200">
                 {tag}
               </span>
             ))}
@@ -142,7 +143,7 @@ export default function AboutContent({ locale }: { locale: string }) {
                    skill.titleKey === 'devops' ? (locale === 'ja' ? 'インフラ' : locale === 'zh' ? '基础设施' : 'Infrastructure') :
                    (locale === 'ja' ? '自動化' : locale === 'zh' ? '自动化' : 'Automation')}
                 </h4>
-                <p className="text-white/60 text-xs leading-relaxed">
+                <p className="text-slate-300 text-xs leading-relaxed">
                   {skill.descKey === 'webDesc' ? (locale === 'ja' ? 'Next.js + React + TypeScript' : locale === 'zh' ? 'Next.js + React + TypeScript' : 'Next.js + React + TypeScript') :
                    skill.descKey === 'aiDesc' ? (locale === 'ja' ? 'OpenAI API、LangChain' : locale === 'zh' ? 'OpenAI API、LangChain' : 'OpenAI API, LangChain') :
                    skill.descKey === 'devopsDesc' ? (locale === 'ja' ? 'Docker、Cloudflare' : locale === 'zh' ? 'Docker、Cloudflare' : 'Docker, Cloudflare') :
