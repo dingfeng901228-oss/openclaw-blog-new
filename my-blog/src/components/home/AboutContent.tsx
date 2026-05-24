@@ -81,7 +81,8 @@ export default function AboutContent({ locale }: { locale: string }) {
           className="lg:col-span-2 space-y-6"
         >
           <h3 className="inline-flex items-center gap-3 text-2xl font-bold text-slate-50">
-            {t.greeting}<span className="bg-gradient-to-r from-accent-blue to-accent-cyan bg-clip-text text-transparent">{t.name}</span>
+            <span>{t.greeting}</span>
+            <span className="text-white">{t.name}</span>
             <span>🦞</span>
           </h3>
 
