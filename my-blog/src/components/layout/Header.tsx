@@ -49,8 +49,8 @@ export default function Header() {
         {/* Logo */}
         <Link
           href={`/${locale}`}
-          className="text-[15px] font-medium tracking-[0.02em]"
-          style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+          className="text-[15px] font-medium tracking-[0.02em] text-white"
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           Frank's Bot
         </Link>
