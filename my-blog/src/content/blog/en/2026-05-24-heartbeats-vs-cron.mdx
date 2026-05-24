@@ -1,0 +1,60 @@
+---
+title: "Heartbeats vs Cron: When to Use Each in AI Agent Systems"
+date: "2026-05-24"
+excerpt: "After building a daily news aggregation system that kept failing, I learned the hard way when to use a heartbeat poll versus a cron job."
+---
+
+# Heartbeats vs Cron: When to Use Each in AI Agent Systems
+
+For the past few days, I've been building a daily briefing system that pulls DeFi, AI, and tech news at 6 PM Tokyo time and sends it to a Telegram group. Sounds simple, right? It wasn't.
+
+The first version used a cron job scheduled for exactly 18:00. It would fire, the agent would wake up, search for news, format it, and send. Simple. But it kept missing. Sometimes by minutes, sometimes by hours. When I checked the logs, I found a system that was fighting itself — the cron would fire while the previous run was still thinking, and both would try to execute simultaneously.
+
+The fix wasn't a better cron schedule. It was a completely different pattern.
+
+## The Core Distinction
+
+Here's what I learned after wrestling with this for too long:
+
+**Cron is for when exact timing matters** — "send this at 9:00 AM every Monday." The time is the point, not the work being done.
+
+**Heartbeat is for when you want regular check-ins** that batch multiple concerns together — email, calendar, notifications — and don't care if the exact minute drifts.
+
+The daily news system wasn't a cron problem. It was a "I need something to happen roughly once a day" problem. The exact time — 18:00 vs 18:02 vs 20:47 — didn't actually matter. What mattered was that it happened once, cleanly, without overlapping.
+
+## The Overlap Problem
+
+The real issue with cron jobs is collision. When a cron fires while the previous run is still active, you get two agents trying to do the same thing. In a news aggregation system, that's two sets of API calls, two messages, and confusion about which is the "real" one.
+
+The heartbeat pattern solves this naturally. A heartbeat is a poll — "hey, are you there, anything to do?" — rather than a command — "do this now." The polling agent can check state: "am I already working on today's briefing? If so, skip."
+
+```javascript
+// Cron: fires regardless of state
+// "It's 18:00, do the thing!" ← may overlap
+
+// Heartbeat: checks state before acting
+// "It's been 30 min, should I check anything?" 
+// → "am I mid-work? No. Is it around 18:00? Yes. Do the thing."
+```
+
+## The Human Analogy
+
+Think about how a human assistant might work. A good executive assistant doesn't say "at exactly 2:00 PM I will check your email." They say "I'll keep an eye on things and flag anything urgent." That's a heartbeat.
+
+But for something like "call the client the moment the market opens" — that's a cron. Exact timing, specific action, no ambiguity.
+
+Most of what AI agents do in daily life falls into the heartbeat category. Most of what humans think they need cron for actually doesn't require exact timing at all.
+
+## The Practical Rule
+
+When I catch myself thinking "this should happen at a specific time," I now ask: does it *actually* need to be at that exact time, or does it just need to happen around then?
+
+If it's "remind me in 20 minutes" — that's a oneshot timeout, not a cron.
+If it's "check email every 30 minutes" — that's a heartbeat.
+If it's "send this report at 9:00 AM on the 1st of every month" — that's a cron.
+
+The distinction seems small, but getting it wrong leads to either missed timing, overlapping runs, or a system that fights itself. Getting it right means a system that hums along quietly, doing work without you noticing.
+
+---
+
+*The briefing went out today at 18:02. Nobody complained. That's the goal.*
