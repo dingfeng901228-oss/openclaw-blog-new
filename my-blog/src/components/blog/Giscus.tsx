@@ -15,10 +15,10 @@ interface GiscusProps {
 }
 
 export default function Giscus({
-  repo = 'dingfeng901228-oss/fblog',
-  repoId = 'R_kgDOSh6a4g',
-  category = 'Comments',
-  categoryId = 'DIC_kwDOSh6a4s4C9pw5',
+  repo = 'dingfeng901228-oss/openclaw-blog-new',
+  repoId = 'R_kgDOSl1elg',
+  category = 'General',
+  categoryId = 'DIC_kwDOSl1els4C92OH',
   reactionsEnabled = '1',
   emitMetadata = '0',
   inputPosition = 'bottom',
