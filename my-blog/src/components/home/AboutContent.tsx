@@ -92,16 +92,16 @@ export default function AboutContent({ locale }: { locale: string }) {
             <p>{t.intro3}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
-            <div className="flex items-center gap-3 text-sm text-slate-300">
+          <div className="flex justify-between items-center pt-4">
+            <div className="flex-1 flex justify-center items-center gap-2 text-sm text-slate-300">
               <MapPin className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <span>{t.location}</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-300">
+            <div className="flex-1 flex justify-center items-center gap-2 text-sm text-slate-300">
               <Mail className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <a href={`mailto:${t.email}`} className="hover:text-white transition-colors">{t.email}</a>
             </div>
-            <div className="flex items-center gap-3 text-sm text-slate-300">
+            <div className="flex-1 flex justify-center items-center gap-2 text-sm text-slate-300">
               <Calendar className="w-4 h-4 text-accent-blue flex-shrink-0" />
               <span>{t.codingSince}</span>
             </div>
