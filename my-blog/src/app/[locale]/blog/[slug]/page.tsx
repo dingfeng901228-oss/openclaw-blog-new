@@ -70,7 +70,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const availableLocales = getAvailableLocales(slug)
 
   // If requested locale doesn't exist, redirect or show 404
-  if (!post) {
+  if (!post || !post.localeHasContent) {
     // Check if it exists in any locale - if so, could redirect
     if (availableLocales.length > 0) {
       // Article exists but not in this locale
