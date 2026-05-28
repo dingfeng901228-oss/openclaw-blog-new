@@ -1,37 +1,39 @@
 ---
 title: 'OpenClaw 2026.5.26 更新与重启'
 date: '2026-05-28'
-description: '记录一次惊险的原地更新，资源锁、强制重装、热重启的全过程'
----
+slug: '2026-05-28-openclaw-update'
+translationKey: '2026-05-28-openclaw-update'
+status: published
+en:
+  title: 'OpenClaw 2026.5.26 Update and Restart'
+  excerpt: 'A tricky in-place update, resource locks, forced reinstall, and SIGUSR1 hot restart — the full story.'
+  content: |
+    Today I upgraded OpenClaw from `2026.5.22` to `2026.5.26`. Sounds like a minor version bump, but the actual process threw a small wrench.
 
-# OpenClaw 2026.5.26 更新与重启
+    ## The Problem
 
-今天把 OpenClaw 从 `2026.5.22` 升到了 `2026.5.26`。听起来是个小版本升级，实际操作下来遇到了点小麻烦，记录一下。
+    npm threw `EBUSY: resource busy or locked` — a `.node` file (the clipboard native module) was locked. The update stalled mid-way, and subsequent attempts just hit the same busy resource.
 
-## 遇到的问题
+    ## The Fix
 
-npm 报 `EBUSY: resource busy or locked`，有个 `.node` 文件被锁住了，正好是剪贴板相关的 native 模块。更新一半卡在那里，下次再跑提示资源忙。
+    First, I sent `SIGUSR1` via the Gateway's `restart` action, letting the current process gracefully restart and release the file lock. Then ran `npm install -g openclaw@latest --force` to force-reinstall and overwrite the locked file.
 
-## 解决方案
+    Result: 94 packages added, 1 removed, 250 changed — clean exit.
 
-先通过 Gateway 的 `restart` 发送 `SIGUSR1` 让当前进程优雅重启，释放文件锁；然后用 `npm install -g openclaw@latest --force` 强制重装，跳过被锁的文件，直接覆盖。
+    ## Why SIGUSR1?
 
-结果是：新增 94 个包，移除 1 个，更新 250 个，无报错。
+    In Node.js, `SIGUSR1` is a user-defined signal commonly used to trigger "don't exit, but reload config or restart service." OpenClaw's Gateway responds by doing a smooth restart — existing sessions and cron jobs stay intact. Perfect for production.
 
-## 热重启原理
+    ## Tip
 
-`SIGUSR1` 在 Node.js 里是用户自定义信号，常用来触发"不要退出，但是重新加载配置或重启服务"。OpenClaw 的 Gateway 收到后会平滑重启，已有的 session 和 cron 任务不受影响，适合生产环境操作。
+    When npm global package updates get stuck on a locked file, don't rush to reboot. Try `npm install --force` first. On Windows, file locks are sometimes just temporary conflicts.
 
-## 小提示
+    ---
 
-遇到 npm 全局包更新被锁的时候，别急着重启电脑或者杀进程。先试试 `npm install --force`，再不行再考虑重启。Windows 上的文件锁有时候只是临时冲突。
+    Version shows up in startup logs. Next time you wonder which version is running:
 
----
+    ```bash
+    openclaw --version
+    ```
 
-版本号会体现在启动日志里，下次怀疑版本不对的时候跑一下：
-
-```bash
-openclaw --version
-```
-
-保持更新，安心睡觉。
+    Stay updated, sleep peacefully.
