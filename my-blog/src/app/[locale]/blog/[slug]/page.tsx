@@ -189,6 +189,7 @@ function convertMarkdown(content: string): string {
     .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
     .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-bg-tertiary rounded-lg p-4 my-6 overflow-x-auto border border-border"><code class="text-sm text-text-secondary font-mono">$2</code></pre>')
     .replace(/`([^`]+)`/g, '<code class="bg-bg-tertiary px-1.5 py-0.5 rounded text-accent-blue text-sm font-mono">$1</code>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="rounded-lg my-6 w-full" loading="lazy" />')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent-blue hover:underline" target="_blank" rel="noopener">$1</a>')
     .replace(/^- (.*$)/gm, '<li class="ml-6 text-text-secondary list-disc marker:text-accent-blue">$1</li>')
     .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-6 text-text-secondary list-decimal marker:text-accent-blue">$2</li>')
