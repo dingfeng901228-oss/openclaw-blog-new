@@ -130,7 +130,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-            className="leading-[1.9] mb-12 max-w-xl whitespace-pre-line"
+            className="leading-[1.9] mb-10 max-w-xl whitespace-pre-line"
             style={{
               fontFamily: 'var(--font-mono)',
               fontWeight: 300,
@@ -142,19 +142,20 @@ export default function Hero() {
             {t.subtitle}
           </motion.p>
 
-          {/* CTA — primary (blue gradient) + secondary (glass) */}
+          {/* CTA — primary (blue gradient), centered */}
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.4, ease: 'easeOut' }}
-            className="flex items-center gap-3 flex-wrap justify-center"
+            className="flex justify-center"
           >
-            <Link href={`/${locale}/blog`} className="hero-cta-primary group">
+            <Link
+              href={`/${locale}/blog`}
+              className="hero-cta-primary group"
+              style={{ minWidth: '180px' }}
+            >
               {t.cta_read}
               <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </Link>
-            <Link href={`/${locale}/projects`} className="hero-cta-secondary">
-              {t.cta_projects}
             </Link>
           </motion.div>
 

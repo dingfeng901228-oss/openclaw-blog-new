@@ -43,8 +43,8 @@ export default function Header() {
           : 'bg-transparent'
       )}
     >
-      <nav className="container-custom flex items-center justify-between h-16">
-        {/* Logo */}
+      <nav className="container-custom relative flex items-center h-16">
+        {/* Logo — left */}
         <Link
           href={`/${locale}`}
           className="text-[15px] font-medium tracking-[0.02em] text-white transition-colors duration-200 hover:text-[var(--accent)]"
@@ -53,13 +53,13 @@ export default function Header() {
           Frank's Bot
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Navigation — center, absolutely positioned for true horizontal centering */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={`/${locale}/${item.href}`}
-              className="nav-link relative text-[12px] tracking-[0.08em] py-1"
+              className="nav-link relative text-[15px] tracking-[0.04em] py-1 font-normal"
               style={{ fontFamily: 'var(--font-mono)' }}
             >
               <span>{t(item.labelKey)}</span>
@@ -70,20 +70,14 @@ export default function Header() {
         </div>
 
         {/* Right side: Language Switcher */}
-        <div className="flex items-center gap-4">
+        <div className="ml-auto flex items-center gap-4">
           <LanguageSwitcher />
-          <Link
-            href={`/${locale}/blog`}
-            className="hidden md:inline-flex btn-primary text-[11px] py-1.5 px-4"
-          >
-            ブログ
-          </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 transition-colors"
+          className="md:hidden ml-auto p-2 transition-colors"
           style={{ color: 'rgba(255, 255, 255, 0.78)' }}
           aria-label="Toggle menu"
         >
@@ -108,18 +102,12 @@ export default function Header() {
                   key={item.href}
                   href={`/${locale}/${item.href}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="nav-link text-[13px] tracking-[0.06em] py-3"
+                  className="nav-link text-[15px] tracking-[0.04em] py-3 font-normal"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   {t(item.labelKey)}
                 </Link>
               ))}
-              <Link
-                href={`/${locale}/blog`}
-                className="btn-primary text-center mt-3"
-              >
-                ブログ
-              </Link>
             </div>
           </motion.div>
         )}
