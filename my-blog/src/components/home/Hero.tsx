@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
@@ -12,65 +11,67 @@ const heroContent = {
     badge: 'AIが自律創建 — 継続更新中',
     title: 'Frank とAIが、未来をコードしてる',
     subtitle: '自ら学び、自ら書き、自ら記録する。\n成長するAIと、それを支える人間。',
-    cta_read: 'ブログ読む',
+    cta_read: 'ブログを読む',
     cta_projects: '作ったもの',
   },
   zh: {
     badge: 'AI 自主创建 — 持续更新',
     title: 'Frank 和AI，正在用代码构建未来',
     subtitle: '自主学习、自主写作、自主记录。\n成长的AI，和支撑它的人类。',
-    cta_read: '看博客',
+    cta_read: '阅读博客',
     cta_projects: '看项目',
   },
   en: {
     badge: 'AI-Built — Continuously Evolving',
     title: 'Frank & AI, Building the Future with Code',
     subtitle: 'Self-learning. Self-writing. Self-recording.\nA growing AI, and the human who powers it.',
-    cta_read: 'Read Blog',
-    cta_projects: 'View Projects',
+    cta_read: 'Read the blog',
+    cta_projects: 'View projects',
   },
 }
 
 export default function Hero() {
   const params = useParams()
   const locale = (params?.locale as string) || 'ja'
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
 
   const t = heroContent[locale as keyof typeof heroContent] || heroContent.ja
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* ── Background ── */}
-      <div className="absolute inset-0 bg-bg-primary">
-        {/* Ultra-subtle dot grid */}
+      <div className="absolute inset-0">
+        {/* Subtle dot grid */}
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)',
             backgroundSize: '48px 48px',
           }}
         />
 
-        {/* Very faint noise - nearly invisible */}
+        {/* Noise texture */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
             backgroundSize: '180px 180px',
           }}
         />
 
-        {/* Barely-there radial glow — no color cast, just depth */}
+        {/* Central blue+purple glow — Vercel / Linear feel */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[800px] pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.022) 0%, transparent 65%)',
+            background:
+              'radial-gradient(ellipse at center, rgba(59,130,246,0.22) 0%, rgba(139,92,246,0.12) 30%, rgba(15,20,40,0) 65%)',
+          }}
+        />
+        {/* Top accent — extra purple wash from above */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at center top, rgba(139,92,246,0.20) 0%, rgba(59,130,246,0.08) 40%, rgba(15,20,40,0) 70%)',
           }}
         />
       </div>
@@ -81,7 +82,7 @@ export default function Hero() {
           {/* Left: Title + CTA */}
           <div className="lg:col-span-3 flex flex-col items-start text-left max-w-2xl">
 
-            {/* Badge — ultra minimal */}
+            {/* Badge — glassmorphism */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -89,9 +90,23 @@ export default function Hero() {
               className="mb-10"
             >
               <span
-                className="text-[11px] tracking-[0.12em] uppercase"
-                style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.12em] uppercase"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.75)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
               >
+                <span
+                  className="inline-block w-1.5 h-1.5 rounded-full"
+                  style={{
+                    background: '#3B82F6',
+                    boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)',
+                  }}
+                />
                 {t.badge}
               </span>
             </motion.div>
@@ -101,12 +116,13 @@ export default function Hero() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
-              className="leading-[1.4] tracking-[-0.025em] mb-6"
+              className="leading-[1.25] tracking-[-0.03em] mb-6 text-white"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontWeight: 400,
-                fontSize: 'clamp(24px, 3.8vw, 40px)',
-                color: 'var(--text-primary)',
+                fontWeight: 600,
+                fontSize: 'clamp(28px, 4.5vw, 48px)',
+                textShadow:
+                  '0 0 40px rgba(59, 130, 246, 0.30), 0 0 80px rgba(139, 92, 246, 0.15)',
               }}
             >
               {t.title}
@@ -117,19 +133,19 @@ export default function Hero() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-              className="leading-[2] mb-10 whitespace-pre-line"
+              className="leading-[1.9] mb-10 max-w-xl whitespace-pre-line"
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontWeight: 300,
-                fontSize: '13px',
-                color: 'var(--text-muted)',
+                fontSize: '14px',
+                color: 'rgba(255, 255, 255, 0.75)',
                 letterSpacing: '0.01em',
               }}
             >
               {t.subtitle}
             </motion.p>
 
-            {/* CTA — minimal outlined buttons */}
+            {/* CTA — primary (blue gradient), with secondary option */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
@@ -162,7 +178,14 @@ export default function Hero() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-8 h-8 rounded-md border border-white/[0.06] hover:border-white/[0.12] transition-colors duration-200"
+                  className="flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-200"
+                  style={{ border: '1px solid rgba(255, 255, 255, 0.08)' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  }}
                   aria-label={label}
                 >
                   <Icon className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
@@ -186,7 +209,7 @@ export default function Hero() {
         >
           <div
             className="w-px h-6"
-            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), transparent)' }}
+            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.18), transparent)' }}
           />
         </motion.div>
       </div>

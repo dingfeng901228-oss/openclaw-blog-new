@@ -62,3 +62,37 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-output
+          path: my-blog/out
+          retention-days: 5
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+      deployments: write
+      pages: write
+      id-token: write
+    steps:
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-output
+          path: my-blog/out
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: openclaw-blog-new
+          directory: my-blog/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -21,7 +21,9 @@ const config: Config = {
           muted: '#555566',
         },
         accent: {
-          DEFAULT: '#00D4C8',
+          DEFAULT: '#3B82F6',
+          blue: '#3B82F6',
+          cyan: '#22D3EE',
         },
         border: {
           DEFAULT: 'rgba(255, 255, 255, 0.06)',
