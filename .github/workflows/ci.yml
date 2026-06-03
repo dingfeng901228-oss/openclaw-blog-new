@@ -63,6 +63,14 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-output
+          path: my-blog/out
+          retention-days: 5
+          if-no-files-found: error
+
   deploy:
     name: Deploy to Cloudflare Pages
     needs: build
@@ -74,8 +82,11 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-output
+          path: my-blog/out
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
