@@ -20,7 +20,6 @@ export default async function HomePage({
       <main className="min-h-screen">
         <Hero />
         <AboutContent locale={locale} />
-        <TimelineSection locale={locale} />
         <ProjectsGrid locale={locale} />
       </main>
       <Footer />
