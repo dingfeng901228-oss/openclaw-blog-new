@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 import { ArrowRight, Github, Twitter, MessageCircle } from 'lucide-react'
+import PersonalCard from './PersonalCard'
 
 const heroContent = {
   ja: {
@@ -44,7 +45,7 @@ export default function Hero() {
   const t = heroContent[locale as keyof typeof heroContent] || heroContent.ja
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* ── Background ── */}
       <div className="absolute inset-0 bg-bg-primary">
         {/* Ultra-subtle dot grid */}
@@ -75,100 +76,108 @@ export default function Hero() {
       </div>
 
       {/* ── Content ── */}
-      <div className="container-custom relative z-10">
-        <div className="flex flex-col items-center text-center justify-center max-w-xl mx-auto">
+      <div className="container-custom relative z-10 py-20 md:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+          {/* Left: Title + CTA */}
+          <div className="lg:col-span-3 flex flex-col items-start text-left max-w-2xl">
 
-          {/* Badge — ultra minimal */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5, ease: 'easeOut' }}
-            className="mb-14"
-          >
-            <span
-              className="text-[11px] tracking-[0.12em] uppercase"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            {/* Badge — ultra minimal */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.5, ease: 'easeOut' }}
+              className="mb-10"
             >
-              {t.badge}
-            </span>
-          </motion.div>
-
-          {/* Headline — restrained weight, proper breathing */}
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
-            className="leading-[1.4] tracking-[-0.025em] mb-8"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 400,
-              fontSize: 'clamp(22px, 3.8vw, 38px)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            {t.title}
-          </motion.h1>
-
-          {/* Subtitle — light, airy, readable */}
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-            className="leading-[2] mb-14"
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 300,
-              fontSize: '13px',
-              color: 'var(--text-muted)',
-              letterSpacing: '0.01em',
-            }}
-          >
-            {t.subtitle}
-          </motion.p>
-
-          {/* CTA — minimal outlined buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.4, ease: 'easeOut' }}
-            className="flex items-center gap-2"
-          >
-            <Link href={`/${locale}/blog`} className="btn-primary">
-              {t.cta_read}
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-            <Link href={`/${locale}/projects`} className="btn-secondary">
-              {t.cta_projects}
-            </Link>
-          </motion.div>
-
-          {/* Social — minimal, quiet */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.55, duration: 0.4 }}
-            className="flex items-center gap-1.5 mt-12"
-          >
-            {[
-              { Icon: Github, label: 'GitHub', href: 'https://github.com' },
-              { Icon: Twitter, label: 'X', href: 'https://twitter.com' },
-              { Icon: MessageCircle, label: 'Telegram', href: 'https://t.me' },
-            ].map(({ Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-8 h-8 rounded-md border border-white/[0.06] hover:border-white/[0.12] transition-colors duration-200"
-                aria-label={label}
+              <span
+                className="text-[11px] tracking-[0.12em] uppercase"
+                style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
               >
-                <Icon className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
-              </a>
-            ))}
-          </motion.div>
+                {t.badge}
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
+              className="leading-[1.4] tracking-[-0.025em] mb-6"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 400,
+                fontSize: 'clamp(24px, 3.8vw, 40px)',
+                color: 'var(--text-primary)',
+              }}
+            >
+              {t.title}
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
+              className="leading-[2] mb-10 whitespace-pre-line"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 300,
+                fontSize: '13px',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.01em',
+              }}
+            >
+              {t.subtitle}
+            </motion.p>
+
+            {/* CTA — minimal outlined buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45, duration: 0.4, ease: 'easeOut' }}
+              className="flex items-center gap-2"
+            >
+              <Link href={`/${locale}/blog`} className="btn-primary">
+                {t.cta_read}
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+              <Link href={`/${locale}/projects`} className="btn-secondary">
+                {t.cta_projects}
+              </Link>
+            </motion.div>
+
+            {/* Social — minimal, quiet */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55, duration: 0.4 }}
+              className="flex items-center gap-1.5 mt-10"
+            >
+              {[
+                { Icon: Github, label: 'GitHub', href: 'https://github.com/dingfeng901228-oss' },
+                { Icon: Twitter, label: 'X', href: 'https://twitter.com' },
+                { Icon: MessageCircle, label: 'Telegram', href: 'https://t.me' },
+              ].map(({ Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-8 h-8 rounded-md border border-white/[0.06] hover:border-white/[0.12] transition-colors duration-200"
+                  aria-label={label}
+                >
+                  <Icon className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
+                </a>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Right: Personal Card */}
+          <div className="lg:col-span-2 flex justify-center lg:justify-end">
+            <PersonalCard locale={locale} />
+          </div>
         </div>
 
-        {/* Scroll indicator — nearly invisible, just orientation */}
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
