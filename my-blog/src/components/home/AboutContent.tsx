@@ -2,7 +2,26 @@
 
 import { MapPin, Mail, Sparkles } from 'lucide-react'
 
-const labels = {
+type AboutLabels = {
+  badge: string
+  title: string
+  subtitle: string
+  greeting: string
+  name: string
+  greetingSuffix?: string
+  intro1: string
+  intro2: string
+  intro3: string
+  intro4?: string
+  intro5?: string
+  intro6?: string
+  signature?: string
+  location: string
+  email: string
+  status: string
+}
+
+const labels: Record<'ja' | 'zh' | 'en', AboutLabels> = {
   ja: {
     badge: 'About',
     title: 'プロフィール',
@@ -52,7 +71,7 @@ const labels = {
 const techTags = ['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'AI', 'React', 'Node.js']
 
 export default function AboutContent({ locale }: { locale: string }) {
-  const t = labels[locale as keyof typeof labels] || labels.ja
+  const t = labels[(locale as 'ja' | 'zh' | 'en')] || labels.ja
 
   const infoItems = [
     { icon: MapPin, label: t.location },
