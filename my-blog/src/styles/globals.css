@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+JP:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,19 +6,22 @@
 
 @layer base {
   :root {
-    --bg-primary: #0A0A0F;
-    --bg-secondary: #111118;
-    --bg-tertiary: #1a1a24;
-    --text-primary: #E8E8EC;
-    --text-secondary: #888899;
-    --text-muted: #555566;
-    --accent: #00D4C8;
-    --accent-dim: rgba(0, 212, 200, 0.08);
-    --border: rgba(255, 255, 255, 0.06);
-    --border-hover: rgba(255, 255, 255, 0.14);
-    --font-display: 'Noto Serif JP', 'Noto Sans JP', serif;
+    /* 深蓝 + 紫蓝渐变，亮度较原 #0A0A0F 提升约 25% */
+    --bg-primary: #0F1428;
+    --bg-secondary: #141937;
+    --bg-tertiary: #1c1f3d;
+    --text-primary: #F4F5F9;
+    --text-secondary: #B4B6C5;
+    --text-muted: #8A8DA0;
+    --accent: #3B82F6;        /* 科技蓝 */
+    --accent-2: #8B5CF6;      /* 紫蓝 */
+    --accent-cyan: #22D3EE;
+    --accent-dim: rgba(59, 130, 246, 0.12);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.16);
+    --font-display: 'Noto Serif JP', 'Noto Sans JP', 'Inter', serif;
     --font-mono: 'IBM Plex Mono', monospace;
-    --font-body: 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+    --font-body: 'Noto Sans JP', 'Noto Sans SC', 'Inter', sans-serif;
   }
 
   * { border-color: var(--border); }
@@ -26,14 +29,35 @@
   html { scroll-behavior: smooth; }
 
   body {
-    @apply bg-bg-primary text-text-primary antialiased;
+    @apply text-text-primary antialiased;
     font-family: var(--font-body);
     font-weight: 300;
+    background-color: var(--bg-primary);
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 50% 0%,
+        rgba(139, 92, 246, 0.22) 0%,
+        rgba(59, 130, 246, 0.10) 35%,
+        rgba(15, 20, 40, 0) 70%
+      ),
+      radial-gradient(
+        ellipse 60% 50% at 50% 30%,
+        rgba(59, 130, 246, 0.14) 0%,
+        rgba(15, 20, 40, 0) 60%
+      ),
+      linear-gradient(
+        180deg,
+        #0F1428 0%,
+        #141937 40%,
+        #0F1428 100%
+      );
+    background-attachment: fixed;
+    min-height: 100vh;
   }
 
   ::selection {
-    background: rgba(0, 212, 200, 0.18);
-    color: var(--text-primary);
+    background: rgba(59, 130, 246, 0.28);
+    color: #FFFFFF;
   }
 
   h1, h2, h3 {
@@ -47,7 +71,65 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Ultra-minimal outlined CTA — no glow, no shadow, no noise */
+  /* Hero 区域中央光晕 */
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse 70% 50% at 50% 40%,
+        rgba(59, 130, 246, 0.22) 0%,
+        rgba(139, 92, 246, 0.10) 30%,
+        rgba(15, 20, 40, 0) 65%
+      );
+    z-index: 0;
+  }
+
+  /* ── Hero CTA 主按钮（科技蓝渐变）── */
+  .hero-cta-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+    box-shadow:
+      0 4px 20px rgba(59, 130, 246, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.10) inset;
+    transition: box-shadow 300ms ease, transform 300ms ease, filter 300ms ease;
+  }
+  .hero-cta-primary:hover {
+    box-shadow:
+      0 8px 32px rgba(59, 130, 246, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+
+  /* ── Hero CTA 次按钮（玻璃风）── */
+  .hero-cta-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 300ms ease, border-color 300ms ease, color 300ms ease, transform 300ms ease;
+  }
+  .hero-cta-secondary:hover {
+    color: #FFFFFF;
+    background: rgba(59, 130, 246, 0.10);
+    border-color: rgba(59, 130, 246, 0.45);
+    transform: translateY(-1px);
+  }
+
+  /* ── 保留旧 minimal 风格按钮（其它页面使用） ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md;
     font-family: var(--font-mono);
@@ -80,6 +162,18 @@
   .btn-secondary:hover {
     border-color: var(--border-hover);
     color: var(--text-secondary);
+  }
+
+  /* Navbar 链接 hover 蓝色高亮 */
+  .nav-link {
+    color: var(--text-secondary);
+    transition: color 200ms ease;
+  }
+  .nav-link:hover {
+    color: var(--accent);
+  }
+  .nav-link[data-active='true'] {
+    color: #FFFFFF;
   }
 
   .card {
