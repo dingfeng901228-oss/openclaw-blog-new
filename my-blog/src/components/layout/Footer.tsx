@@ -49,8 +49,6 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {[
                 { href: '/ja/blog', label: 'ブログ' },
-                { href: '/ja/projects', label: '作ったもの' },
-                { href: '/ja/timeline', label: '足跡' },
                 { href: '/ja/about', label: 'プロフィール' },
               ].map((link) => (
                 <li key={link.href}>
