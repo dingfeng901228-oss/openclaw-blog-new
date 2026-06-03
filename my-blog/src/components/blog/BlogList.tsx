@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react'
 import { Search, X } from 'lucide-react'
-import { motion } from 'framer-motion'
 import ArticleCard from '@/components/blog/ArticleCard'
 import { cn } from '@/lib/utils'
 import type { Post } from '@/lib/types'
@@ -12,7 +11,7 @@ const labels: Record<string, { search: string; noResults: string; clearFilters: 
     search: '記事を検索...',
     noResults: '記事が見つかりません。',
     clearFilters: 'フィルターをクリア',
-    showing: '{count}件中{total}件を表示',
+    showing: '{total}件中{count}件を表示',
     allCategories: '全カテゴリー',
   },
   zh: {
@@ -31,10 +30,10 @@ const labels: Record<string, { search: string; noResults: string; clearFilters: 
   },
 }
 
-const pageTitle: Record<string, { title: string; subtitle: string }> = {
-  ja: { title: 'ブログ', subtitle: 'AI、Web開発、構築についての思考。' },
-  zh: { title: '博客', subtitle: '关于AI、Web开发和构建的思考。' },
-  en: { title: 'Blog', subtitle: 'Thoughts on AI, web development, and building things.' },
+const pageTitle: Record<string, { badge: string; title: string; subtitle: string }> = {
+  ja: { badge: 'Blog', title: 'ブログ', subtitle: 'AI、Web開発、構築についての思考。' },
+  zh: { badge: '博客', title: '博客', subtitle: '关于AI、Web开发和构建的思考。' },
+  en: { badge: 'Blog', title: 'Blog', subtitle: 'Thoughts on AI, web development, and building things.' },
 }
 
 interface BlogListProps {
@@ -54,7 +53,6 @@ export default function BlogList({ posts, tags, categories, locale }: BlogListPr
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      // Only show published posts
       if (post.status === 'draft') return false
       const matchesSearch =
         searchQuery === '' ||
@@ -75,114 +73,204 @@ export default function BlogList({ posts, tags, categories, locale }: BlogListPr
   const hasActiveFilters = searchQuery || selectedTag || selectedCategory
 
   return (
-    <div className="container-custom py-12 md:py-16">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-12"
-      >
-        <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">
-          {meta.title}
-        </h1>
-        <p className="text-text-secondary text-base">
-          {meta.subtitle}
-        </p>
-      </motion.div>
+    <div className="relative overflow-hidden">
+      {/* Subtle central glow — matches hero */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] pointer-events-none opacity-40"
+        style={{
+          background:
+            'radial-gradient(ellipse at center top, rgba(59,130,246,0.18) 0%, rgba(139,92,246,0.08) 40%, rgba(15,20,40,0) 70%)',
+        }}
+      />
 
-      {/* Search */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-8 space-y-4"
-      >
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
-          <input
-            type="text"
-            placeholder={t.search}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-bg-secondary border border-border rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue transition-all duration-200"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3">
-          <select
-            value={selectedCategory || ''}
-            onChange={(e) => setSelectedCategory(e.target.value || null)}
-            className="bg-bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/50 cursor-pointer"
+      <div className="container-custom relative z-10 py-16 md:py-24">
+        {/* Header — glowing white title, matches hero language */}
+        <div className="mb-12 md:mb-16 max-w-3xl">
+          <span
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] tracking-[0.12em] uppercase mb-6"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              color: 'rgba(255, 255, 255, 0.75)',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.10)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+            }}
           >
-            <option value="">{t.allCategories}</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
+            <span
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{
+                background: '#3B82F6',
+                boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)',
+              }}
+            />
+            {meta.badge}
+          </span>
+          <h1
+            className="text-white tracking-tight mb-5"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              fontSize: 'clamp(36px, 5vw, 56px)',
+              lineHeight: 1.15,
+              textShadow:
+                '0 0 40px rgba(59, 130, 246, 0.25), 0 0 80px rgba(139, 92, 246, 0.12)',
+            }}
+          >
+            {meta.title}
+          </h1>
+          <p
+            className="text-lg"
+            style={{ color: 'rgba(255, 255, 255, 0.75)' }}
+          >
+            {meta.subtitle}
+          </p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
+        {/* Search + filters — glassmorphic */}
+        <div className="mb-10 space-y-4">
+          <div className="relative">
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            />
+            <input
+              type="text"
+              placeholder={t.search}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="blog-search w-full pl-11 pr-11 py-3 rounded-xl text-sm focus:outline-none"
+              style={{
+                fontFamily: 'var(--font-body)',
+                color: 'rgba(255, 255, 255, 0.9)',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+              }}
+            />
+            {searchQuery && (
               <button
-                key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                className={cn(
-                  'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200',
-                  selectedTag === tag
-                    ? 'bg-accent-blue text-white'
-                    : 'bg-bg-secondary text-text-secondary border border-border hover:border-border-hover'
-                )}
+                onClick={() => setSearchQuery('')}
+                className="blog-clear absolute right-4 top-1/2 -translate-y-1/2"
+                aria-label="Clear search"
               >
-                {tag}
+                <X className="w-4 h-4" />
               </button>
-            ))}
+            )}
           </div>
 
-          {hasActiveFilters && (
-            <button onClick={clearFilters} className="text-sm text-text-muted hover:text-text-primary transition-colors ml-auto">
-              {t.clearFilters}
-            </button>
+          {/* Filters */}
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              value={selectedCategory || ''}
+              onChange={(e) => setSelectedCategory(e.target.value || null)}
+              className="rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                color: 'rgba(255, 255, 255, 0.85)',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+              }}
+            >
+              <option value="">{t.allCategories}</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                  className={cn('px-3 py-1.5 rounded-full text-xs font-medium blog-tag')}
+                  style={
+                    selectedTag === tag
+                      ? {
+                          fontFamily: 'var(--font-mono)',
+                          color: '#FFFFFF',
+                          background: 'rgba(59, 130, 246, 0.20)',
+                          border: '1px solid rgba(59, 130, 246, 0.6)',
+                        }
+                      : {
+                          fontFamily: 'var(--font-mono)',
+                          color: 'rgba(255, 255, 255, 0.75)',
+                          background: 'rgba(255, 255, 255, 0.04)',
+                          border: '1px solid rgba(255, 255, 255, 0.10)',
+                        }
+                  }
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="text-xs ml-auto blog-clear-link"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.55)',
+                }}
+              >
+                {t.clearFilters}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Posts Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post) => (
+              <ArticleCard key={post.slug} post={post} locale={locale} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-16">
+              <p style={{ color: 'rgba(255, 255, 255, 0.55)' }}>{t.noResults}</p>
+              <button
+                onClick={clearFilters}
+                className="mt-4 text-sm blog-cta-link"
+                style={{ color: '#3B82F6' }}
+              >
+                {t.clearFilters}
+              </button>
+            </div>
           )}
         </div>
-      </motion.div>
 
-      {/* Posts Grid */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post, index) => (
-            <motion.div
-              key={post.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-            >
-              <ArticleCard post={post} locale={locale} />
-            </motion.div>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <p className="text-text-muted text-base">{t.noResults}</p>
-            <button onClick={clearFilters} className="mt-4 text-accent-blue hover:underline">
-              {t.clearFilters}
-            </button>
-          </div>
-        )}
-      </motion.div>
-
-      <div className="mt-8 text-sm text-text-muted">
-        {t.showing.replace('{count}', String(filteredPosts.length)).replace('{total}', String(posts.length))}
+        <div
+          className="mt-10 text-xs"
+          style={{
+            fontFamily: 'var(--font-mono)',
+            color: 'rgba(255, 255, 255, 0.45)',
+          }}
+        >
+          {t.showing.replace('{count}', String(filteredPosts.length)).replace('{total}', String(posts.length))}
+        </div>
       </div>
+
+      <style jsx>{`
+        .blog-search {
+          transition: border-color 200ms ease, background 200ms ease;
+        }
+        .blog-search:focus {
+          border-color: rgba(59, 130, 246, 0.5) !important;
+          background: rgba(59, 130, 246, 0.05) !important;
+        }
+        .blog-clear { color: rgba(255, 255, 255, 0.5); transition: color 200ms ease; }
+        .blog-clear:hover { color: #3b82f6; }
+        .blog-clear-link { transition: color 200ms ease; }
+        .blog-clear-link:hover { color: #3b82f6 !important; }
+        .blog-tag { transition: color 200ms ease, border-color 200ms ease; }
+        .blog-tag:hover { color: #3b82f6 !important; border-color: rgba(59, 130, 246, 0.4) !important; }
+        .blog-cta-link { transition: text-decoration 200ms ease; }
+        .blog-cta-link:hover { text-decoration: underline; }
+      `}</style>
     </div>
   )
 }
