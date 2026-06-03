@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion'
 import { FileText, FolderGit2, Briefcase, GraduationCap } from 'lucide-react'
 
 interface StatItemProps {
-  icon: React.ComponentType<{ className?: string }>
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
   value: number
   suffix?: string
   label: string
