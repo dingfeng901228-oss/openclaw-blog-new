@@ -12,8 +12,6 @@ import LanguageSwitcher from './LanguageSwitcher'
 const navItems = [
   { href: '', labelKey: 'home' },
   { href: 'blog', labelKey: 'blog' },
-  { href: 'projects', labelKey: 'projects' },
-  { href: 'timeline', labelKey: 'timeline' },
   { href: 'about', labelKey: 'about' },
 ]
 
