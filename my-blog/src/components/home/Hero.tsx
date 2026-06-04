@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
 import { ArrowRight, Github, Twitter, MessageCircle } from 'lucide-react'
-import PersonalCard from './PersonalCard'
 
 const heroContent = {
   ja: {
@@ -78,9 +77,8 @@ export default function Hero() {
 
       {/* ── Content ── */}
       <div className="container-custom relative z-10 py-20 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
-          {/* Left: Title + CTA */}
-          <div className="lg:col-span-3 flex flex-col items-start text-left max-w-2xl">
+        <div className="max-w-2xl mx-auto flex flex-col items-start text-left">
+
 
             {/* Badge — glassmorphism */}
             <motion.div
@@ -192,12 +190,6 @@ export default function Hero() {
                 </a>
               ))}
             </motion.div>
-          </div>
-
-          {/* Right: Personal Card */}
-          <div className="lg:col-span-2 flex justify-center lg:justify-end">
-            <PersonalCard locale={locale} />
-          </div>
         </div>
 
         {/* Scroll indicator */}
