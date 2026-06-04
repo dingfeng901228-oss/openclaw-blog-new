@@ -76,8 +76,8 @@ export default function Hero() {
       </div>
 
       {/* ── Content ── */}
-      <div className="container-custom relative z-10 py-20 md:py-24">
-        <div className="max-w-2xl mx-auto flex flex-col items-start text-left">
+      <div className="container-custom relative z-10 flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center py-20 md:py-28 text-center">
+        <div className="mx-auto flex w-full max-w-2xl flex-col items-center">
 
 
             {/* Badge — glassmorphism */}
