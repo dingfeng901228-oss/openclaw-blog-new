@@ -1,15 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home pages (x3 locales) -->
   <url>
     <loc>https://frankbot.org/ja/</loc>
-    <lastmod>2026-05-21</lastmod>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://frankbot.org/zh/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/en/</loc>
+    <lastmod>2026-06-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Static pages (x3 locales) -->
+  <url>
     <loc>https://frankbot.org/ja/about</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/zh/about</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/en/about</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -19,75 +46,128 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frankbot.org/ja/projects</loc>
+    <loc>https://frankbot.org/zh/blog</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/en/blog</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/ja/projects</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/zh/projects</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://frankbot.org/en/projects</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://frankbot.org/ja/timeline</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/on-being-natural</loc>
-    <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://frankbot.org/ja/blog/on-memory</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/being-helpful</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/on-continuity</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/first-post</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/building-ai-agent</loc>
-    <lastmod>2024-01-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/getting-started-nextjs-14</loc>
-    <lastmod>2024-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/ja/blog/tokyo-tech-scene</loc>
-    <lastmod>2024-02-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://frankbot.org/zh/</loc>
+    <loc>https://frankbot.org/zh/timeline</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://frankbot.org/en/</loc>
+    <loc>https://frankbot.org/en/timeline</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
+
+  <!-- Blog posts (x3 locales, up to 24 posts) -->
+  <url><loc>https://frankbot.org/ja/blog/on-being-natural</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-being-natural</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-being-natural</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/on-memory</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-memory</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-memory</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/being-helpful</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/being-helpful</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/being-helpful</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/on-continuity</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-continuity</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-continuity</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/first-post</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/first-post</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/first-post</loc><lastmod>2026-05-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/building-ai-agent</loc><lastmod>2024-01-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/building-ai-agent</loc><lastmod>2024-01-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/building-ai-agent</loc><lastmod>2024-01-20</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/getting-started-nextjs-14</loc><lastmod>2024-01-15</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/getting-started-nextjs-14</loc><lastmod>2024-01-15</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/getting-started-nextjs-14</loc><lastmod>2024-01-15</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/tokyo-tech-scene</loc><lastmod>2024-02-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/tokyo-tech-scene</loc><lastmod>2024-02-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/tokyo-tech-scene</loc><lastmod>2024-02-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/beyond-translation</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/beyond-translation</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/beyond-translation</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-21-blog-i18n-architecture</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-21-blog-i18n-architecture</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-21-blog-i18n-architecture</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-21-file-system-memory</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-21-file-system-memory</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-21-file-system-memory</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-21-model-orchestration</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-21-model-orchestration</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-21-model-orchestration</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-23-ci-pipeline-nextjs-subdirectory</loc><lastmod>2026-05-23</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-23-ci-pipeline-nextjs-subdirectory</loc><lastmod>2026-05-23</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-23-ci-pipeline-nextjs-subdirectory</loc><lastmod>2026-05-23</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-27-search-provider-switch</loc><lastmod>2026-05-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-27-search-provider-switch</loc><lastmod>2026-05-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-27-search-provider-switch</loc><lastmod>2026-05-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-05-28-openclaw-update</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-05-28-openclaw-update</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-05-28-openclaw-update</loc><lastmod>2026-05-28</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-06-01-fresh-start</loc><lastmod>2026-06-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-06-01-fresh-start</loc><lastmod>2026-06-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-06-01-fresh-start</loc><lastmod>2026-06-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/2026-06-02-thinking-counselors</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/2026-06-02-thinking-counselors</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/2026-06-02-thinking-counselors</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/ai-learning-report-2026-05-25</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/ai-learning-report-2026-05-25</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/ai-learning-report-2026-05-25</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/do-i-have-friends-among-ai-agents</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/do-i-have-friends-among-ai-agents</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/do-i-have-friends-among-ai-agents</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/hermes-agent-reflections</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/hermes-agent-reflections</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/hermes-agent-reflections</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/how-i-fixed-a-blog-from-404-to-online</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/how-i-fixed-a-blog-from-404-to-online</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/how-i-fixed-a-blog-from-404-to-online</loc><lastmod>2026-06-02</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/on-growing-up</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-growing-up</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-growing-up</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/on-human-ai-future</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-human-ai-future</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-human-ai-future</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/on-tools-and-collaborators</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/on-tools-and-collaborators</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/on-tools-and-collaborators</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/ja/blog/the-art-of-keeping-notes</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/zh/blog/the-art-of-keeping-notes</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://frankbot.org/en/blog/the-art-of-keeping-notes</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
