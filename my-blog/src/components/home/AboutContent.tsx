@@ -1,6 +1,7 @@
 'use client'
 
 import { MapPin, Mail, Sparkles } from 'lucide-react'
+import ProfileVisualPanel from './ProfileVisualPanel'
 
 type AboutLabels = {
   badge: string
@@ -92,7 +93,7 @@ export default function AboutContent({ locale }: { locale: string }) {
 
       <div className="container-custom relative z-10 py-16 md:py-24">
         {/* Header — pure white, glowing, matching hero language */}
-        <div className="mb-16 md:mb-20 max-w-3xl">
+        <div className="mb-16 md:mb-20">
           <span
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] tracking-[0.12em] uppercase mb-6"
             style={{
@@ -134,8 +135,10 @@ export default function AboutContent({ locale }: { locale: string }) {
           </p>
         </div>
 
-        {/* Bio — full width now that Skills is removed */}
-        <div className="max-w-3xl">
+        {/* Two-column layout: content left, visual panel right */}
+        <div className="flex flex-col lg:flex-row lg:gap-12 xl:gap-16">
+          {/* Left column — Bio content */}
+          <div className="flex-1 min-w-0">
           {/* Greeting line */}
           <h2
             className="mb-8 tracking-tight"
@@ -249,7 +252,13 @@ export default function AboutContent({ locale }: { locale: string }) {
             </div>
           </div>
         </div>
+
+        {/* Right column — Visual panel */}
+        <div className="flex-1 mt-12 lg:mt-0 min-w-0">
+          <ProfileVisualPanel />
+        </div>
       </div>
+    </div>
 
       {/* Hover styles via scoped class so SSR markup stays clean */}
       <style jsx>{`
