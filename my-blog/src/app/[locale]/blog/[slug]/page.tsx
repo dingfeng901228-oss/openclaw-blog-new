@@ -254,13 +254,27 @@ export default async function BlogPostPage({ params }: PageProps) {
 }
 
 function convertMarkdown(content: string): string {
-  return content
+  // Process code blocks FIRST so their content is protected from later regexes
+  const codeBlockPlaceholders: string[] = []
+  let processed = content.replace(/```(\w+)?\n([\s\S]*?)```/g, (_match, _lang, code) => {
+    const escaped = code
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+    const placeholder = `%%CODEBLOCK_${codeBlockPlaceholders.length}%%`
+    codeBlockPlaceholders.push(
+      `<pre class="bg-bg-tertiary rounded-lg p-4 my-6 overflow-x-auto border border-border"><code class="text-sm text-text-secondary font-mono">${escaped.replace(/\n/g, '<br />')}</code></pre>`
+    )
+    return placeholder
+  })
+
+  // Apply markdown transformations (safe from code block interference)
+  processed = processed
     .replace(/^### (.*$)/gm, '<h3 class="text-xl font-semibold text-text-primary mt-8 mb-4">$1</h3>')
     .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-semibold text-text-primary mt-10 mb-4">$1</h2>')
     .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold text-text-primary mt-10 mb-6">$1</h1>')
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-text-primary">$1</strong>')
     .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-    .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-bg-tertiary rounded-lg p-4 my-6 overflow-x-auto border border-border"><code class="text-sm text-text-secondary font-mono">$2</code></pre>')
     .replace(/`([^`]+)`/g, '<code class="bg-bg-tertiary px-1.5 py-0.5 rounded text-accent-blue text-sm font-mono">$1</code>')
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="rounded-lg my-6 w-full" loading="lazy" />')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent-blue hover:underline" target="_blank" rel="noopener">$1</a>')
@@ -269,4 +283,11 @@ function convertMarkdown(content: string): string {
     .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-accent-blue pl-4 my-4 text-text-secondary italic">$1</blockquote>')
     .replace(/\n\n/g, '</p><p class="text-text-secondary leading-relaxed my-4">')
     .replace(/\n/g, '<br />')
+
+  // Restore code blocks (replace placeholders with actual HTML)
+  for (let i = 0; i < codeBlockPlaceholders.length; i++) {
+    processed = processed.replace(`%%CODEBLOCK_${i}%%`, codeBlockPlaceholders[i])
+  }
+
+  return processed
 }
