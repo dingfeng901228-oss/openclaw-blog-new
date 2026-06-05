@@ -19,13 +19,23 @@ const descriptions: Record<string, string> = {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const title = titles[locale] || titles.en
+  const desc = descriptions[locale] || descriptions.en
   return {
-    title: titles[locale] || titles.en,
-    description: descriptions[locale] || descriptions.en,
+    title,
+    description: desc,
     alternates: { canonical: `https://frankbot.org/${locale}/blog` },
     openGraph: {
-      title: titles[locale] || titles.en,
-      description: descriptions[locale] || descriptions.en,
+      title,
+      description: desc,
+      url: `https://frankbot.org/${locale}/blog`,
+      images: [{ url: '/favicon.svg', width: 512, height: 512, alt: 'OpenClaw Blog' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: desc,
+      images: ['/favicon.svg'],
     },
   }
 }
