@@ -69,7 +69,7 @@ export default function ProfileVisualPanel() {
               boxShadow: '0 0 30px rgba(59,130,246,0.12), inset 0 0 30px rgba(59,130,246,0.04)',
             }}
           >
-            {/* Bot face SVG */}
+            {/* OpenClaw lobster SVG */}
             <svg
               viewBox="0 0 100 100"
               className="w-20 h-20 md:w-24 md:h-24"
@@ -77,48 +77,41 @@ export default function ProfileVisualPanel() {
               xmlns="http://www.w3.org/2000/svg"
               style={{ opacity: 0.9 }}
             >
-              {/* Bot head */}
-              <rect
-                x="20"
-                y="28"
-                width="60"
-                height="50"
-                rx="10"
-                stroke="url(#avatarGrad)"
-                strokeWidth="1.8"
-                fill="rgba(59,130,246,0.06)"
-              />
-              {/* Antenna */}
-              <line
-                x1="50"
-                y1="18"
-                x2="50"
-                y2="28"
-                stroke="url(#avatarGrad)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              <circle
-                cx="50"
-                cy="16"
-                r="3"
-                fill="#3B82F6"
-                style={{ filter: 'drop-shadow(0 0 4px rgba(59,130,246,0.6))' }}
-              />
+              {/* Antennae */}
+              <path d="M38 30 Q30 8 20 6" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+              <path d="M62 30 Q70 8 80 6" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+
+              {/* Left claw */}
+              <path d="M20 38 Q14 28 18 22 Q22 18 26 24 Q30 30 28 38" fill="rgba(59,130,246,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
+              {/* Right claw */}
+              <path d="M80 38 Q86 28 82 22 Q78 18 74 24 Q70 30 72 38" fill="rgba(59,130,246,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
+
+              {/* Body - head */}
+              <ellipse cx="50" cy="34" rx="22" ry="12" fill="rgba(59,130,246,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" />
+
               {/* Eyes */}
-              <rect x="32" y="42" width="10" height="7" rx="3.5" fill="#3B82F6" opacity="0.9" />
-              <rect x="58" y="42" width="10" height="7" rx="3.5" fill="#3B82F6" opacity="0.9" />
-              {/* Mouth — subtle smile */}
-              <path
-                d="M38 62 Q50 72 62 62"
-                stroke="rgba(59,130,246,0.5)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                fill="none"
-              />
-              {/* Ears */}
-              <rect x="14" y="47" width="7" height="12" rx="3.5" fill="rgba(59,130,246,0.12)" stroke="rgba(59,130,246,0.2)" strokeWidth="1" />
-              <rect x="79" y="47" width="7" height="12" rx="3.5" fill="rgba(59,130,246,0.12)" stroke="rgba(59,130,246,0.2)" strokeWidth="1" />
+              <circle cx="42" cy="33" r="2.5" fill="#3B82F6" opacity="0.8" />
+              <circle cx="58" cy="33" r="2.5" fill="#3B82F6" opacity="0.8" />
+              <circle cx="42" cy="32" r="1.2" fill="rgba(255,255,255,0.6)" />
+              <circle cx="58" cy="32" r="1.2" fill="rgba(255,255,255,0.6)" />
+
+              {/* Body - segments */}
+              <path d="M32 44 Q50 50 68 44" stroke="url(#avatarGrad)" strokeWidth="1.3" fill="none" opacity="0.6" />
+              <path d="M34 50 Q50 56 66 50" stroke="url(#avatarGrad)" strokeWidth="1.3" fill="none" opacity="0.6" />
+              <path d="M36 56 Q50 62 64 56" stroke="url(#avatarGrad)" strokeWidth="1.3" fill="none" opacity="0.6" />
+
+              {/* Tail */}
+              <path d="M40 62 Q50 82 60 62" fill="rgba(59,130,246,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" strokeLinecap="round" />
+              {/* Tail fan */}
+              <path d="M42 75 Q36 80 38 85" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+              <path d="M50 78 L50 86" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+              <path d="M58 75 Q64 80 62 85" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
+
+              {/* Legs */}
+              <path d="M32 46 L24 50 L20 54" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
+              <path d="M30 52 L22 56 L18 60" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
+              <path d="M68 46 L76 50 L80 54" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
+              <path d="M70 52 L78 56 L82 60" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.4" />
 
               {/* Gradient definition */}
               <defs>
