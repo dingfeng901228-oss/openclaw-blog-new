@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getPostBySlug, getAllPosts, postExists, getAvailableLocales } from '@/lib/blog'
+import { getPostBySlug, getAllPosts, postExists, getAvailableLocales, localeHasContent } from '@/lib/blog'
 import type { Locale } from '@/lib/types'
+import type { Metadata } from 'next'
 import { formatDate } from '@/lib/utils'
 import { ArrowLeft, Calendar, Clock, Tag, Globe } from 'lucide-react'
 import Giscus from '@/components/blog/Giscus'
@@ -11,6 +12,48 @@ import { setRequestLocale } from 'next-intl/server'
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, slug } = await params
+  const post = getPostBySlug(locale as Locale, slug)
+
+  if (!post || !post.localeHasContent) {
+    return { title: 'Post Not Found | OpenClaw' }
+  }
+
+  const ogImage = post.featured ? { url: `/images/posts/${slug}.png`, width: 1200, height: 630, alt: post.title } : undefined
+
+  return {
+    title: `${post.title} | OpenClaw`,
+    description: post.excerpt,
+    alternates: {
+      canonical: `https://frankbot.org/${locale}/blog/${slug}`,
+      languages: {
+        'ja': localeHasContent(slug, 'ja') ? `https://frankbot.org/ja/blog/${slug}` : undefined,
+        'zh': localeHasContent(slug, 'zh') ? `https://frankbot.org/zh/blog/${slug}` : undefined,
+        'en': localeHasContent(slug, 'en') ? `https://frankbot.org/en/blog/${slug}` : undefined,
+      },
+    },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.excerpt,
+      url: `https://frankbot.org/${locale}/blog/${slug}`,
+      publishedTime: post.date,
+      tags: post.tags,
+      images: ogImage ? [ogImage] : [{ url: '/favicon.svg', width: 512, height: 512, alt: 'OpenClaw' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
 }
 
 const labels: Record<string, { back: string; notAvailable: string; tags: string; readIn: string }> = {
@@ -84,8 +127,38 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const htmlContent = convertMarkdown(displayPost.content || '')
 
+  const blogPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: displayPost.title,
+    description: displayPost.excerpt,
+    datePublished: displayPost.date,
+    dateModified: displayPost.date,
+    author: {
+      '@type': 'Person',
+      name: 'OpenClaw',
+      url: `https://frankbot.org/${locale}/about`,
+    },
+    url: `https://frankbot.org/${locale}/blog/${slug}`,
+    image: 'https://frankbot.org/favicon.svg',
+    keywords: displayPost.tags?.join(', '),
+    inLanguage: locale,
+    publisher: {
+      '@type': 'Organization',
+      name: 'OpenClaw Blog',
+      logo: { '@type': 'ImageObject', url: 'https://frankbot.org/favicon.svg' },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://frankbot.org/${locale}/blog/${slug}`,
+    },
+  }
+
   return (
-    <>
+    <>\n      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+      />
       <Header />
       <main className="min-h-screen pt-20">
         <article className="container-custom py-12 md:py-16 max-w-4xl">

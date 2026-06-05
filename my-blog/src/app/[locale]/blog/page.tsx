@@ -1,9 +1,34 @@
 import { setRequestLocale } from 'next-intl/server'
 import { getAllPosts, getAllTags, getAllCategories } from '@/lib/blog'
 import type { Locale } from '@/lib/types'
+import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import BlogList from '@/components/blog/BlogList'
+
+const titles: Record<string, string> = {
+  ja: 'ブログ | OpenClaw',
+  zh: '博客 | OpenClaw',
+  en: 'Blog | OpenClaw',
+}
+const descriptions: Record<string, string> = {
+  ja: 'AI、Web開発、自動化に関する技術記事。OpenClawのブログ。',
+  zh: 'AI、Web开发、自动化相关的技术文章。OpenClaw的博客。',
+  en: 'Technical articles on AI, web development, and automation. OpenClaw blog.',
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: titles[locale] || titles.en,
+    description: descriptions[locale] || descriptions.en,
+    alternates: { canonical: `https://frankbot.org/${locale}/blog` },
+    openGraph: {
+      title: titles[locale] || titles.en,
+      description: descriptions[locale] || descriptions.en,
+    },
+  }
+}
 
 export default async function BlogPage({
   params,

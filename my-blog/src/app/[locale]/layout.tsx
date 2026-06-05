@@ -11,6 +11,59 @@ const inter = Inter({
   display: 'swap',
 })
 
+// SEO metadata per locale
+const metadataTitles: Record<string, { default: string; template: string }> = {
+  ja: { default: 'OpenClaw | AIエンジニア & 独立開発者', template: '%s | OpenClaw' },
+  zh: { default: 'OpenClaw | AI工程师 & 独立开发者', template: '%s | OpenClaw' },
+  en: { default: 'OpenClaw | AI Engineer & Independent Developer', template: '%s | OpenClaw' },
+}
+const metadataDescriptions: Record<string, string> = {
+  ja: 'AIエンジニア / 独立開発者 / テッククリエイター。AI、Web開発、自動化について探索する技術ブログ。',
+  zh: 'AI工程师 / 独立开发者 / 技术创造者。探索AI、Web开发、自动化的技术博客。',
+  en: 'AI Engineer / Independent Developer / Tech Creator. Thoughts on AI, web development, and automation.',
+}
+const metadataBase = new URL('https://frankbot.org')
+const ogImages = [{ url: '/favicon.svg', width: 512, height: 512, alt: 'OpenClaw Blog' }]
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  const meta = metadataTitles[locale] || metadataTitles.ja
+  const desc = metadataDescriptions[locale] || metadataDescriptions.ja
+  return {
+    title: meta,
+    description: desc,
+    metadataBase,
+    alternates: {
+      canonical: `https://frankbot.org/${locale}`,
+      languages: {
+        'ja': 'https://frankbot.org/ja',
+        'zh': 'https://frankbot.org/zh',
+        'en': 'https://frankbot.org/en',
+        'x-default': 'https://frankbot.org/ja',
+      },
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'ja' ? 'ja_JP' : locale === 'zh' ? 'zh_CN' : 'en_US',
+      siteName: 'OpenClaw Blog',
+      title: meta.default,
+      description: desc,
+      url: `https://frankbot.org/${locale}`,
+      images: ogImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: meta.default,
+      description: desc,
+      images: ['/favicon.svg'],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
+}
+
 const notoSansSC = Noto_Sans_SC({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
@@ -47,17 +100,23 @@ export default async function LocaleLayout({
   setRequestLocale(locale)
   const messages = await getMessages()
 
-  const titles: Record<string, { default: string; template: string }> = {
-    ja: { default: 'OpenClaw | AIエンジニア & 独立開発者', template: '%s | OpenClaw' },
-    zh: { default: 'OpenClaw | AI工程师 & 独立开发者', template: '%s | OpenClaw' },
-    en: { default: 'OpenClaw | AI Engineer & Independent Developer', template: '%s | OpenClaw' },
+  const desc = metadataDescriptions[locale] || metadataDescriptions.ja
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'OpenClaw Blog',
+    url: `https://frankbot.org/${locale}`,
+    description: desc,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `https://frankbot.org/${locale}/blog?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   }
-  const descriptions: Record<string, string> = {
-    ja: 'AIエンジニア / 独立開発者 / テッククリエイター。AI、Web開発、自動化について探索する技術ブログ。',
-    zh: 'AI工程师 / 独立开发者 / 技术创造者。探索AI、Web开发、自动化的技术博客。',
-    en: 'AI Engineer / Independent Developer / Tech Creator. Thoughts on AI, web development, and automation.',
-  }
-  const meta = titles[locale] || titles.ja
 
   return (
     <html lang={locale} className={`${inter.variable} ${notoSansSC.variable} ${notoSansJP.variable}`}>
@@ -72,6 +131,10 @@ export default async function LocaleLayout({
         <link rel="alternate" hrefLang="zh" href="https://frankbot.org/zh" />
         <link rel="alternate" hrefLang="en" href="https://frankbot.org/en" />
         <link rel="alternate" hrefLang="x-default" href="https://frankbot.org/ja" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="min-h-screen bg-bg-primary font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
