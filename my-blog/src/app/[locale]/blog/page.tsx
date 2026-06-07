@@ -7,9 +7,9 @@ import Footer from '@/components/layout/Footer'
 import BlogList from '@/components/blog/BlogList'
 
 const titles: Record<string, string> = {
-  ja: 'ブログ | OpenClaw',
-  zh: '博客 | OpenClaw',
-  en: 'Blog | OpenClaw',
+  ja: 'ブログ',
+  zh: '博客',
+  en: 'Blog',
 }
 const descriptions: Record<string, string> = {
   ja: 'AI、Web開発、自動化に関する技術記事。OpenClawのブログ。',

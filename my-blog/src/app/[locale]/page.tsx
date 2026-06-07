@@ -23,7 +23,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const title = titles[locale] || titles.en
   const desc = metadataDescriptions[locale] || metadataDescriptions.en
   return {
-    title,
+    // Inherit <title> from the layout's `default` ("OpenClaw | AIエンジニア & 独立開発者").
+    // Setting `title` here would re-apply the layout's `template: '%s | OpenClaw'`,
+    // producing "OpenClaw | AIエンジニア & 独立開発者 | OpenClaw" — duplication bug.
+    // The OG/Twitter titles below still get the full localized brand string.
     description: desc,
     alternates: { canonical: `https://frankbot.org/${locale}` },
     openGraph: {

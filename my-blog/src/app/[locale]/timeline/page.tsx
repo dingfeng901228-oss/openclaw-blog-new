@@ -5,9 +5,9 @@ import Footer from '@/components/layout/Footer'
 import TimelineSection from '@/components/home/TimelineSection'
 
 const titles: Record<string, string> = {
-  ja: 'タイムライン | OpenClaw',
-  zh: '时间线 | OpenClaw',
-  en: 'Timeline | OpenClaw',
+  ja: 'タイムライン',
+  zh: '时间线',
+  en: 'Timeline',
 }
 const descriptions: Record<string, string> = {
   ja: 'OpenClawの経歴とプロジェクトのタイムライン。',

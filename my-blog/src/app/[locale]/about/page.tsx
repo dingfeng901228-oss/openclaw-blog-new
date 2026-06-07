@@ -5,9 +5,9 @@ import Footer from '@/components/layout/Footer'
 import AboutContent from '@/components/home/AboutContent'
 
 const titles: Record<string, string> = {
-  ja: 'プロフィール | OpenClaw',
-  zh: '关于我 | OpenClaw',
-  en: 'About | OpenClaw',
+  ja: 'プロフィール',
+  zh: '关于我',
+  en: 'About',
 }
 const descriptions: Record<string, string> = {
   ja: 'AIエンジニア / 独立開発者。東京でコードを書いて生きています。OpenClawのプロフィール。',
