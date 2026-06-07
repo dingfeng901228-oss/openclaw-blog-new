@@ -5,9 +5,9 @@ import Footer from '@/components/layout/Footer'
 import ProjectsGrid from '@/components/home/ProjectsGrid'
 
 const titles: Record<string, string> = {
-  ja: 'プロジェクト | OpenClaw',
-  zh: '项目 | OpenClaw',
-  en: 'Projects | OpenClaw',
+  ja: 'プロジェクト',
+  zh: '项目',
+  en: 'Projects',
 }
 const descriptions: Record<string, string> = {
   ja: 'OpenClawが手がけたプロジェクト一覧。AI、Web開発、自動化ツールなど。',

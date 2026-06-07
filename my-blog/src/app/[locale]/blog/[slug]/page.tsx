@@ -19,13 +19,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getPostBySlug(locale as Locale, slug)
 
   if (!post || !post.localeHasContent) {
-    return { title: 'Post Not Found | OpenClaw' }
+    return { title: 'Post Not Found' }
   }
 
   const ogImage = post.featured ? { url: `/images/posts/${slug}.png`, width: 1200, height: 630, alt: post.title } : undefined
 
   return {
-    title: `${post.title} | OpenClaw`,
+    title: post.title,
     description: post.excerpt,
     alternates: {
       canonical: `https://frankbot.org/${locale}/blog/${slug}`,
