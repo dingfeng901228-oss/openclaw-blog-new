@@ -4,7 +4,7 @@ import { getPostBySlug, getAllPosts, postExists, getAvailableLocales, localeHasC
 import type { Locale } from '@/lib/types'
 import type { Metadata } from 'next'
 import { formatDate } from '@/lib/utils'
-import { ArrowLeft, Calendar, Clock, Tag, Globe, MessageCircle } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Tag, Globe } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { setRequestLocale } from 'next-intl/server'
@@ -261,8 +261,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           {/* Feedback & Discussion */}
           <section className="mt-16">
-            <h2 className="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-accent-blue" />
+            <h2 className="text-2xl font-semibold text-text-primary mb-6">
               <span>💬 {t.feedback.title}</span>
             </h2>
             <div className="rounded-lg border border-border bg-bg-secondary/40 p-8 text-center">
