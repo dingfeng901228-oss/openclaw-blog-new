@@ -4,8 +4,7 @@ import { getPostBySlug, getAllPosts, postExists, getAvailableLocales, localeHasC
 import type { Locale } from '@/lib/types'
 import type { Metadata } from 'next'
 import { formatDate } from '@/lib/utils'
-import { ArrowLeft, Calendar, Clock, Tag, Globe } from 'lucide-react'
-import Giscus from '@/components/blog/Giscus'
+import { ArrowLeft, Calendar, Clock, Tag, Globe, MessageCircle } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { setRequestLocale } from 'next-intl/server'
@@ -56,24 +55,42 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-const labels: Record<string, { back: string; notAvailable: string; tags: string; readIn: string }> = {
+const labels: Record<string, { back: string; notAvailable: string; tags: string; readIn: string; feedback: { title: string; intro: string; bodyBefore: string; bodyAfter: string } }> = {
   ja: {
     back: 'ブログに戻る',
     notAvailable: 'この記事は日本語版がありません。',
     tags: 'タグ',
     readIn: 'この文章は',
+    feedback: {
+      title: '交流とフィードバック',
+      intro: 'すべてのフィードバックを真剣に読んでいます。',
+      bodyBefore: '記事について質問がある、誤りを見つけた、技術や生活について交流したい場合は、お気軽に',
+      bodyAfter: 'でご連絡ください。',
+    },
   },
   zh: {
     back: '返回博客',
     notAvailable: '这篇文章暂无中文版。',
     tags: '标签',
     readIn: '本文可在',
+    feedback: {
+      title: '交流与反馈',
+      intro: '我认真阅读每一条反馈。',
+      bodyBefore: '如果你对文章有疑问、发现错误、或者想交流技术与生活话题，欢迎通过',
+      bodyAfter: '联系我。',
+    },
   },
   en: {
     back: 'Back to Blog',
     notAvailable: 'This article is not yet available in your language.',
     tags: 'Tags',
     readIn: 'Read this in',
+    feedback: {
+      title: 'Feedback & Discussion',
+      intro: 'I read every piece of feedback carefully.',
+      bodyBefore: 'Questions about an article, spotted an error, or just want to chat about tech and life — reach out on',
+      bodyAfter: '.',
+    },
   },
 }
 
@@ -242,10 +259,30 @@ export default async function BlogPostPage({ params }: PageProps) {
             </Link>
           </footer>
 
-          {/* Comments via Giscus */}
-          <Giscus
-            lang={locale === 'zh' ? 'zh-CN' : locale}
-          />
+          {/* Feedback & Discussion */}
+          <section className="mt-16">
+            <h2 className="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 text-accent-blue" />
+              <span>💬 {t.feedback.title}</span>
+            </h2>
+            <div className="rounded-lg border border-border bg-bg-secondary/40 p-8 text-center">
+              <p className="text-text-primary leading-relaxed text-base">
+                {t.feedback.intro}
+              </p>
+              <p className="text-text-secondary leading-relaxed mt-3 text-base">
+                {t.feedback.bodyBefore}{' '}
+                <a
+                  href="https://t.me/frank901228"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:text-amber-300 hover:underline font-medium transition-colors"
+                >
+                  Telegram
+                </a>{' '}
+                {t.feedback.bodyAfter}
+              </p>
+            </div>
+          </section>
         </article>
       </main>
       <Footer />
