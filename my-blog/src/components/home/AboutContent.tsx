@@ -74,11 +74,14 @@ const techTags = ['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'AI', 'R
 export default function AboutContent({ locale }: { locale: string }) {
   const t = labels[(locale as 'ja' | 'zh' | 'en')] || labels.ja
 
-  const infoItems = [
+  // Layout: 2-up row (location + status) + full-width email row
+  // Reason: email is the longest string (~24 chars) and the most important CTA —
+  // it must not be truncated in a 3-equal-column grid.
+  const infoItemsTop = [
     { icon: MapPin, label: t.location },
-    { icon: Mail, label: t.email, href: `mailto:${t.email}` },
     { icon: Sparkles, label: t.status },
   ]
+  const emailItem = { icon: Mail, label: t.email, href: `mailto:${t.email}` }
 
   return (
     <div className="relative overflow-hidden">
@@ -190,34 +193,33 @@ export default function AboutContent({ locale }: { locale: string }) {
             </p>
           )}
 
-          {/* Info cards row — glassy, 3-up on md+ */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
-            {infoItems.map(({ icon: Icon, label, href }, i) => {
-              const inner = (
-                <div
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl about-info-card"
+          {/* Info cards — row 1: location + status (2-up), row 2: email full-width */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
+            {infoItemsTop.map(({ icon: Icon, label }, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl about-info-card"
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
+                <span
+                  className="text-sm about-info-text"
+                  style={{ color: 'rgba(255, 255, 255, 0.85)' }}
                 >
-                  <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
-                  {href ? (
-                    <a
-                      href={href}
-                      className="text-sm truncate about-info-text"
-                      style={{ color: 'rgba(255, 255, 255, 0.85)' }}
-                    >
-                      {label}
-                    </a>
-                  ) : (
-                    <span
-                      className="text-sm truncate about-info-text"
-                      style={{ color: 'rgba(255, 255, 255, 0.85)' }}
-                    >
-                      {label}
-                    </span>
-                  )}
-                </div>
-              )
-              return <div key={i}>{inner}</div>
-            })}
+                  {label}
+                </span>
+              </div>
+            ))}
+            {/* Email — full width on its own row so it never gets truncated */}
+            <div className="sm:col-span-2 flex items-center gap-3 px-4 py-3 rounded-xl about-info-card">
+              <emailItem.icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
+              <a
+                href={emailItem.href}
+                className="text-sm about-info-text"
+                style={{ color: 'rgba(255, 255, 255, 0.85)' }}
+              >
+                {emailItem.label}
+              </a>
+            </div>
           </div>
 
           {/* Tech tags */}
