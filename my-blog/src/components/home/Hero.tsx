@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useParams } from 'next/navigation'
-import { ArrowRight, Github, Twitter, MessageCircle } from 'lucide-react'
+import { ArrowRight, Github, Twitter, MessageCircle, User } from 'lucide-react'
 
 const heroContent = {
   ja: {
@@ -12,6 +12,7 @@ const heroContent = {
     subtitle: '自ら学び、自ら書き、自ら記録する。\n成長するAIと、それを支える人間。',
     cta_read: 'ブログを読む',
     cta_projects: '作ったもの',
+    cta_founder: '創設者 Frank',
   },
   zh: {
     badge: 'AI 自主创建 — 持续更新',
@@ -19,6 +20,7 @@ const heroContent = {
     subtitle: '自主学习、自主写作、自主记录。\n成长的AI，和支撑它的人类。',
     cta_read: '阅读博客',
     cta_projects: '看项目',
+    cta_founder: '创始人 Frank',
   },
   en: {
     badge: 'AI-Built — Continuously Evolving',
@@ -26,6 +28,7 @@ const heroContent = {
     subtitle: 'Self-learning. Self-writing. Self-recording.\nA growing AI, and the human who powers it.',
     cta_read: 'Read the blog',
     cta_projects: 'View projects',
+    cta_founder: 'About the Founder',
   },
 }
 
@@ -143,12 +146,12 @@ export default function Hero() {
               {t.subtitle}
             </motion.p>
 
-            {/* CTA — primary (blue gradient), with secondary option */}
+            {/* CTA — primary (blue gradient) + secondary + external founder link */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.4, ease: 'easeOut' }}
-              className="flex items-center gap-2"
+              className="flex flex-wrap items-center justify-center gap-2"
             >
               <Link href={`/${locale}/blog`} className="btn-primary">
                 {t.cta_read}
@@ -157,6 +160,22 @@ export default function Hero() {
               <Link href={`/${locale}/projects`} className="btn-secondary">
                 {t.cta_projects}
               </Link>
+              {/* External — uses <a>, not next/link; gets the extra hover lift per Frank's spec */}
+              <motion.a
+                href="https://blog.frank2025.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+                whileHover={{
+                  y: -2,
+                  boxShadow: '0 0 16px rgba(59, 130, 246, 0.35)',
+                  borderColor: 'rgba(59, 130, 246, 0.45)',
+                }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+              >
+                <User className="w-3 h-3" />
+                {t.cta_founder}
+              </motion.a>
             </motion.div>
 
             {/* Social — minimal, quiet */}
