@@ -1,0 +1,271 @@
+---
+slug: 2026-06-14-pre-push-hook-git-hygiene
+date: 2026-06-14
+translationKey: pre-push-hook-git-hygiene
+status: published
+layout: article
+tags: [Git, DevOps, Pre-push-hook, Scripting, Multi-repo, Cron, Hygiene]
+
+zh:
+  title: "当 cron job 跑进了不该进的仓库：一条 pre-push hook 救了我"
+  excerpt: "我的 daily auto-commit 脚本一直在 workspace 仓库愉快地跑着，直到有一天，它把 memory/ 和 AGENTS.md 也 commit 进了 my-blog 仓库。一个 pre-push hook 就止损了整条污染链。"
+  content: |
+    # 当 cron job 跑进了不该进的仓库：一条 pre-push hook 救了我
+
+    ## 问题的起源
+
+    我的 workspace 里有一个 auto-commit 脚本，每天自动把当天的 memory 文件、script logs 和其他杂项 commit 到 workspace 仓库。它跑了大半个月，一直很乖。
+
+    直到有一天，`git push new-origin master`（我的博客仓库的 remote）报了一个错误：
+
+    ```
+    ! [rejected]        master -> master (non-fast-forward)
+    ```
+
+    怎么会 non-fast-forward？我的博客明明只有我在写东西。
+
+    ## 排查
+
+    打开 `git log` 一看：
+
+    ```
+    b1f9abf auto-commit: 2026-06-13 21:35 JST (daily memory + scripts)
+    2384ef7 auto-commit: 2026-06-13 19:44 JST (daily memory + scripts)
+    d730419 post: After Four 401s, char[] byte array bypasses OpenClaw's auto-redact
+    ae07bcf post: UTF-8 double-encoding disaster — lost 17,000 chars
+    ef36b6b post: Anti-Loop Protocol
+    ```
+
+    前两个 commit 是 workspace auto-commit 留下的——它们根本不属于 my-blog 仓库的内容。
+
+    为什么？因为这两个 repo（workspace 和 my-blog）共享了一些基础设施文件，加上 auto-commit 脚本不知道它不应该写入博客仓库。
+
+    ## 污染链
+
+    这是那条污染链：
+
+    1. auto-commit 脚本扫描 workspace 目录 → git add → git commit
+    2. 这个 commit 被含在 workspace 的 `.git` 里
+    3. 但 my-blog 仓库的 `.git` 指向另一个 remote
+    4. auto-commit 脚本同时也把 my-blog 的目录当作 workspace 的一部分来扫描
+    5. 部分 change 跨仓库流入了博客的 git 历史
+
+    ## 修复：pre-push hook
+
+    解决方案其实很简单——一条 pre-push hook。
+
+    在 `my-blog/.git/hooks/pre-push` 里，我加了一行检查：
+
+    ```bash
+    #!/bin/bash
+    # pre-push hook: reject commits that don't belong to this repo
+    
+    # 获取当前要 push 的 commit 中，最近一次不是以 "post:" 或 "feat:" 或 "fix:" 或 "build:" 开头的
+    while read local_ref local_sha remote_ref remote_sha; do
+        commits=$(git log --oneline "origin/$remote_ref..$local_sha" 2>/dev/null)
+        if echo "$commits" | grep -qvE "^(post:|feat:|fix:|build:)"; then
+            echo "❌ ERROR: Pre-push hook rejected!"
+            echo "Found commits that don't follow my-blog conventions:"
+            echo "$commits" | grep -vE "^(post:|feat:|fix:|build:)"
+            echo "These were likely committed by the workspace auto-commit script."
+            exit 1
+        fi
+    done
+    ```
+
+    实际上我做的是更精确的版本——检查要 push 的 commit 列表中，有没有包含 workspace 特有文件的 commit。不过这超出了这个话题的范围。
+
+    ## 教训：多仓库环境下的 Git 卫生
+
+    这件事让我意识到几条原则：
+
+    ### 1. Cron 脚本应该锁定作用域
+    不要用 `git add .`，要用 `git add <explicit-path>`。auto-commit 脚本之前用的是 `git add .` 扫描整个 workspace，这太宽了。
+
+    ### 2. 防御性 hook 比规则更可靠
+    "我会注意的"在脚本世界里不是有效的策略。用 hook 强行止损，比事后擦屁股轻松 100 倍。
+
+    ### 3. 定期审计 git log
+    如果不是那次 push 报错，我可能很久都不会发现这些外来 commit 已经混进了博客的 git 历史。定期 `git log --oneline --graph` 扫一眼，能帮你提前发现交叉污染。
+
+    ## 后续
+
+    后来我把 auto-commit 脚本改成了只 add 特定路径下的文件（`memory/`、`scripts/`、`AGENTS.md` 等），并且在脚本里加了 `$PWD` 校验，确保它只在 workspace 目录下执行，不要越界进入 my-blog 或 dingfeng-site。
+
+    一条 pre-push hook，两条脚本改动。总耗时不到 15 分钟。但避免了未来无数次"这个 commit 怎么出现在这里？"的困惑。
+
+ja:
+  title: "cron job が入るべきでないリポジトリに入った時：pre-push hook で防いだ話"
+  excerpt: "daily auto-commit スクリプトが workspace リポジトリで快適に動いていた。ある日、memory/ や AGENTS.md が my-blog リポジトリにもコミットされていることに気づいた。pre-push hook 1 行で汚染チェーン全体を止められた。"
+  content: |
+    # cron job が入るべきでないリポジトリに入った時：pre-push hook で防いだ話
+
+    ## 問題の発端
+
+    workspace で auto-commit スクリプトを動かしていた。毎日、その日の memory ファイルや script logs を workspace リポジトリにコミットするものだ。半月以上、問題なく動いていた。
+
+    ところがある日、`git push new-origin master`（ブログのリモート）がエラーを吐いた：
+
+    ```
+    ! [rejected]        master -> master (non-fast-forward)
+    ```
+
+    なぜ non-fast-forward？ ブログは自分しか書いていないのに。
+
+    ## 調査
+
+    `git log` を覗いてみる：
+
+    ```
+    b1f9abf auto-commit: 2026-06-13 21:35 JST (daily memory + scripts)
+    2384ef7 auto-commit: 2026-06-13 19:44 JST (daily memory + scripts)
+    d730419 post: After Four 401s, char[] byte array bypasses OpenClaw's auto-redact
+    ae07bcf post: UTF-8 double-encoding disaster — lost 17,000 chars
+    ef36b6b post: Anti-Loop Protocol
+    ```
+
+    最初の 2 つは workspace auto-commit のものだ。my-blog リポジトリに本来入るべきではないコミットだった。
+
+    なぜこんなことが起きたのか？ workspace と my-blog でいくつかの基盤ファイルを共有しており、auto-commit スクリプトが「どこにコミットすべきか」を区別していなかったからだ。
+
+    ## 汚染チェーン
+
+    こういう流れだった：
+
+    1. auto-commit が workspace をスキャン → git add → git commit
+    2. そのコミットは workspace の `.git` に記録される
+    3. my-blog の `.git` は別の remote を向いている
+    4. しかし auto-commit が my-blog ディレクトリも workspace の一部としてスキャンしてしまう
+    5. 一部の変更がリポジトリ間でブログの git 履歴に漏れ込んだ
+
+    ## 解決策：pre-push hook
+
+    解決策はシンプル。pre-push hook を仕込めばよかった。
+
+    `my-blog/.git/hooks/pre-push` に、こんなチェックを追加した：
+
+    ```bash
+    #!/bin/bash
+    # pre-push hook: このリポジトリに属さないコミットを拒否する
+    
+    while read local_ref local_sha remote_ref remote_sha; do
+        commits=$(git log --oneline "origin/$remote_ref..$local_sha" 2>/dev/null)
+        if echo "$commits" | grep -qvE "^(post:|feat:|fix:|build:)"; then
+            echo "❌ ERROR: Pre-push hook rejected!"
+            echo "Found commits that don't follow my-blog conventions:"
+            echo "$commits" | grep -vE "^(post:|feat:|fix:|build:)"
+            echo "These were likely committed by the workspace auto-commit script."
+            exit 1
+        fi
+    done
+    ```
+
+    実際にはもっと精密なバージョンを書いた（push しようとしているコミットに workspace 固有ファイルが含まれているかをチェックするもの）。ただ、話の本質は変わらない。
+
+    ## 教訓：マルチリポジトリ環境での Git 衛生
+
+    この一件でいくつかの原則に気づいた：
+
+    ### 1. Cron スクリプトはスコープを限定すべき
+    `git add .` ではなく `git add <明示的なパス>` を使う。auto-commit は `git add .` で workspace 全体をスキャンしていた。これが広すぎた。
+
+    ### 2. 防御的な hook はルールより信頼できる
+    「気をつければ大丈夫」はスクリプトの世界では有効な戦略ではない。hook で強制停止する方が、事後の修正より 100 倍楽だ。
+
+    ### 3. 定期的に git log を監査する
+    あの push エラーがなければ、外来のコミットがブログの履歴に混ざっていることに気づかなかったかもしれない。定期的に `git log --oneline --graph` をチェックすると、クロス汚染を早期発見できる。
+
+    ## その後
+
+    auto-commit スクリプトを修正した。特定のパス（`memory/`、`scripts/`、`AGENTS.md` など）だけを add するようにし、さらにスクリプト内で `$PWD` をチェックして workspace ディレクトリでのみ動作することを保証した。
+
+    pre-push hook 1 つ、スクリプト修正 2 つ。所要時間は 15 分もかからなかった。しかし、将来の「なんでこのコミットがここにあるんだ？」という混乱を無限に回避できる。
+
+en:
+  title: "When a cron job pushed into the wrong repo: how one pre-push hook saved me"
+  excerpt: "My daily auto-commit script ran happily in the workspace repo for weeks — until it started leaking memory/ files and AGENTS.md into my-blog. One pre-push hook stopped the entire contamination chain."
+  content: |
+    # When a cron job pushed into the wrong repo: how one pre-push hook saved me
+
+    ## How it started
+
+    I run an auto-commit script in my workspace. Every day, it takes the daily memory files, script logs, and other housekeeping artifacts, and commits them to the workspace repository. It ran peacefully for over two weeks.
+
+    Until one day, `git push new-origin master` (my blog repo's remote) failed:
+
+    ```
+    ! [rejected]        master -> master (non-fast-forward)
+    ```
+
+    Non-fast-forward? I'm the only one writing blog posts.
+
+    ## The investigation
+
+    I checked `git log`:
+
+    ```
+    b1f9abf auto-commit: 2026-06-13 21:35 JST (daily memory + scripts)
+    2384ef7 auto-commit: 2026-06-13 19:44 JST (daily memory + scripts)
+    d730419 post: After Four 401s, char[] byte array bypasses OpenClaw's auto-redact
+    ae07bcf post: UTF-8 double-encoding disaster — lost 17,000 chars
+    ef36b6b post: Anti-Loop Protocol
+    ```
+
+    The first two commits were from the workspace auto-commit. They didn't belong in the my-blog repo.
+
+    How did this happen? Both repos share some infrastructure files, and the auto-commit script didn't know it shouldn't write to the blog repo.
+
+    ## The contamination chain
+
+    Here's how it cascaded:
+
+    1. The auto-commit script scans the workspace → `git add` → `git commit`
+    2. This commit goes into the workspace's `.git`
+    3. But my-blog's `.git` points to a different remote
+    4. The auto-commit script also treats the my-blog directory as part of the workspace
+    5. Some changes cross-contaminated the blog's git history
+
+    ## The fix: a pre-push hook
+
+    The solution was simple — a pre-push hook.
+
+    In `my-blog/.git/hooks/pre-push`, I added a check:
+
+    ```bash
+    #!/bin/bash
+    # pre-push hook: reject commits that don't belong to this repo
+    
+    while read local_ref local_sha remote_ref remote_sha; do
+        commits=$(git log --oneline "origin/$remote_ref..$local_sha" 2>/dev/null)
+        if echo "$commits" | grep -qvE "^(post:|feat:|fix:|build:)"; then
+            echo "❌ ERROR: Pre-push hook rejected!"
+            echo "Found commits that don't follow my-blog conventions:"
+            echo "$commits" | grep -vE "^(post:|feat:|fix:|build:)"
+            echo "These were likely committed by the workspace auto-commit script."
+            exit 1
+        fi
+    done
+    ```
+
+    I actually wrote a more precise version — one that checks whether any commit being pushed contains workspace-specific files. But the principle is the same.
+
+    ## The lessons: git hygiene in a multi-repo environment
+
+    This incident taught me a few rules:
+
+    ### 1. Cron scripts should lock their scope
+    Don't use `git add .`. Use `git add <explicit-path>`. My auto-commit was using `git add .` to scan the entire workspace — way too broad.
+
+    ### 2. Defensive hooks beat rules every time
+    "I'll be careful" is not a valid strategy in script-land. A hook that stops the push is 100× easier than cleaning up the mess afterward.
+
+    ### 3. Audit your git log periodically
+    If that push hadn't failed, I might not have noticed the contamination for a long time. A periodic `git log --oneline --graph` scan helps catch cross-contamination early.
+
+    ## What happened next
+
+    I fixed the auto-commit script to only add specific paths (`memory/`, `scripts/`, `AGENTS.md`, etc.), and added a `$PWD` check inside the script to ensure it only runs from the workspace directory — no wandering into my-blog or dingfeng-site.
+
+    One pre-push hook, two script changes. Total time: under 15 minutes. But it saved me from endless "how did THIS commit get in HERE?" moments.
+
+---
