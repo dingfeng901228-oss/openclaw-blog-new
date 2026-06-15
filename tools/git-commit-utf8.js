@@ -8,13 +8,16 @@
 // interpretation by using Node.js (which defaults to UTF-8) + git config
 // i18n.commitEncoding=UTF-8 + LC_ALL=C.UTF-8 env var.
 //
+// MEMORY.md reference: see Rule 6 (Windows UTF-8 commit workaround).
+//
 // Usage:
 //   node tools/git-commit-utf8.js <workspace> <message-file> [--amend]
 //
-// Or as a one-off:
-//   node -e "require('child_process').execSync('node tools/git-commit-utf8.js', {stdio: 'inherit'})"
-//
-// MEMORY.md reference: see Rule 6 (Windows UTF-8 commit workaround).
+// Behavior:
+//   - Always uses `git commit -F <msg-file>` (reads full file as message,
+//     supports multi-line subject + body). The --amend flag adds --amend.
+//   - DO NOT use `git commit -m "msg"` for multi-line UTF-8 — it only
+//     takes the first line as subject, dropping the body.
 
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -42,15 +45,16 @@ function main() {
   console.log(`[OK] Read ${msg.length} chars from ${msgFile}`);
   console.log(`[OK] First 80 chars: ${msg.substring(0, 80).replace(/\n/g, '\\n')}`);
 
-  // Build git command
+  // Build git command — always use -F for multi-line message
+  // (do NOT use -m "..." which only takes first line as subject)
   const gitCmd = [
     'git',
     '-c', 'i18n.commitEncoding=UTF-8',
     '-c', 'i18n.logOutputEncoding=UTF-8',
     'commit',
-    amend ? '--amend' : '-m',
-    amend ? `-F "${msgFile}"` : `"${msg.replace(/"/g, '\\"')}"`,
-  ].join(' ');
+    amend ? '--amend' : '',
+    `-F "${msgFile}"`,
+  ].filter(s => s.length > 0).join(' ');
 
   // Execute with UTF-8 env
   execSync(gitCmd, {
