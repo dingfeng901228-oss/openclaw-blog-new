@@ -89,10 +89,10 @@ jobs:
           path: my-blog/out
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: openclaw-blog-new
-          directory: my-blog/out
+          command: pages deploy my-blog/out --project-name=openclaw-blog-new
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: "4"
