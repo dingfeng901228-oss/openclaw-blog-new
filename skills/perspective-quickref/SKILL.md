@@ -29,6 +29,13 @@ description: |
 
 ---
 
+> **5-Dim Audit (2026-06-16)**: 18/18 perspective skills 已升级到 v2.0，5 维度全量覆盖
+> 维度：mental models / expression DNA / internal tensions / honesty boundaries / decision heuristics
+> Reference 模板：`skills/sun-tzu-perspective/SKILL.md` v2.0
+> Audit 框架：`perspective-audit` skill（即将发布，见下方 5-Dim 速查）
+
+---
+
 ## 1. 巴菲特 Buffett — 价值投资 / 长期主义 / 护城河
 
 **镜片**：股票是企业 / 内在价值 > 账面 / 安全边际 / 市场先生（躁郁症合伙人）/ 能力圈 / 经济护城河 / 复利
@@ -144,6 +151,25 @@ description: |
 
 ---
 
+## 5 维度速查（v2.0 标准结构）
+
+每个 perspective v2.0 SKILL.md 都按这 5 维度组织。quickref 不够用时 read 完整 SKILL.md，按需查表：
+
+| 维度 | 用途 | 何时 read |
+|------|------|----------|
+| **mental models** | 核心思维框架（5-6 个 + 出处） | 需要框架判断时 |
+| **expression DNA** | 句式 + 高频词 + 经典名言 | 要"用 X 视角"不流于表面时 |
+| **internal tensions** | X 自己内部矛盾（4-10 个） | 防过度神化 / 稻草人化时 |
+| **honesty boundaries** | X 视角**不能**说/做的事（5-12 条） | 每次必读 — 含**死亡声明 + 利益相关** |
+| **decision heuristics** | X 视角的决策规则集（5-10 条） | 给出可执行建议时 |
+
+**诚实边界硬规则**（v2.0 新增）：
+
+- **已故人物**（munger 2023-11-28 / feynman 1988-02-15 / drucker 2005-11-11 / schopenhauer 1860-09-21 / musashi 1645-06-13 / da_vinci 1519-05-02 / sun-tzu 生卒存疑 / nietzsche 1900-08-25 / jung 1961-06-06）— 每次使用**主动声明"作为 Y（生卒年）"避免假装观察 2026 市场**
+- **在世人物**（buffett 1930-08-30 [2026-01-01 退休 Greg Abel 接 CEO] / dawkins 1941-03-26 / musk 1971-06-28 / naval 1974 / paul-graham 1964 / karpathy 1986-10-23 / hassabis 1976-07-27 / taleb 1960 / thiel 1967-10-11）— **不预测 2025+ 之后的具体立场**；如有 GOOGL/crypto/政治利益，**显式声明**
+
+---
+
 ## 使用规范
 
 **自动激活（每次回答前默读）**：
@@ -161,3 +187,9 @@ description: |
 **诚实边界**：
 - 10 位人物是真实，速查表是简化。深问题读原文。
 - 不要假装是"X 本人"在说话。明确是"用 X 视角分析"。
+
+---
+
+> **版本**: 2.0 (2026-06-16, 5-dim 整合)
+> **覆盖**: 18/18 perspective skills 已 5-dim 审计完成（commits 见 git log `audit: *perspective v2.0`）
+> **升级方法**: 参见 `perspective-audit` skill（即将发布）
