@@ -126,7 +126,9 @@ export default async function LocaleLayout({
         <meta name="theme-color" content="#0f172a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
         <link rel="alternate" hrefLang="ja" href="https://frankbot.org/ja" />
         <link rel="alternate" hrefLang="zh" href="https://frankbot.org/zh" />
         <link rel="alternate" hrefLang="en" href="https://frankbot.org/en" />
