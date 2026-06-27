@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 const terminalLines = [
-  'Reasoning...',
+  'Learning AI...',
   'Building Websites...',
   'Automating Workflows...',
   'Exploring Japan IT...',
@@ -135,7 +135,7 @@ export default function ProfileVisualPanel() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          OpenClaw
+          Frank's Bot AI
         </motion.p>
       </motion.div>
 
