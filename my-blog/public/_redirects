@@ -3,8 +3,6 @@
 # static export can't do server-side redirect from app/page.tsx redirect('/ja').
 # Proper HTTP redirect from CF Pages routing layer.
 #
-# Trailing slashes are required by CF Pages — they map static export
-# (out/ja.html) to /ja/ URLs.
+# DO NOT add trailing-slash redirects like /en → /en/. CF Pages already does
+# slash normalization, and an explicit rule creates a 308/301 loop.
 /                  /ja/                 302
-/en                /en/                 301
-/zh                /zh/                 301
