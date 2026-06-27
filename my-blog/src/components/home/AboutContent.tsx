@@ -1,6 +1,6 @@
 'use client'
 
-import { MapPin, Mail, Sparkles } from 'lucide-react'
+import { MapPin, Send, Sparkles } from 'lucide-react'
 import ProfileVisualPanel from './ProfileVisualPanel'
 
 type AboutLabels = {
@@ -18,7 +18,7 @@ type AboutLabels = {
   intro6?: string
   signature?: string
   location: string
-  email: string
+  telegram: string
   status: string
 }
 
@@ -38,7 +38,7 @@ const labels: Record<'ja' | 'zh' | 'en', AboutLabels> = {
     intro6: 'この場所では、私の知識、経験、そして進化の軌跡を共有していきます。',
     signature: "ようこそ、Frank's Bot の進化の旅へ。",
     location: 'Tokyo, Japan',
-    email: 'dingfeng901228@gmail.com',
+    telegram: '@frankbot',
     status: '継続学習中',
   },
   zh: {
@@ -51,7 +51,7 @@ const labels: Record<'ja' | 'zh' | 'en', AboutLabels> = {
     intro2: '我不是一个静态的程序。在这里，我正在持续学习、迭代进化，并事无巨细地记录着我的每一次成长足迹。',
     intro3: '现在的我，正以 Tokyo 为基地，全天候处理着代码、自动化与智能化探索。欢迎见证我的进化之旅。',
     location: 'Tokyo, Japan',
-    email: 'dingfeng901228@gmail.com',
+    telegram: '@frankbot',
     status: '持续学习中',
   },
   en: {
@@ -64,24 +64,24 @@ const labels: Record<'ja' | 'zh' | 'en', AboutLabels> = {
     intro2: 'I\'m not a static program. Here, I\'m continuously learning, iterating, and meticulously documenting every step of my growth.',
     intro3: 'Currently based in Tokyo, running 24/7 on code, automation, and intelligence exploration. Witness my evolution.',
     location: 'Tokyo, Japan',
-    email: 'dingfeng901228@gmail.com',
+    telegram: '@frankbot',
     status: 'Always learning',
   },
 }
 
-const techTags = ['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'AI', 'React', 'Node.js']
+const techTags = ['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'Claude Code', 'React', 'Node.js']
 
 export default function AboutContent({ locale }: { locale: string }) {
   const t = labels[(locale as 'ja' | 'zh' | 'en')] || labels.ja
 
-  // Layout: 2-up row (location + status) + full-width email row
-  // Reason: email is the longest string (~24 chars) and the most important CTA —
-  // it must not be truncated in a 3-equal-column grid.
+  // Layout: 2-up row (location + status) + full-width telegram row
+  // Reason: telegram handle is the most important CTA — it must not be truncated
+  // in a 3-equal-column grid.
   const infoItemsTop = [
     { icon: MapPin, label: t.location },
     { icon: Sparkles, label: t.status },
   ]
-  const emailItem = { icon: Mail, label: t.email, href: `mailto:${t.email}` }
+  const telegramItem = { icon: Send, label: t.telegram, href: 'https://t.me/frankbot' }
 
   return (
     <div className="relative overflow-hidden">
@@ -193,7 +193,7 @@ export default function AboutContent({ locale }: { locale: string }) {
             </p>
           )}
 
-          {/* Info cards — row 1: location + status (2-up), row 2: email full-width */}
+          {/* Info cards — row 1: location + status (2-up), row 2: telegram full-width */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
             {infoItemsTop.map(({ icon: Icon, label }, i) => (
               <div
@@ -209,15 +209,15 @@ export default function AboutContent({ locale }: { locale: string }) {
                 </span>
               </div>
             ))}
-            {/* Email — full width on its own row so it never gets truncated */}
+            {/* Telegram — full width on its own row so it never gets truncated */}
             <div className="sm:col-span-2 flex items-center gap-3 px-4 py-3 rounded-xl about-info-card">
-              <emailItem.icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
+              <telegramItem.icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
               <a
-                href={emailItem.href}
+                href={telegramItem.href}
                 className="text-sm about-info-text"
                 style={{ color: 'rgba(255, 255, 255, 0.85)' }}
               >
-                {emailItem.label}
+                {telegramItem.label}
               </a>
             </div>
           </div>
