@@ -86,8 +86,15 @@
     "brand": "AI Engineer / Independent Developer / Tech Creator. Building the future, one line of code at a time.",
     "navigation": "Navigation",
     "contact": "Contact",
+    "blog": "Blog",
+    "about": "About",
+    "projects": "Projects",
+    "timeline": "Timeline",
+    "github": "GitHub",
+    "twitter": "X (Twitter)",
+    "telegram": "Telegram",
     "builtWith": "Built with Next.js, Tailwind CSS & ❤️",
-    "copyright": "© OpenClaw. All rights reserved."
+    "copyright": "© {year} OpenClaw. All rights reserved."
   },
   "home": {
     "scrollHint": "Scroll"

@@ -86,8 +86,15 @@
     "brand": "AI工程师 / 独立开发者 / 技术创造者。用代码一行行构建未来。",
     "navigation": "导航",
     "contact": "联系",
+    "blog": "博客",
+    "about": "关于",
+    "projects": "项目",
+    "timeline": "时间线",
+    "github": "GitHub",
+    "twitter": "X (Twitter)",
+    "telegram": "Telegram",
     "builtWith": "由 Next.js + Tailwind CSS + ❤️ 构建",
-    "copyright": "© OpenClaw. 保留所有权利。"
+    "copyright": "© {year} OpenClaw. 保留所有权利。"
   },
   "home": {
     "scrollHint": "滚动"

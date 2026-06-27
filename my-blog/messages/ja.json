@@ -68,8 +68,15 @@
     "brand": "東京まれの独立開発者。AIと自動化で生きている。",
     "navigation": "ナビゲーション",
     "contact": "お問い合わせ",
+    "blog": "ブログ",
+    "about": "プロフィール",
+    "projects": "作ったもの",
+    "timeline": "足跡",
+    "github": "GitHub",
+    "twitter": "X (Twitter)",
+    "telegram": "Telegram",
     "builtWith": "Next.js + Tailwind CSS + ❤️",
-    "copyright": "© 2024 OpenClaw. All rights reserved."
+    "copyright": "© {year} OpenClaw. All rights reserved."
   },
   "home": {
     "scrollHint": "スクロール"

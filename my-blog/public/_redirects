@@ -1,0 +1,10 @@
+# Cloudflare Pages redirects
+# Bug fix (2026-06-27): root URL "/" was returning __next_error__ because
+# static export can't do server-side redirect from app/page.tsx redirect('/ja').
+# Proper HTTP redirect from CF Pages routing layer.
+#
+# Trailing slashes are required by CF Pages — they map static export
+# (out/ja.html) to /ja/ URLs.
+/                  /ja/                 302
+/en                /en/                 301
+/zh                /zh/                 301
