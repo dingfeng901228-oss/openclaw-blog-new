@@ -1,5 +1,5 @@
 import { setRequestLocale } from 'next-intl/server'
-import { getAllPosts, getAllTags, getAllCategories } from '@/lib/blog'
+import { getPostsPage, getAllTags, getAllCategories } from '@/lib/blog'
 import type { Locale } from '@/lib/types'
 import type { Metadata } from 'next'
 import Header from '@/components/layout/Header'
@@ -48,7 +48,7 @@ export default async function BlogPage({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const posts = getAllPosts(locale as Locale)
+  const { posts, totalPosts, totalPages, currentPage } = getPostsPage(locale as Locale, 1)
   const tags = getAllTags(locale as Locale)
   const categories = getAllCategories(locale as Locale)
 
@@ -56,7 +56,16 @@ export default async function BlogPage({
     <>
       <Header />
       <main className="min-h-screen pt-20">
-        <BlogList posts={posts} tags={tags} categories={categories} locale={locale} />
+        <BlogList
+          posts={posts}
+          tags={tags}
+          categories={categories}
+          locale={locale}
+          totalPosts={totalPosts}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          firstPageUrl={`/${locale}/blog`}
+        />
       </main>
       <Footer />
     </>

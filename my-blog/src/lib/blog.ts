@@ -227,6 +227,31 @@ export function validatePostComplete(slug: string): { valid: boolean; missing: s
   }
 }
 
+// ============================================================================
+// Pagination
+// ============================================================================
+
+export const POSTS_PER_PAGE = 10
+
+export interface PaginatedPosts {
+  posts: Post[]
+  totalPosts: number
+  totalPages: number
+  currentPage: number
+  pageSize: number
+}
+
+export function getPostsPage(locale: Locale, page: number = 1): PaginatedPosts {
+  const allPosts = getAllPosts(locale)
+  const totalPosts = allPosts.length
+  const totalPages = Math.max(1, Math.ceil(totalPosts / POSTS_PER_PAGE))
+  const currentPage = Math.min(Math.max(1, Math.floor(page) || 1), totalPages)
+  const start = (currentPage - 1) * POSTS_PER_PAGE
+  const posts = allPosts.slice(start, start + POSTS_PER_PAGE)
+  return { posts, totalPosts, totalPages, currentPage, pageSize: POSTS_PER_PAGE }
+}
+
+
 export function getAllSlugs(): string[] {
   const contentDir = getContentDir()
   if (!fs.existsSync(contentDir)) return []

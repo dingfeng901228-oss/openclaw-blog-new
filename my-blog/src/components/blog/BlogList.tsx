@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { Search, X } from 'lucide-react'
 import ArticleCard from '@/components/blog/ArticleCard'
 import { cn } from '@/lib/utils'
@@ -41,9 +42,13 @@ interface BlogListProps {
   tags: string[]
   categories: string[]
   locale: string
+  totalPosts: number
+  totalPages: number
+  currentPage: number
+  firstPageUrl: string
 }
 
-export default function BlogList({ posts, tags, categories, locale }: BlogListProps) {
+export default function BlogList({ posts, tags, categories, locale, totalPosts, totalPages, currentPage, firstPageUrl }: BlogListProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -243,14 +248,63 @@ export default function BlogList({ posts, tags, categories, locale }: BlogListPr
           )}
         </div>
 
+        {totalPages > 1 && (
+          <nav
+            className="mt-10 flex items-center justify-center gap-2"
+            aria-label="Blog pagination"
+          >
+            {currentPage > 1 && (
+              <Link
+                href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
+                className="blog-page-link px-4 py-2 rounded-lg text-sm"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
+              >
+                ← Prev
+              </Link>
+            )}
+            <span
+              className="px-3 text-sm"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                color: 'rgba(255, 255, 255, 0.55)',
+              }}
+            >
+              Page {currentPage} / {totalPages}
+            </span>
+            {currentPage < totalPages && (
+              <Link
+                href={currentPage + 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage + 1)}
+                className="blog-page-link px-4 py-2 rounded-lg text-sm"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
+              >
+                Next →
+              </Link>
+            )}
+          </nav>
+        )}
+
         <div
-          className="mt-10 text-xs"
+          className="mt-6 text-xs text-center"
           style={{
             fontFamily: 'var(--font-mono)',
             color: 'rgba(255, 255, 255, 0.45)',
           }}
         >
-          {t.showing.replace('{count}', String(filteredPosts.length)).replace('{total}', String(posts.length))}
+          {t.showing.replace('{count}', String(filteredPosts.length)).replace('{total}', String(totalPosts))}
         </div>
       </div>
 
