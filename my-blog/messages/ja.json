@@ -46,7 +46,11 @@
     "allTags": "全タグ",
     "noResults": "記事が見つかりません。",
     "clearFilters": "フィルターをクリア",
-    "showing": "{count}件中{total}件を表示"
+    "showing": "{count}件中{total}件を表示",
+    "jumpTo": "ページ移動",
+    "go": "移動",
+    "pagePlaceholder": "ページ",
+    "invalidPage": "ページ番号が無効です"
   },
   "projects": {
     "title": "作ったもの",

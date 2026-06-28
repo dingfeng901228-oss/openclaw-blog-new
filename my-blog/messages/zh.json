@@ -64,7 +64,11 @@
     "allTags": "全部标签",
     "noResults": "未找到文章。",
     "clearFilters": "清除筛选",
-    "showing": "显示 {count} / {total} 篇"
+    "showing": "显示 {count} / {total} 篇",
+    "jumpTo": "跳转到",
+    "go": "跳转",
+    "pagePlaceholder": "页码",
+    "invalidPage": "页码不存在"
   },
   "projects": {
     "title": "项目",

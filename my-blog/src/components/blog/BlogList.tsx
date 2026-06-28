@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
 
 // ============================================================================
 // CategoryDropdown — custom dark-themed dropdown replacing native <select>
@@ -184,7 +183,11 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
   const t = labels[locale] || labels.en
   const meta = pageTitle[locale] || pageTitle.en
 
-  const filteredPosts = useMemo(() => {
+  const [jumpValue, setJumpValue] = useState<string>('')
+  const [jumpError, setJumpError] = useState(false)
+  const jumpInputRef = useRef<HTMLInputElement>(null)
+
+    const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
       if (post.status === 'draft') return false
       const matchesSearch =
@@ -197,7 +200,28 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
     })
   }, [posts, searchQuery, selectedTag, selectedCategory])
 
-  const clearFilters = () => {
+  const handleJump = (raw: string) => {
+    const trimmed = raw.trim()
+    const num = parseInt(trimmed, 10)
+    if (!Number.isFinite(num) || trimmed === '' || num < 1 || num > totalPages) {
+      setJumpError(true)
+      // Auto-clear error after a short delay
+      setTimeout(() => setJumpError(false), 1800)
+      return
+    }
+    if (num === currentPage) {
+      // Already on this page — just clear input, no navigation
+      setJumpValue('')
+      return
+    }
+    setJumpError(false)
+    setJumpValue('')
+    if (typeof window !== 'undefined') {
+      window.location.href = num === 1 ? firstPageUrl : firstPageUrl + '/page/' + num
+    }
+  }
+
+    const clearFilters = () => {
     setSearchQuery('')
     setSelectedTag(null)
     setSelectedCategory(null)
@@ -345,13 +369,99 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
 
         {totalPages > 1 && (
           <nav
-            className="mt-10 flex items-center justify-center gap-2"
+            className="mt-10 flex flex-col items-center gap-4"
             aria-label="Blog pagination"
           >
-            {currentPage > 1 && (
-              <Link
-                href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
-                className="blog-page-link px-4 py-2 rounded-lg text-sm"
+            {/* Row 1: Prev / Page / Next */}
+            <div className="flex items-center justify-center gap-2">
+              {currentPage > 1 && (
+                <Link
+                  href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
+                  className="blog-page-link px-4 py-2 rounded-lg text-sm"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    color: 'rgba(255, 255, 255, 0.85)',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                  }}
+                >
+                  ← Prev
+                </Link>
+              )}
+              <span
+                className="px-3 text-sm"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.55)',
+                }}
+              >
+                Page {currentPage} / {totalPages}
+              </span>
+              {currentPage < totalPages && (
+                <Link
+                  href={currentPage + 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage + 1)}
+                  className="blog-page-link px-4 py-2 rounded-lg text-sm"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    color: 'rgba(255, 255, 255, 0.85)',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                  }}
+                >
+                  Next →
+                </Link>
+              )}
+            </div>
+
+            {/* Row 2: Jump to [N] [Go] */}
+            <div className="flex items-center justify-center gap-2">
+              <span
+                className="text-xs"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.45)',
+                }}
+              >
+                {t.jumpTo}
+              </span>
+              <input
+                ref={jumpInputRef}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={jumpValue}
+                onChange={(e) => {
+                  // Auto-filter non-digit characters
+                  const cleaned = e.target.value.replace(/[^0-9]/g, '')
+                  setJumpValue(cleaned)
+                  if (jumpError) setJumpError(false)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleJump(jumpValue)
+                  }
+                }}
+                placeholder={t.pagePlaceholder}
+                aria-label={t.jumpTo}
+                className={`blog-jump-input w-14 px-2 py-1.5 rounded-lg text-sm text-center focus:outline-none ${jumpError ? 'blog-jump-error' : ''}`}
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid ' + (jumpError ? 'rgba(239, 68, 68, 0.6)' : 'rgba(255, 255, 255, 0.10)'),
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => handleJump(jumpValue)}
+                className="blog-page-link px-4 py-1.5 rounded-lg text-sm"
                 style={{
                   fontFamily: 'var(--font-mono)',
                   color: 'rgba(255, 255, 255, 0.85)',
@@ -361,34 +471,20 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   WebkitBackdropFilter: 'blur(8px)',
                 }}
               >
-                ← Prev
-              </Link>
-            )}
-            <span
-              className="px-3 text-sm"
-              style={{
-                fontFamily: 'var(--font-mono)',
-                color: 'rgba(255, 255, 255, 0.55)',
-              }}
-            >
-              Page {currentPage} / {totalPages}
-            </span>
-            {currentPage < totalPages && (
-              <Link
-                href={currentPage + 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage + 1)}
-                className="blog-page-link px-4 py-2 rounded-lg text-sm"
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.10)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                }}
-              >
-                Next →
-              </Link>
-            )}
+                {t.go}
+              </button>
+              {jumpError && (
+                <span
+                  className="blog-jump-error-msg text-xs ml-1"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    color: 'rgba(239, 68, 68, 0.85)',
+                  }}
+                >
+                  {t.invalidPage}
+                </span>
+              )}
+            </div>
           </nav>
         )}
 
@@ -406,6 +502,33 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
       <style jsx>{`
         .blog-search {
           transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+        }
+        .blog-jump-input {
+          transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+        }
+        .blog-jump-input:focus {
+          border-color: rgba(59, 130, 246, 0.6) !important;
+          background: rgba(59, 130, 246, 0.05) !important;
+          box-shadow:
+            0 0 0 4px rgba(59, 130, 246, 0.10),
+            0 0 24px rgba(59, 130, 246, 0.18);
+        }
+        .blog-jump-error {
+          animation: jumpShake 320ms ease-out;
+        }
+        .blog-jump-error-msg {
+          animation: jumpErrorFadeIn 240ms ease-out;
+        }
+        @keyframes jumpShake {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-4px); }
+          40% { transform: translateX(4px); }
+          60% { transform: translateX(-3px); }
+          80% { transform: translateX(2px); }
+        }
+        @keyframes jumpErrorFadeIn {
+          from { opacity: 0; transform: translateX(-6px); }
+          to { opacity: 1; transform: translateX(0); }
         }
 
         .blog-search:focus {

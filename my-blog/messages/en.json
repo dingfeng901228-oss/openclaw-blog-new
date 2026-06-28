@@ -64,7 +64,11 @@
     "allTags": "All Tags",
     "noResults": "No articles found.",
     "clearFilters": "Clear filters",
-    "showing": "Showing {count} of {total}"
+    "showing": "Showing {count} of {total}",
+    "jumpTo": "Jump to",
+    "go": "Go",
+    "pagePlaceholder": "Page",
+    "invalidPage": "Invalid page"
   },
   "projects": {
     "title": "Projects",
