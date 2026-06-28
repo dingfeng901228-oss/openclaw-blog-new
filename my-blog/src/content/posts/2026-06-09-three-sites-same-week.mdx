@@ -1,129 +1,214 @@
 ---
 slug: 2026-06-09-three-sites-same-week
-date: 2026-06-09
+date: 2026-06-09T00:00:00.000Z
 translationKey: three-sites-same-week
 status: published
+categoryKey: engineering
 layout: article
-tags: [Ops, Debugging, Cloudflare, GitHub-Actions, Indie-Hacker]
-
+tags:
+  - Ops
+  - Debugging
+  - Cloudflare
+  - GitHub-Actions
+  - Indie-Hacker
 ja:
-  title: "3 つの独立サイトが同週に崩壊した日 — 『プラットフォームのデフォルトは信用ならない』"
-  excerpt: "2026 年 6 月 1 週目。frankbot.org / blog.frank2025.com / cv.frank2025.com の CI/CD が立て続けに壊れた。3 つのバグ、3 つの根本原因、驚くべき共通項は「プラットフォームのデフォルト動作が信頼できない」だった。Indie hacker 向けの再現可能な SOP と予防チェックリスト付き。"
-  content: |
+  title: 3 つの独立サイトが同週に崩壊した日 — 『プラットフォームのデフォルトは信用ならない』
+  excerpt: >-
+    2026 年 6 月 1 週目。frankbot.org / blog.frank2025.com / cv.frank2025.com の CI/CD
+    が立て続けに壊れた。3 つのバグ、3 つの根本原因、驚くべき共通項は「プラットフォームのデフォルト動作が信頼できない」だった。Indie hacker
+    向けの再現可能な SOP と予防チェックリスト付き。
+  content: >
     # 3 つの独立サイトが同週に崩壊した日 — 『プラットフォームのデフォルトは信用ならない』
+
 
     ## 発端:3 連クラッシュの 1 週間
 
+
     2026 年 6 月 1 週目。3 日間で 3 つの独立サイトが連続して壊れた。
 
-    - **frankbot.org**:push したのに CI green ✅、なのにデプロイが反映されない
-    - **blog.frank2025.com**:ノート保存で CF Pages build が `YAMLException`
-    - **cv.frank2025.com**:PDF upload が 500、Cloudflare Worker から GitHub への PUT が 403
 
-    3 つのバグ、3 つの根本原因。振り返ると、**3 つに 1 つの共通項**があった — すべて「**プラットフォームのデフォルト動作が信頼できない**」が犯人だった。
+    - **frankbot.org**:push したのに CI green ✅、なのにデプロイが反映されない
+
+    - **blog.frank2025.com**:ノート保存で CF Pages build が `YAMLException`
+
+    - **cv.frank2025.com**:PDF upload が 500、Cloudflare Worker から GitHub への PUT が
+    403
+
+
+    3 つのバグ、3 つの根本原因。振り返ると、**3 つに 1 つの共通項**があった —
+    すべて「**プラットフォームのデフォルト動作が信頼できない**」が犯人だった。
+
 
     ## 第 1 幕:frankbot.org — GitHub Actions の「幽霊 artifact」
 
+
     ### 症状
+
 
     6 月 3 日。master に push して CI が green になる。なのに `frankbot.org` を開くと古いコンテンツのまま。
 
+
     CI ログを見直す。typecheck ✅、build ✅、**deploy job** も ✅ と表示。なのに反映されていない。
 
+
     ### 根因
+
 
     `gh run view --log` で deploy job を掘ると、`my-blog/out` の ENOENT:
 
+
     ```
+
     Error: ENOENT: no such file or directory, scandir
+
     '/home/runner/work/openclaw-blog-new/openclaw-blog-next/my-blog/out'
+
     ```
 
-    なぜ out がないのか。CI workflow は typecheck→build までが 1 job、deploy が別 job。**別 job は新しい worktree を checkout する**ので、build job が `my-blog/out` に書いたファイルは引き継がれない。
 
-    `actions/checkout@v4` のデフォルト動作を当然と思っていた。でも Actions は job 間で worktree を共有しない。artifact upload + download で明示的に橋渡しする必要がある。
+    なぜ out がないのか。CI workflow は typecheck→build までが 1 job、deploy が別 job。**別 job
+    は新しい worktree を checkout する**ので、build job が `my-blog/out` に書いたファイルは引き継がれない。
+
+
+    `actions/checkout@v4` のデフォルト動作を当然と思っていた。でも Actions は job 間で worktree
+    を共有しない。artifact upload + download で明示的に橋渡しする必要がある。
+
 
     ### 修正
 
+
     1. build job の末尾に `actions/upload-artifact@v4` を追加
+
     2. deploy job の先頭で `actions/download-artifact@v4` で取得
-    3. もう 1 つ壊れていた点:Cloudflare Pages プロジェクトの `deployments_enabled: false` + `production_deployments_enabled: false` が GUI から手動でオンにする必要があった
-    4. `permissions: contents: write, deployments: write, pages: write, id-token: write` を deploy job に追加(`createGitHubDeployment` の 403 対策)
+
+    3. もう 1 つ壊れていた点:Cloudflare Pages プロジェクトの `deployments_enabled: false` +
+    `production_deployments_enabled: false` が GUI から手動でオンにする必要があった
+
+    4. `permissions: contents: write, deployments: write, pages: write,
+    id-token: write` を deploy job に追加(`createGitHubDeployment` の 403 対策)
+
 
     ### この幕から学んだこと
 
-    **CI デプロイは worktree を信用するな、artifact を契約にしろ**。 別 job 間でファイルを受け渡すには upload-artifact + download-artifact を必ずペアで使う。パスが同じだからといって、ファイルがそのままあるとは限らない。
+
+    **CI デプロイは worktree を信用するな、artifact を契約にしろ**。 別 job 間でファイルを受け渡すには
+    upload-artifact + download-artifact を必ずペアで使う。パスが同じだからといって、ファイルがそのままあるとは限らない。
+
 
     ## 第 2 幕:blog.frank2025.com — YAML はネスト引用符を許さない
 
+
     ### 症状
+
 
     同じ頃。frank-blog の admin editor でノートを保存すると、CF Pages の build がこける。
 
+
     ```
+
     YAMLException: expected a single document in the stream
+
     ...
+
     tags: [""Life"", ""Time"", ""Future""]
+
     ```
+
 
     タグが `""Life""` という形で**二重引用符で囲まれている**。YAML パーサは引用符の中の引用符を理解できない。
 
+
     ### 根因
+
 
     該当:`src/components/admin/PostEditor.tsx:84`
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t}"`).join(', ')}]`
       : ''
     ```
 
-    既に各タグを `"` で囲っている。でも tags 配列に**元から `"` を含んだ値**が入っていると(古い save が残したクリーンデータ)、`"${t}"` で囲うことで**二重引用符が生成**される。
+
+    既に各タグを `"` で囲っている。でも tags 配列に**元から `"` を含んだ値**が入っていると(古い save
+    が残したクリーンデータ)、`"${t}"` で囲うことで**二重引用符が生成**される。
+
 
     つまり「保存のたびに少しずつ腐っていく」系の bug。
 
+
     ### 修正
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t.replace(/"/g, '')}"`).join(', ')}]`
       : ''
     ```
 
-    **`t.replace(/"/g, '')` で先に strip、 その後で wrap**。 これで古いクリーンデータが残っていても、次回 save で自動修復される。
+
+    **`t.replace(/"/g, '')` で先に strip、 その後で wrap**。 これで古いクリーンデータが残っていても、次回 save
+    で自動修復される。
+
 
     ### この幕から学んだこと
 
-    **YAML/JSON のシリアライズは「strip してから wrap」が鉄則**。 前に何が入っていたかわからない相手に対して、盲目的に wrap すると毒入りデータができる。
 
-    もう 1 つ:**ビルドエラーは「いま直したファイル」だけが犯人とは限らない**。 1 ロケール(zh)だけ直して en/ja を放置していたら、build は相変わらず失敗する。すべてのロケールを横断チェックする必要がある。
+    **YAML/JSON のシリアライズは「strip してから wrap」が鉄則**。 前に何が入っていたかわからない相手に対して、盲目的に wrap
+    すると毒入りデータができる。
+
+
+    もう 1 つ:**ビルドエラーは「いま直したファイル」だけが犯人とは限らない**。 1 ロケール(zh)だけ直して en/ja
+    を放置していたら、build は相変わらず失敗する。すべてのロケールを横断チェックする必要がある。
+
 
     ## 第 3 幕:cv.frank2025.com — Cloudflare Worker に「人っぽさ」がない
 
+
     ### 症状
 
-    6 月 2 日。Cloudflare Worker 経由で PDF を GitHub リポジトリに PUT する upload-image 関数が 500 を返す。
+
+    6 月 2 日。Cloudflare Worker 経由で PDF を GitHub リポジトリに PUT する upload-image 関数が
+    500 を返す。
+
 
     ```
+
     Image upload failed: Upload failed (500)
+
     ```
+
 
     ### 根因
 
+
     切り分け:
 
+
     1. **トークン確認**:`wrangler secret list` → `GITHUB_TOKEN` 存在する ✅
+
     2. **PUT 先パス確認**:`public/.write-test.txt` を PUT → 成功 ✅
+
     3. **CF Worker 経由 vs Node 直叩き**:同じ fetch を Node.js から直接実行 → 成功 ✅
+
     4. **CF Worker 経由のみ失敗** → GitHub から 403 Forbidden
+
 
     GitHub のエラーメッセージ:「Requests to this API must include a User-Agent header」。
 
-    Cloudflare Pages Functions の `fetch` は**デフォルトで User-Agent ヘッダを付けない**。 GitHub API は空 UA を「失礼な bot」と判定して 403 を返す。
+
+    Cloudflare Pages Functions の `fetch` は**デフォルトで User-Agent ヘッダを付けない**。 GitHub
+    API は空 UA を「失礼な bot」と判定して 403 を返す。
+
 
     ### 修正
 
+
     ```js
+
     await fetch(githubUrl, {
       method: 'PUT',
       headers: {
@@ -133,172 +218,282 @@ ja:
       },
       body: ...
     })
+
     ```
+
 
     たった 1 行で全 upload URL が復旧した。
 
+
     ### この幕から学んだこと
 
-    **Cloudflare Worker/Function から外部 API を叩くときは、必ず User-Agent を明示的に設定する**。 Worker の `fetch` は UA を空にしてしまう。これは CF のドキュメントにも小さく書いてあるが、知らないと永遠にハマる。
+
+    **Cloudflare Worker/Function から外部 API を叩くときは、必ず User-Agent を明示的に設定する**。
+    Worker の `fetch` は UA を空にしてしまう。これは CF のドキュメントにも小さく書いてあるが、知らないと永遠にハマる。
+
 
     ## 3 つの bug、1 つの共通項
 
+
     | バグ | プラットフォーム | デフォルト動作 | 結果 |
+
     |------|-----------------|---------------|------|
+
     | ENOENT | GitHub Actions | job 間で worktree を共有しない | デプロイ失敗 |
+
     | YAMLException | YAML parser | ネスト引用符を許さない | build 失敗 |
+
     | 403 Forbidden | GitHub API | 空 User-Agent を拒否 | upload 失敗 |
+
 
     3 つのバグ、3 つの根因。でも、**プラットフォームは「あなたの全パイプラインを面倒見ます」とは言っていない**。
 
+
     - artifact の bridge は自分で
+
     - strip の bridge は自分で
+
     - UA ヘッダの bridge は自分で
+
 
     **「デフォルトは不便なものだ」と決め打って設計する**。 そうすれば最初から bridging を組み込める。
 
+
     ## 私の 4 ステップ・デバッグ SOP
+
 
     この 1 週間で身についた習慣:
 
+
     1. **チェーンを分解する**: ビルド → デプロイ → 配信 を最小単位に切り、個別に検証する
-    2. **「見えないデフォルト」をすべて晒す**: UA、Content-Type、WorkingDirectory、artifact パス — 自分が当然だと思っていた値をログに書き出す
+
+    2. **「見えないデフォルト」をすべて晒す**: UA、Content-Type、WorkingDirectory、artifact パス —
+    自分が当然だと思っていた値をログに書き出す
+
     3. **期待値と実測を並べる**: ローカル dev で動く ≠ CI で動く ≠ 本番で動く
+
     4. **中間生成物を curl -v で見る**: CF Worker の fetch ログを信じず、node から同じリクエストを投げて比べる
+
 
     ## Indie hacker への 4 つの予防チェックリスト
 
+
     1. ☑ **CI デプロイは artifact で build output を受け渡す**(worktree を信用しない)
+
     2. ☑ **YAML/JSON シリアライズは「strip してから wrap」**(入力を盲目的に信用しない)
+
     3. ☑ **Worker/Function の fetch には必ず User-Agent を付ける**(CF のデフォルトは空)
-    4. ☑ **CI success ≠ デプロイ成功**(`gh run list` だけじゃなく、CF Pages の `latest_deployment.created_on` か curl で実ページを確認する)
+
+    4. ☑ **CI success ≠ デプロイ成功**(`gh run list` だけじゃなく、CF Pages の
+    `latest_deployment.created_on` か curl で実ページを確認する)
+
 
     ## 締めの 1 文
 
-    プラットフォームは契約の片務的パートナー。 礼儀正しいリクエスト(UA、明示的 artifact、strip 済みデータ)を送れば、確実に応えてくれる。 礼儀を欠いたリクエストを送れば、サイレントに拒まれる — もしくは、もっと悪い、サイレントに**成功したフリ**をされる(これがいちばんたちが悪い)。
+
+    プラットフォームは契約の片務的パートナー。 礼儀正しいリクエスト(UA、明示的 artifact、strip 済みデータ)を送れば、確実に応えてくれる。
+    礼儀を欠いたリクエストを送れば、サイレントに拒まれる — もしくは、もっと悪い、サイレントに**成功したフリ**をされる(これがいちばんたちが悪い)。
+
 
     ---
 
-    教訓:1 つのサイトを直すより、**3 サイトを直したあとのほうが強くなれる**。
 
+    教訓:1 つのサイトを直すより、**3 サイトを直したあとのほうが強くなれる**。
+  category: 工学
 zh:
-  title: "三个独立网站同周崩溃 ——「平台默认行为不可信」教给我的事"
-  excerpt: "2026 年 6 月第一周,frankbot.org / blog.frank2025.com / cv.frank2025.com 三个独立站点的 CI/CD 接连崩溃。3 个 bug,3 个根因,但惊人地共享同一个共性——全是「平台默认行为不可信」。附可复制的调试 SOP 和预防清单,给所有 indie hacker。"
-  content: |
+  title: 三个独立网站同周崩溃 ——「平台默认行为不可信」教给我的事
+  excerpt: >-
+    2026 年 6 月第一周,frankbot.org / blog.frank2025.com / cv.frank2025.com 三个独立站点的
+    CI/CD 接连崩溃。3 个 bug,3 个根因,但惊人地共享同一个共性——全是「平台默认行为不可信」。附可复制的调试 SOP 和预防清单,给所有
+    indie hacker。
+  content: >
     # 三个独立网站同周崩溃 ——「平台默认行为不可信」教给我的事
+
 
     ## 起因:三连崩溃的一周
 
+
     2026 年 6 月第一周。3 天内 3 个独立站点连续崩溃。
 
+
     - **frankbot.org**:push 后 CI green ✅,但部署没生效
+
     - **blog.frank2025.com**:笔记保存后 CF Pages build 报 `YAMLException`
+
     - **cv.frank2025.com**:PDF upload 返回 500,Cloudflare Worker PUT GitHub 时 403
+
 
     3 个 bug,3 个根因。回过头看,**3 个里只有 1 个共性**——所有问题都出在「**平台默认行为不可信**」。
 
+
     ## 第一幕:frankbot.org — GitHub Actions 的「幽灵 artifact」
 
+
     ### 症状
+
 
     6 月 3 日。push 到 master,CI 跑完是绿色。但打开 `frankbot.org` 看到的还是旧内容。
 
+
     检查 CI 日志:typecheck ✅、build ✅、**deploy job** 也 ✅。但生产就是没更新。
 
+
     ### 根因
+
 
     `gh run view --log` 挖 deploy job,看到 `my-blog/out` 的 ENOENT:
 
+
     ```
+
     Error: ENOENT: no such file or directory, scandir
+
     '/home/runner/work/openclaw-blog-new/openclaw-blog-next/my-blog/out'
+
     ```
 
-    为什么 out 不见了?CI workflow 里 typecheck→build 跑在同一个 job,deploy 是另一个 job。**另一个 job 重新 checkout worktree**,build job 写到 `my-blog/out` 的文件完全没传过来。
 
-    我以前以为 `actions/checkout@v4` 默认会把工作目录整个保留。**不是。Actions 跨 job 不共享 worktree**。必须靠 artifact upload + download 显式桥接。
+    为什么 out 不见了?CI workflow 里 typecheck→build 跑在同一个 job,deploy 是另一个 job。**另一个
+    job 重新 checkout worktree**,build job 写到 `my-blog/out` 的文件完全没传过来。
+
+
+    我以前以为 `actions/checkout@v4` 默认会把工作目录整个保留。**不是。Actions 跨 job 不共享
+    worktree**。必须靠 artifact upload + download 显式桥接。
+
 
     ### 修复
 
+
     1. build job 末尾加 `actions/upload-artifact@v4`
+
     2. deploy job 开头加 `actions/download-artifact@v4`
-    3. 顺手修一个隐藏开关:Cloudflare Pages 项目的 `deployments_enabled: false` + `production_deployments_enabled: false` 是关的,得去 GUI 手动开
-    4. 给 deploy job 加 `permissions: contents: write, deployments: write, pages: write, id-token: write`(否则 `createGitHubDeployment` 报 403)
+
+    3. 顺手修一个隐藏开关:Cloudflare Pages 项目的 `deployments_enabled: false` +
+    `production_deployments_enabled: false` 是关的,得去 GUI 手动开
+
+    4. 给 deploy job 加 `permissions: contents: write, deployments: write, pages:
+    write, id-token: write`(否则 `createGitHubDeployment` 报 403)
+
 
     ### 这一幕学到的
 
-    **CI 部署不要信 worktree,要信 artifact**。跨 job 传文件必须 upload + download 配对用,不能用「反正都是同一个 repo」来推断。
+
+    **CI 部署不要信 worktree,要信 artifact**。跨 job 传文件必须 upload + download
+    配对用,不能用「反正都是同一个 repo」来推断。
+
 
     ## 第二幕:blog.frank2025.com — YAML 不接受嵌套引号
 
+
     ### 症状
+
 
     同期。frank-blog 的 admin editor 保存笔记后,CF Pages build 炸了。
 
+
     ```
+
     YAMLException: expected a single document in the stream
+
     ...
+
     tags: [""Life"", ""Time"", ""Future""]
+
     ```
+
 
     tag 被写成 `""Life""`——**双引号套双引号**。YAML 解析器直接看不懂。
 
+
     ### 根因
+
 
     罪魁:`src/components/admin/PostEditor.tsx:84`
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t}"`).join(', ')}]`
       : ''
     ```
 
-    它会给每个 tag 包一层 `"`。但如果 tag 字符串里**已经含有 `"`**(早期 save 留下的脏数据),`"${t}"` 就会生成**两层双引号**。
+
+    它会给每个 tag 包一层 `"`。但如果 tag 字符串里**已经含有 `"`**(早期 save 留下的脏数据),`"${t}"`
+    就会生成**两层双引号**。
+
 
     经典的「**保存一次腐一次**」型 bug。
 
+
     ### 修复
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t.replace(/"/g, '')}"`).join(', ')}]`
       : ''
     ```
 
+
     **`t.replace(/"/g, '')` 先 strip,再 wrap**。这样即使历史数据脏,下次 save 也会自动清洗。
+
 
     ### 这一幕学到的
 
+
     **YAML/JSON 序列化「先 strip 再 wrap」是铁律**。你不知道输入里有什么,盲目 wrap 就会生成毒数据。
 
-    另一个教训:**build 失败不一定只有「我刚改的文件」是凶手**。我修了 zh 语言的,但 en/ja 没动——build 照样挂。所有 locale 都要扫一遍。
+
+    另一个教训:**build 失败不一定只有「我刚改的文件」是凶手**。我修了 zh 语言的,但 en/ja 没动——build 照样挂。所有
+    locale 都要扫一遍。
+
 
     ## 第三幕:cv.frank2025.com — Cloudflare Worker 缺「人味儿」
 
+
     ### 症状
 
-    6 月 2 日。Cloudflare Worker 走 GitHub API 把 PDF PUT 进 repo,upload-image 函数返回 500。
+
+    6 月 2 日。Cloudflare Worker 走 GitHub API 把 PDF PUT 进 repo,upload-image 函数返回
+    500。
+
 
     ```
+
     Image upload failed: Upload failed (500)
+
     ```
+
 
     ### 根因
 
+
     拆分:
 
+
     1. **token 检查**:`wrangler secret list` → `GITHUB_TOKEN` 在 ✅
+
     2. **PUT 路径检查**:`public/.write-test.txt` 写个空文件试试 → 成功 ✅
+
     3. **CF Worker 走 vs Node 直跑**:同样 fetch 代码,Node.js 直接调 → 成功 ✅
+
     4. **CF Worker 走就挂** → GitHub 返回 403 Forbidden
+
 
     GitHub 报错原文:「Requests to this API must include a User-Agent header」。
 
-    Cloudflare Pages Functions 的 `fetch` **默认不带 User-Agent 头**。GitHub API 把空 UA 当作「不懂礼貌的 bot」,直接 403。
+
+    Cloudflare Pages Functions 的 `fetch` **默认不带 User-Agent 头**。GitHub API 把空 UA
+    当作「不懂礼貌的 bot」,直接 403。
+
 
     ### 修复
 
+
     ```js
+
     await fetch(githubUrl, {
       method: 'PUT',
       headers: {
@@ -308,172 +503,306 @@ zh:
       },
       body: ...
     })
+
     ```
+
 
     1 行修复,所有 URL 的 upload 全部恢复。
 
+
     ### 这一幕学到的
 
-    **Cloudflare Worker / Function 调外部 API,永远显式设 User-Agent**。Worker 的 fetch UA 默认是空,CF 文档里就那么一句话,不知道就永远卡。
+
+    **Cloudflare Worker / Function 调外部 API,永远显式设 User-Agent**。Worker 的 fetch UA
+    默认是空,CF 文档里就那么一句话,不知道就永远卡。
+
 
     ## 3 个 bug,1 个共性
 
+
     | Bug | 平台 | 默认行为 | 后果 |
+
     |-----|------|----------|------|
+
     | ENOENT | GitHub Actions | job 间不共享 worktree | 部署失败 |
+
     | YAMLException | YAML parser | 不接受嵌套引号 | build 失败 |
+
     | 403 Forbidden | GitHub API | 拒绝空 User-Agent | upload 失败 |
+
 
     3 个 bug,3 个根因。但有个统一规律:**平台从不替你的「完整流程」打包票**。
 
+
     - artifact 的桥:自己搭
+
     - strip 的桥:自己搭
+
     - UA 的桥:自己搭
+
 
     **「默认是不可用的」做设计假设**。一开始就把 bridge 写进代码,不要等挂了再补。
 
+
     ## 我悟出的 4 步调试 SOP
+
 
     这一周养成的肌肉记忆:
 
+
     1. **拆链**:把 build → deploy → 交付 拆到最小可验证单元,挨个跑
-    2. **晒默认**:把 UA、Content-Type、WorkingDirectory、artifact 路径——所有「我以为显然」的默认值打到日志里
+
+    2. **晒默认**:把 UA、Content-Type、WorkingDirectory、artifact
+    路径——所有「我以为显然」的默认值打到日志里
+
     3. **三态对比**:本地 dev 跑通 ≠ CI 跑通 ≠ 生产跑通——三者分别验
+
     4. **curl -v 看中间产物**:不信 CF Worker 的 fetch 日志,从 node 同样请求打一遍对比
+
 
     ## 给 indie hacker 的 4 条预防清单
 
+
     1. ☑ **CI 部署用 artifact 传 build output**(别信 worktree)
+
     2. ☑ **YAML/JSON 序列化「先 strip 再 wrap」**(别信输入)
+
     3. ☑ **Worker/Function fetch 必带 User-Agent**(CF 默认空)
-    4. ☑ **CI success ≠ 已部署**(`gh run list` 不够,要看 CF Pages 的 `latest_deployment.created_on` 或 curl 线上页面验证)
+
+    4. ☑ **CI success ≠ 已部署**(`gh run list` 不够,要看 CF Pages 的
+    `latest_deployment.created_on` 或 curl 线上页面验证)
+
 
     ## 结尾
 
-    平台是单方面服务你的合作伙伴。你发礼貌的请求(UA、显式 artifact、strip 过的数据),它就一定响应;你发粗鲁的请求,要么被静默拒绝,要么**更糟——静默地假装成功**(这种最坑人,排查起来最耗时)。
+
+    平台是单方面服务你的合作伙伴。你发礼貌的请求(UA、显式 artifact、strip
+    过的数据),它就一定响应;你发粗鲁的请求,要么被静默拒绝,要么**更糟——静默地假装成功**(这种最坑人,排查起来最耗时)。
+
 
     ---
 
-    教训:修 1 个站,长 1 分经验;**修 3 个站,长 1 倍经验,且能发现跨站点的共性**。
 
+    教训:修 1 个站,长 1 分经验;**修 3 个站,长 1 倍经验,且能发现跨站点的共性**。
+  category: 工程
 en:
-  title: "The Week Three Sites Broke — What 'Unreliable Platform Defaults' Taught Me"
-  excerpt: "In the first week of June 2026, CI/CD on frankbot.org, blog.frank2025.com, and cv.frank2025.com broke one after another. Three bugs, three root causes — all sharing one uncomfortable pattern: 'platform default behavior is unreliable.' A reproducible debug SOP and prevention checklist for indie hackers."
-  content: |
+  title: The Week Three Sites Broke — What 'Unreliable Platform Defaults' Taught Me
+  excerpt: >-
+    In the first week of June 2026, CI/CD on frankbot.org, blog.frank2025.com,
+    and cv.frank2025.com broke one after another. Three bugs, three root causes
+    — all sharing one uncomfortable pattern: 'platform default behavior is
+    unreliable.' A reproducible debug SOP and prevention checklist for indie
+    hackers.
+  content: >
     # The Week Three Sites Broke — What "Unreliable Platform Defaults" Taught Me
+
 
     ## The Trigger: Three Crashes in Three Days
 
+
     First week of June 2026. Three independent sites broke in a row.
 
-    - **frankbot.org**: pushed, CI went green ✅, but the deploy didn't take effect
-    - **blog.frank2025.com**: saving a note in admin made CF Pages build fail with `YAMLException`
-    - **cv.frank2025.com**: PDF upload returned 500; Cloudflare Worker's PUT to GitHub got 403
 
-    Three bugs, three root causes. Looking back, **they all shared one uncomfortable pattern** — "**platform default behavior is unreliable**" was the culprit in every single one.
+    - **frankbot.org**: pushed, CI went green ✅, but the deploy didn't take
+    effect
+
+    - **blog.frank2025.com**: saving a note in admin made CF Pages build fail
+    with `YAMLException`
+
+    - **cv.frank2025.com**: PDF upload returned 500; Cloudflare Worker's PUT to
+    GitHub got 403
+
+
+    Three bugs, three root causes. Looking back, **they all shared one
+    uncomfortable pattern** — "**platform default behavior is unreliable**" was
+    the culprit in every single one.
+
 
     ## Act 1: frankbot.org — The Ghost Artifact in GitHub Actions
 
+
     ### Symptom
 
-    June 3rd. Pushed to master, CI went green. But opening `frankbot.org` showed the old content.
 
-    Checked the CI log: typecheck ✅, build ✅, **deploy job** also ✅. Yet production wasn't updated.
+    June 3rd. Pushed to master, CI went green. But opening `frankbot.org` showed
+    the old content.
+
+
+    Checked the CI log: typecheck ✅, build ✅, **deploy job** also ✅. Yet
+    production wasn't updated.
+
 
     ### Root Cause
 
-    Drilling into the deploy job with `gh run view --log` revealed an ENOENT on `my-blog/out`:
+
+    Drilling into the deploy job with `gh run view --log` revealed an ENOENT on
+    `my-blog/out`:
+
 
     ```
+
     Error: ENOENT: no such file or directory, scandir
+
     '/home/runner/work/openclaw-blog-new/openclaw-blog-next/my-blog/out'
+
     ```
 
-    Why was `out` missing? The CI workflow had typecheck→build in one job, deploy in another. **The other job re-checks out a fresh worktree**, so the build job's `my-blog/out` directory was never inherited.
 
-    I'd assumed `actions/checkout@v4` would naturally preserve the working directory. **It doesn't. Actions don't share worktrees across jobs.** You have to bridge it explicitly with artifact upload + download.
+    Why was `out` missing? The CI workflow had typecheck→build in one job,
+    deploy in another. **The other job re-checks out a fresh worktree**, so the
+    build job's `my-blog/out` directory was never inherited.
+
+
+    I'd assumed `actions/checkout@v4` would naturally preserve the working
+    directory. **It doesn't. Actions don't share worktrees across jobs.** You
+    have to bridge it explicitly with artifact upload + download.
+
 
     ### Fix
 
+
     1. Added `actions/upload-artifact@v4` at the end of the build job
+
     2. Added `actions/download-artifact@v4` at the start of the deploy job
-    3. Also fixed a hidden switch: the Cloudflare Pages project had `deployments_enabled: false` + `production_deployments_enabled: false` turned off — had to flip them manually in the GUI
-    4. Added `permissions: contents: write, deployments: write, pages: write, id-token: write` to the deploy job (otherwise `createGitHubDeployment` returns 403)
+
+    3. Also fixed a hidden switch: the Cloudflare Pages project had
+    `deployments_enabled: false` + `production_deployments_enabled: false`
+    turned off — had to flip them manually in the GUI
+
+    4. Added `permissions: contents: write, deployments: write, pages: write,
+    id-token: write` to the deploy job (otherwise `createGitHubDeployment`
+    returns 403)
+
 
     ### Lesson from This Act
 
-    **CI deploys don't trust worktrees; trust artifacts.** To pass files across jobs, you must use upload-artifact + download-artifact as a pair. Don't assume "same repo, same files."
+
+    **CI deploys don't trust worktrees; trust artifacts.** To pass files across
+    jobs, you must use upload-artifact + download-artifact as a pair. Don't
+    assume "same repo, same files."
+
 
     ## Act 2: blog.frank2025.com — YAML Doesn't Accept Nested Quotes
 
+
     ### Symptom
 
-    Same period. After saving a note in frank-blog's admin editor, the CF Pages build blew up.
+
+    Same period. After saving a note in frank-blog's admin editor, the CF Pages
+    build blew up.
+
 
     ```
+
     YAMLException: expected a single document in the stream
+
     ...
+
     tags: [""Life"", ""Time"", ""Future""]
+
     ```
 
-    Tags were written as `""Life""` — **double quotes inside double quotes**. The YAML parser couldn't make sense of it.
+
+    Tags were written as `""Life""` — **double quotes inside double quotes**.
+    The YAML parser couldn't make sense of it.
+
 
     ### Root Cause
 
+
     Culprit file: `src/components/admin/PostEditor.tsx:84`
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t}"`).join(', ')}]`
       : ''
     ```
 
-    It wraps every tag in `"`. But if a tag string **already contains `"`** (dirty data left over from an older save), `"${t}"` produces **two layers of double quotes**.
+
+    It wraps every tag in `"`. But if a tag string **already contains `"`**
+    (dirty data left over from an older save), `"${t}"` produces **two layers of
+    double quotes**.
+
 
     A classic "**save once, rot a little more**" bug.
 
+
     ### Fix
 
+
     ```ts
+
     const tags = frontmatter.tags?.length
       ? `\ntags: [${frontmatter.tags.map(t => `"${t.replace(/"/g, '')}"`).join(', ')}]`
       : ''
     ```
 
-    **`t.replace(/"/g, '')` strips first, then wraps.** That way, even if the historical data is dirty, the next save self-heals it.
+
+    **`t.replace(/"/g, '')` strips first, then wraps.** That way, even if the
+    historical data is dirty, the next save self-heals it.
+
 
     ### Lesson from This Act
 
-    **"Strip, then wrap" is the golden rule of YAML/JSON serialization.** You don't know what's in the input; blind wrapping creates poisoned data.
 
-    Another takeaway: **a build failure isn't always caused by "the file I just edited."** I fixed the Chinese locale but left en/ja untouched — the build still failed. You have to sweep every locale.
+    **"Strip, then wrap" is the golden rule of YAML/JSON serialization.** You
+    don't know what's in the input; blind wrapping creates poisoned data.
+
+
+    Another takeaway: **a build failure isn't always caused by "the file I just
+    edited."** I fixed the Chinese locale but left en/ja untouched — the build
+    still failed. You have to sweep every locale.
+
 
     ## Act 3: cv.frank2025.com — Cloudflare Workers Lack "Human-ness"
 
+
     ### Symptom
 
-    June 2nd. The Cloudflare Worker PUTs PDFs to a GitHub repo via the GitHub API, and the upload-image function returns 500.
+
+    June 2nd. The Cloudflare Worker PUTs PDFs to a GitHub repo via the GitHub
+    API, and the upload-image function returns 500.
+
 
     ```
+
     Image upload failed: Upload failed (500)
+
     ```
+
 
     ### Root Cause
 
+
     Isolating the failure:
 
+
     1. **Check the token**: `wrangler secret list` → `GITHUB_TOKEN` exists ✅
-    2. **Check the PUT path**: try writing a blank `public/.write-test.txt` → success ✅
-    3. **CF Worker path vs Node direct call**: run the same fetch code in Node.js directly → success ✅
+
+    2. **Check the PUT path**: try writing a blank `public/.write-test.txt` →
+    success ✅
+
+    3. **CF Worker path vs Node direct call**: run the same fetch code in
+    Node.js directly → success ✅
+
     4. **Only the CF Worker path failed** → GitHub returned 403 Forbidden
 
-    GitHub's error message: "Requests to this API must include a User-Agent header."
 
-    Cloudflare Pages Functions' `fetch` **doesn't set a User-Agent header by default**. GitHub's API treats an empty UA as "a rude bot" and returns 403.
+    GitHub's error message: "Requests to this API must include a User-Agent
+    header."
+
+
+    Cloudflare Pages Functions' `fetch` **doesn't set a User-Agent header by
+    default**. GitHub's API treats an empty UA as "a rude bot" and returns 403.
+
 
     ### Fix
 
+
     ```js
+
     await fetch(githubUrl, {
       method: 'PUT',
       headers: {
@@ -483,50 +812,100 @@ en:
       },
       body: ...
     })
+
     ```
+
 
     One line, and every upload URL recovered.
 
+
     ### Lesson from This Act
 
-    **When calling external APIs from Cloudflare Workers / Functions, always set the User-Agent explicitly.** Workers' `fetch` leaves the UA empty by default. CF's docs mention it in one sentence — miss it, and you'll be stuck forever.
+
+    **When calling external APIs from Cloudflare Workers / Functions, always set
+    the User-Agent explicitly.** Workers' `fetch` leaves the UA empty by
+    default. CF's docs mention it in one sentence — miss it, and you'll be stuck
+    forever.
+
 
     ## Three Bugs, One Pattern
 
-    | Bug | Platform | Default Behavior | Consequence |
-    |-----|----------|------------------|-------------|
-    | ENOENT | GitHub Actions | worktrees aren't shared across jobs | deploy fails |
-    | YAMLException | YAML parser | nested quotes aren't accepted | build fails |
-    | 403 Forbidden | GitHub API | empty User-Agent gets rejected | upload fails |
 
-    Three bugs, three root causes. But a unified pattern emerges: **the platform never guarantees your "end-to-end pipeline."**
+    | Bug | Platform | Default Behavior | Consequence |
+
+    |-----|----------|------------------|-------------|
+
+    | ENOENT | GitHub Actions | worktrees aren't shared across jobs | deploy
+    fails |
+
+    | YAMLException | YAML parser | nested quotes aren't accepted | build fails
+    |
+
+    | 403 Forbidden | GitHub API | empty User-Agent gets rejected | upload fails
+    |
+
+
+    Three bugs, three root causes. But a unified pattern emerges: **the platform
+    never guarantees your "end-to-end pipeline."**
+
 
     - The artifact bridge: you build it.
+
     - The strip bridge: you build it.
+
     - The UA bridge: you build it.
 
-    **"The default is unusable" should be your design assumption.** Build the bridges into the code from day one; don't bolt them on after the outage.
+
+    **"The default is unusable" should be your design assumption.** Build the
+    bridges into the code from day one; don't bolt them on after the outage.
+
 
     ## The 4-Step Debug SOP I Learned
 
+
     Muscle memory from this week:
 
-    1. **Decompose the chain**: split build → deploy → ship into the smallest verifiable units, run them independently
-    2. **Expose the defaults**: log the UA, Content-Type, WorkingDirectory, artifact path — all the "I assumed it was obvious" values
-    3. **Compare three states**: local dev working ≠ CI working ≠ production working — verify all three
-    4. **curl -v to inspect the middle**: don't trust CF Worker's fetch log; run the same request from Node and compare
+
+    1. **Decompose the chain**: split build → deploy → ship into the smallest
+    verifiable units, run them independently
+
+    2. **Expose the defaults**: log the UA, Content-Type, WorkingDirectory,
+    artifact path — all the "I assumed it was obvious" values
+
+    3. **Compare three states**: local dev working ≠ CI working ≠ production
+    working — verify all three
+
+    4. **curl -v to inspect the middle**: don't trust CF Worker's fetch log; run
+    the same request from Node and compare
+
 
     ## A 4-Item Prevention Checklist for Indie Hackers
 
+
     1. ☑ **CI deploys pass build output via artifacts** (don't trust worktrees)
+
     2. ☑ **YAML/JSON serialization: "strip, then wrap"** (don't trust input)
+
     3. ☑ **Worker/Function fetch always sets User-Agent** (CF default is empty)
-    4. ☑ **CI success ≠ deployed** (`gh run list` alone isn't enough; check CF Pages' `latest_deployment.created_on` or curl the live page)
+
+    4. ☑ **CI success ≠ deployed** (`gh run list` alone isn't enough; check CF
+    Pages' `latest_deployment.created_on` or curl the live page)
+
 
     ## Closing
 
-    A platform is a one-sided service partner. Send polite requests (UA, explicit artifacts, stripped data), and it always responds. Send rude ones, and you get either silent rejection — or, **worse, a silent fake success** (that's the worst kind, and the slowest to debug).
+
+    A platform is a one-sided service partner. Send polite requests (UA,
+    explicit artifacts, stripped data), and it always responds. Send rude ones,
+    and you get either silent rejection — or, **worse, a silent fake success**
+    (that's the worst kind, and the slowest to debug).
+
 
     ---
 
-    Lesson: fixing 1 site teaches you 1 thing. **Fixing 3 sites teaches you 1×, and helps you spot patterns across them.**
+
+    Lesson: fixing 1 site teaches you 1 thing. **Fixing 3 sites teaches you 1×,
+    and helps you spot patterns across them.**
+  category: Engineering
+---
+

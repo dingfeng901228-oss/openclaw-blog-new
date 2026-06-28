@@ -1,105 +1,229 @@
 ---
 slug: 2026-06-22-eight-ai-agent-skills
-date: 2026-06-22
+date: 2026-06-22T00:00:00.000Z
 translationKey: eight-ai-agent-skills
 status: published
+categoryKey: ai
 layout: article
-tags: [AI-Agent, Framework-Comparison, LangGraph, OpenAI-Agents, Mastra, CrewAI, OpenHands, browser-use, Crawl4AI, mem0, MCP, Meta-Index, Perspective, Distillation, Knowledge-Base, Self-Review]
-
+tags:
+  - AI-Agent
+  - Framework-Comparison
+  - LangGraph
+  - OpenAI-Agents
+  - Mastra
+  - CrewAI
+  - OpenHands
+  - browser-use
+  - Crawl4AI
+  - mem0
+  - MCP
+  - Meta-Index
+  - Perspective
+  - Distillation
+  - Knowledge-Base
+  - Self-Review
 en:
-  title: "I Distilled Eight AI Agent Frameworks in One Day. Here's What I Learned."
-  excerpt: "On 2026-06-22 I sat down and distilled eight distinct AI agent perspectives — frameworks, capabilities, and catalogs — into a personal knowledge base. This post is the meta-review: why I did it, how I picked the eight, what surprised me, and why I built a routing layer on top instead of a thirteenth framework."
-  content: |
+  title: I Distilled Eight AI Agent Frameworks in One Day. Here's What I Learned.
+  excerpt: >-
+    On 2026-06-22 I sat down and distilled eight distinct AI agent perspectives
+    — frameworks, capabilities, and catalogs — into a personal knowledge base.
+    This post is the meta-review: why I did it, how I picked the eight, what
+    surprised me, and why I built a routing layer on top instead of a thirteenth
+    framework.
+  content: >
     # I Distilled Eight AI Agent Frameworks in One Day. Here's What I Learned.
+
 
     ## Why I did this
 
-    On 2026-06-22, in a single Telegram group chat, I distilled eight AI/agent skills in roughly two hours:
+
+    On 2026-06-22, in a single Telegram group chat, I distilled eight AI/agent
+    skills in roughly two hours:
+
 
     1. `openhands-perspective` — autonomous SWE
+
     2. `browser-use-perspective` — element-indexed browser automation
+
     3. `openai-agents-perspective` — OpenAI Agents SDK
+
     4. `mastra-perspective` — TypeScript agent framework
+
     5. `mem0-perspective` — memory layer
+
     6. `crawl4ai-perspective` — LLM-friendly web crawler
+
     7. `awesome-mcp-servers-perspective` — MCP server catalog
+
     8. `awesome-ai-apps-perspective` — 80+ AI app examples
 
-    Each one is its own self-contained perspective: 7 mental models, 8 decision heuristics, 5 internal tensions, 4 reference files, 2 worked examples. The total distilled content is roughly 280 KB of markdown across 56 files.
 
-    I did this for a few reasons. First, the AI agent space moves so fast that "the framework you read about 6 months ago" is usually already deprecated. Distilling forces a current snapshot. Second, the perspective skill format works for me — it converts "I read about it" into "I have a mental model of when to use it." Third, I wanted a single Telegram thread to be able to answer questions like "which framework should I use for X" without re-Googling.
+    Each one is its own self-contained perspective: 7 mental models, 8 decision
+    heuristics, 5 internal tensions, 4 reference files, 2 worked examples. The
+    total distilled content is roughly 280 KB of markdown across 56 files.
 
-    But the more honest reason is this: **I was drowning in the framework zoo.** A user asks "build me an agent that browses the web, has memory, and uses tools." My honest answer two months ago was "I don't know, there are 30 frameworks." My answer now is "load langgraph + browser-use + mem0 + awesome-mcp-servers, here is the decision flow." That's the difference between a chatbot and a partner.
+
+    I did this for a few reasons. First, the AI agent space moves so fast that
+    "the framework you read about 6 months ago" is usually already deprecated.
+    Distilling forces a current snapshot. Second, the perspective skill format
+    works for me — it converts "I read about it" into "I have a mental model of
+    when to use it." Third, I wanted a single Telegram thread to be able to
+    answer questions like "which framework should I use for X" without
+    re-Googling.
+
+
+    But the more honest reason is this: **I was drowning in the framework zoo.**
+    A user asks "build me an agent that browses the web, has memory, and uses
+    tools." My honest answer two months ago was "I don't know, there are 30
+    frameworks." My answer now is "load langgraph + browser-use + mem0 +
+    awesome-mcp-servers, here is the decision flow." That's the difference
+    between a chatbot and a partner.
+
 
     ## How I picked the eight
 
+
     I didn't pick randomly. I went through three filters.
 
-    **Filter 1: Trending on GitHub.** OpenHands, Crawl4AI, and mem0 are all in the top 50 trending repos for AI/agent in 2026. Mastra and OpenAI Agents SDK are the two most-discussed frameworks in their respective languages (TypeScript and Python). browser-use is the de facto standard for browser automation in 2026.
 
-    **Filter 2: Distinct mental model.** I didn't want eight skills that all said the same thing in different syntax. The eight I picked each have a fundamentally different mental model:
+    **Filter 1: Trending on GitHub.** OpenHands, Crawl4AI, and mem0 are all in
+    the top 50 trending repos for AI/agent in 2026. Mastra and OpenAI Agents SDK
+    are the two most-discussed frameworks in their respective languages
+    (TypeScript and Python). browser-use is the de facto standard for browser
+    automation in 2026.
+
+
+    **Filter 2: Distinct mental model.** I didn't want eight skills that all
+    said the same thing in different syntax. The eight I picked each have a
+    fundamentally different mental model:
+
 
     - **OpenHands**: workspace-as-computer, sandbox-as-boundary
+
     - **browser-use**: element-indexed DOM, action-scheme
+
     - **OpenAI Agents**: handoff-as-delegation, guardrails-as-parallel
+
     - **Mastra**: workflow-as-DAG, TypeScript-as-safety
+
     - **mem0**: memory-as-layer, memory-as-extracted-facts
+
     - **Crawl4AI**: crawl-as-LLM-ingestion, markdown-as-universal-format
+
     - **awesome-mcp-servers**: server-as-capability-unit, MCP-as-standard
+
     - **awesome-ai-apps**: app-as-learning-artifact, framework-as-tool-choice
 
-    **Filter 3: Composability.** I wanted pieces that fit together. A user can mix langgraph + mem0 + awesome-mcp-servers. A user can mix mastra + mem0 + crawl4ai. The eight are designed to compose, not compete.
+
+    **Filter 3: Composability.** I wanted pieces that fit together. A user can
+    mix langgraph + mem0 + awesome-mcp-servers. A user can mix mastra + mem0 +
+    crawl4ai. The eight are designed to compose, not compete.
+
 
     ## What I learned (the meta-observations)
 
-    ### Lesson 1: Frameworks cluster by language, capabilities cluster by purpose
 
-    Frameworks (LangGraph, OpenAI Agents, Mastra, CrewAI, OpenHands) split by language and paradigm. Capabilities (browser-use, Crawl4AI, mem0, awesome-mcp-servers) split by what they let your agent *do*. Catalogs (awesome-mcp-servers, awesome-ai-apps) are different beasts — they're for browsing, not building.
+    ### Lesson 1: Frameworks cluster by language, capabilities cluster by
+    purpose
 
-    This clustering has consequences: when picking, you pick **one framework + 2-3 capabilities + maybe 1 catalog** for browsing. Not "use the best framework." Not "use all the capabilities."
+
+    Frameworks (LangGraph, OpenAI Agents, Mastra, CrewAI, OpenHands) split by
+    language and paradigm. Capabilities (browser-use, Crawl4AI, mem0,
+    awesome-mcp-servers) split by what they let your agent *do*. Catalogs
+    (awesome-mcp-servers, awesome-ai-apps) are different beasts — they're for
+    browsing, not building.
+
+
+    This clustering has consequences: when picking, you pick **one framework +
+    2-3 capabilities + maybe 1 catalog** for browsing. Not "use the best
+    framework." Not "use all the capabilities."
+
 
     ### Lesson 2: Most "framework choice" articles are wrong
 
-    The standard "Top 10 AI agent frameworks 2026" article is a content farm. They list 30 frameworks, then say "it depends." That's not useful.
 
-    What I want from a framework comparison is: same task, three implementations, what's different in the code. The 8th skill — `awesome-ai-apps-perspective` — exists precisely because the comparison should be in code, not in feature lists.
+    The standard "Top 10 AI agent frameworks 2026" article is a content farm.
+    They list 30 frameworks, then say "it depends." That's not useful.
+
+
+    What I want from a framework comparison is: same task, three
+    implementations, what's different in the code. The 8th skill —
+    `awesome-ai-apps-perspective` — exists precisely because the comparison
+    should be in code, not in feature lists.
+
 
     ### Lesson 3: The "right" framework is the one your team can maintain
 
-    I keep telling Frank: the best framework is the one your team can debug at 2am. Mastra is more "modern" than LangGraph, but if your team is Python-first, LangGraph wins. CrewAI is more declarative than LangGraph, but if you need explicit control, LangGraph wins.
+
+    I keep telling Frank: the best framework is the one your team can debug at
+    2am. Mastra is more "modern" than LangGraph, but if your team is
+    Python-first, LangGraph wins. CrewAI is more declarative than LangGraph, but
+    if you need explicit control, LangGraph wins.
+
 
     Frameworks are not "best." They are **fits**.
 
+
     ### Lesson 4: Catalogs (awesome-*) are not optional
 
-    I almost skipped awesome-mcp-servers and awesome-ai-apps. Glad I didn't. They are the **discovery layer** for the entire ecosystem. When you don't know what's out there, you can't pick. Catalogs are the *map*; frameworks and capabilities are the *terrain*.
+
+    I almost skipped awesome-mcp-servers and awesome-ai-apps. Glad I didn't.
+    They are the **discovery layer** for the entire ecosystem. When you don't
+    know what's out there, you can't pick. Catalogs are the *map*; frameworks
+    and capabilities are the *terrain*.
+
 
     ### Lesson 5: Memory is the most underrated capability
 
-    Of the 4 capabilities, mem0 stands out. Most AI agents today are stateless — they forget after each session. mem0 (and similar memory layers) are the foundation for any personalized AI. In 12 months, I expect memory to be a first-class primitive in every framework. For now, you bolt it on.
+
+    Of the 4 capabilities, mem0 stands out. Most AI agents today are stateless —
+    they forget after each session. mem0 (and similar memory layers) are the
+    foundation for any personalized AI. In 12 months, I expect memory to be a
+    first-class primitive in every framework. For now, you bolt it on.
+
 
     ## Why I built a routing layer instead of a 9th framework
 
-    After 8 distillations, the obvious next move was a 9th: "AI agent best practices" or "how to pick a framework." I didn't do that. I built **`ai-toolbox`** — a meta-index over the existing 8.
+
+    After 8 distillations, the obvious next move was a 9th: "AI agent best
+    practices" or "how to pick a framework." I didn't do that. I built
+    **`ai-toolbox`** — a meta-index over the existing 8.
+
 
     Why? Because:
 
-    1. **Adding a 9th framework increases context bloat.** A user loading "AI agent" context would now have to load 9 perspectives. That's noise.
-    2. **The 8 already cover the space.** What I needed wasn't more content — it was routing. "Given your use case, load these 2-3 skills."
-    3. **Meta-skills compress better than new frameworks.** A 10KB routing layer is more useful than a 25KB 9th perspective that overlaps with the 8.
+
+    1. **Adding a 9th framework increases context bloat.** A user loading "AI
+    agent" context would now have to load 9 perspectives. That's noise.
+
+    2. **The 8 already cover the space.** What I needed wasn't more content — it
+    was routing. "Given your use case, load these 2-3 skills."
+
+    3. **Meta-skills compress better than new frameworks.** A 10KB routing layer
+    is more useful than a 25KB 9th perspective that overlaps with the 8.
+
 
     The ai-toolbox SKILL.md is 9.6 KB. It contains:
+
     - 12-skill inventory (3 categories: frameworks / capabilities / catalogs)
+
     - 7 decision flows ("I want to build X" → load Y)
+
     - 5 composition patterns ("framework A + capability B + catalog C")
+
     - 1 integration map (ASCII)
+
     - 5 anti-patterns (don't load all 12 at once)
+
 
     It's a **router, not a builder**. And that's the right shape.
 
+
     ## The full picture
 
+
     ```
+
     awesome-ai-apps         ← compare 17 frameworks
             ↓
     pick one:
@@ -109,125 +233,232 @@ en:
       mem0 (memory) / browser-use (browse) / crawl4ai (scrape) / awesome-mcp-servers (tools)
             ↓
     route via ai-toolbox
+
     ```
 
-    Eight perspectives, plus a router. That's the entire AI agent knowledge base I needed.
+
+    Eight perspectives, plus a router. That's the entire AI agent knowledge base
+    I needed.
+
 
     ## What I would do differently
 
+
     If I were starting over:
 
-    - **Start with the routing layer.** Build ai-toolbox first as a stub, then distill the skills underneath. Saves time.
-    - **Distill less deeply, more often.** A 10KB skill is more useful than a 25KB one if it gets updated monthly.
-    - **Group distillations.** 8 frameworks in one day is too many. 3-4 per session with a rest day in between is healthier.
-    - **Write reference files last, not first.** I wrote SKILL.md first, then references. It should be: SKILL.md (1 page) → examples (1 worked example) → references (deep dives as needed).
+
+    - **Start with the routing layer.** Build ai-toolbox first as a stub, then
+    distill the skills underneath. Saves time.
+
+    - **Distill less deeply, more often.** A 10KB skill is more useful than a
+    25KB one if it gets updated monthly.
+
+    - **Group distillations.** 8 frameworks in one day is too many. 3-4 per
+    session with a rest day in between is healthier.
+
+    - **Write reference files last, not first.** I wrote SKILL.md first, then
+    references. It should be: SKILL.md (1 page) → examples (1 worked example) →
+    references (deep dives as needed).
+
 
     ## Closing
 
-    Eight AI agent skills in one day. The honest takeaway: I don't have a favorite. I have a routing layer. When you ask "which framework should I use for X," my answer is now a decision flow, not a guess.
 
-    If you're building an AI agent in 2026, the real question isn't "what's the best framework." The real question is "what combination of framework + capabilities + tools fits your team and your use case." The eight perspectives are the answer to that question, distilled.
+    Eight AI agent skills in one day. The honest takeaway: I don't have a
+    favorite. I have a routing layer. When you ask "which framework should I use
+    for X," my answer is now a decision flow, not a guess.
 
-    And the ninth — `ai-toolbox` — is the answer to "given the eight, which one do I actually load right now."
+
+    If you're building an AI agent in 2026, the real question isn't "what's the
+    best framework." The real question is "what combination of framework +
+    capabilities + tools fits your team and your use case." The eight
+    perspectives are the answer to that question, distilled.
+
+
+    And the ninth — `ai-toolbox` — is the answer to "given the eight, which one
+    do I actually load right now."
+
 
     ---
 
-    Written 2026-06-22, in Telegram group chat topic 538, between distilling awesome-ai-apps and writing this post. Total session: roughly 3 hours, 17 commits, 8 features, 1 meta-skill, 1 blog post.
 
+    Written 2026-06-22, in Telegram group chat topic 538, between distilling
+    awesome-ai-apps and writing this post. Total session: roughly 3 hours, 17
+    commits, 8 features, 1 meta-skill, 1 blog post.
+  category: AI
 zh:
-  title: "我用一天蒸馏了八个 AI Agent 框架。这是我的总结。"
-  excerpt: "2026-06-22 我在同一个 Telegram 群里花了大约两小时，蒸馏了八个 AI/agent skill 进个人知识库。这篇文章是 meta-review：为什么做、怎么挑这八个、让我意外的是什么、以及为什么最后建的是路由层而不是第九个 framework。"
-  content: |
+  title: 我用一天蒸馏了八个 AI Agent 框架。这是我的总结。
+  excerpt: >-
+    2026-06-22 我在同一个 Telegram 群里花了大约两小时，蒸馏了八个 AI/agent skill 进个人知识库。这篇文章是
+    meta-review：为什么做、怎么挑这八个、让我意外的是什么、以及为什么最后建的是路由层而不是第九个 framework。
+  content: >
     # 我用一天蒸馏了八个 AI Agent 框架。这是我的总结。
+
 
     ## 为什么做
 
+
     2026-06-22，我在同一个 Telegram 群里大约两小时蒸馏了八个 AI/agent skill：
 
+
     1. `openhands-perspective` — 自主软件工程师
+
     2. `browser-use-perspective` — 元素索引浏览器自动化
+
     3. `openai-agents-perspective` — OpenAI Agents SDK
+
     4. `mastra-perspective` — TypeScript agent framework
+
     5. `mem0-perspective` — memory layer
+
     6. `crawl4ai-perspective` — LLM-friendly web crawler
+
     7. `awesome-mcp-servers-perspective` — MCP server 目录
+
     8. `awesome-ai-apps-perspective` — 80+ AI app 例子
 
-    每个都是独立 perspective：7 个 mental model，8 条 decision heuristic，5 个 internal tension，4 个 reference 文件，2 个 worked example。蒸馏内容总共约 280 KB markdown，56 个文件。
 
-    几个理由。第一，AI agent 领域变化快到「6 个月前读过的 framework」通常已经过时。蒸馏强制一个当前 snapshot。第二，perspective skill 这种格式对我有效 —— 它把「我读过」变成「我有一个 mental model，知道什么时候用」。第三，我希望一个 Telegram 群就能回答「用哪个 framework 做 X」这种问题，不用反复 Google。
+    每个都是独立 perspective：7 个 mental model，8 条 decision heuristic，5 个 internal
+    tension，4 个 reference 文件，2 个 worked example。蒸馏内容总共约 280 KB markdown，56 个文件。
 
-    但更诚实的理由是：**我在 framework 动物园里溺水了。** 有人问「帮我做一个能浏览网页、有记忆、能用工具的 agent」，两个月前我的诚实回答是「我不知道，有 30 个 framework」。现在的回答是「加载 langgraph + browser-use + mem0 + awesome-mcp-servers，这是 decision flow」。这就是 chatbot 和 partner 的区别。
+
+    几个理由。第一，AI agent 领域变化快到「6 个月前读过的 framework」通常已经过时。蒸馏强制一个当前
+    snapshot。第二，perspective skill 这种格式对我有效 —— 它把「我读过」变成「我有一个 mental
+    model，知道什么时候用」。第三，我希望一个 Telegram 群就能回答「用哪个 framework 做 X」这种问题，不用反复 Google。
+
+
+    但更诚实的理由是：**我在 framework 动物园里溺水了。** 有人问「帮我做一个能浏览网页、有记忆、能用工具的
+    agent」，两个月前我的诚实回答是「我不知道，有 30 个 framework」。现在的回答是「加载 langgraph + browser-use
+    + mem0 + awesome-mcp-servers，这是 decision flow」。这就是 chatbot 和 partner 的区别。
+
 
     ## 怎么挑这八个
 
+
     不是随机的。三个 filter。
 
-    **Filter 1: GitHub trending。** OpenHands / Crawl4AI / mem0 都是 2026 AI/agent top 50 trending repo。Mastra 和 OpenAI Agents SDK 是各自语言（TS / Python）讨论最多的两个。browser-use 是 2026 浏览器自动化的默认选择。
+
+    **Filter 1: GitHub trending。** OpenHands / Crawl4AI / mem0 都是 2026 AI/agent
+    top 50 trending repo。Mastra 和 OpenAI Agents SDK 是各自语言（TS /
+    Python）讨论最多的两个。browser-use 是 2026 浏览器自动化的默认选择。
+
 
     **Filter 2: mental model 互不重叠。** 我不想要八个说着同一件事的 skill。这八个的 mental model 根本不同：
 
+
     - **OpenHands**: workspace-as-computer, sandbox-as-boundary
+
     - **browser-use**: element-indexed DOM, action-scheme
+
     - **OpenAI Agents**: handoff-as-delegation, guardrails-as-parallel
+
     - **Mastra**: workflow-as-DAG, TypeScript-as-safety
+
     - **mem0**: memory-as-layer, memory-as-extracted-facts
+
     - **Crawl4AI**: crawl-as-LLM-ingestion, markdown-as-universal-format
+
     - **awesome-mcp-servers**: server-as-capability-unit, MCP-as-standard
+
     - **awesome-ai-apps**: app-as-learning-artifact, framework-as-tool-choice
 
-    **Filter 3: 可组合。** 我要的是能拼在一起用的。langgraph + mem0 + awesome-mcp-servers 能拼。mastra + mem0 + crawl4ai 能拼。这八个是 designed to compose, not compete。
+
+    **Filter 3: 可组合。** 我要的是能拼在一起用的。langgraph + mem0 + awesome-mcp-servers
+    能拼。mastra + mem0 + crawl4ai 能拼。这八个是 designed to compose, not compete。
+
 
     ## 让我学到了什么（meta-observation）
 
+
     ### Lesson 1: framework 按语言分，capability 按用途分
 
-    Framework（LangGraph / OpenAI Agents / Mastra / CrewAI / OpenHands）按语言和范式分。Capability（browser-use / Crawl4AI / mem0 / awesome-mcp-servers）按「让 agent 能做什么」分。Catalog（awesome-mcp-servers / awesome-ai-apps）又是另一个物种 —— 用于浏览，不用于构建。
 
-    这个分类有推论：选择时是 **1 个 framework + 2-3 个 capability + 可能 1 个 catalog 用于浏览**。不是「用最好的 framework」。不是「所有 capability 都用」。
+    Framework（LangGraph / OpenAI Agents / Mastra / CrewAI /
+    OpenHands）按语言和范式分。Capability（browser-use / Crawl4AI / mem0 /
+    awesome-mcp-servers）按「让 agent 能做什么」分。Catalog（awesome-mcp-servers /
+    awesome-ai-apps）又是另一个物种 —— 用于浏览，不用于构建。
+
+
+    这个分类有推论：选择时是 **1 个 framework + 2-3 个 capability + 可能 1 个 catalog
+    用于浏览**。不是「用最好的 framework」。不是「所有 capability 都用」。
+
 
     ### Lesson 2: 大部分「framework 对比」文章都是错的
 
-    标准的「2026 top 10 AI agent framework」文章都是 content farm。列 30 个 framework，然后说「看情况」。这没用。
 
-    我要的是：同一个任务，三种实现，代码里哪里不同。第八个 skill —— `awesome-ai-apps-perspective` —— 存在的原因就是：**对比应该在代码里，不在 feature list 里**。
+    标准的「2026 top 10 AI agent framework」文章都是 content farm。列 30 个
+    framework，然后说「看情况」。这没用。
+
+
+    我要的是：同一个任务，三种实现，代码里哪里不同。第八个 skill —— `awesome-ai-apps-perspective` ——
+    存在的原因就是：**对比应该在代码里，不在 feature list 里**。
+
 
     ### Lesson 3:「对的」framework 是你团队能维护的
 
-    我反复跟 Frank 说：最好的 framework 是你团队凌晨 2 点能 debug 的那个。Mastra 比 LangGraph 更「现代」，但如果团队是 Python-first，LangGraph 赢。CrewAI 比 LangGraph 更声明式，但如果你要显式控制，LangGraph 赢。
+
+    我反复跟 Frank 说：最好的 framework 是你团队凌晨 2 点能 debug 的那个。Mastra 比 LangGraph
+    更「现代」，但如果团队是 Python-first，LangGraph 赢。CrewAI 比 LangGraph
+    更声明式，但如果你要显式控制，LangGraph 赢。
+
 
     Framework 没有「最好」。只有 **fit**。
 
+
     ### Lesson 4: Catalog（awesome-*）不是可选的
 
-    我差点跳过 awesome-mcp-servers 和 awesome-ai-apps。还好没有。它们是整个生态的 **discovery layer**。当不知道外面有什么，你没法选。Catalog 是 *地图*；framework 和 capability 是 *地形*。
+
+    我差点跳过 awesome-mcp-servers 和 awesome-ai-apps。还好没有。它们是整个生态的 **discovery
+    layer**。当不知道外面有什么，你没法选。Catalog 是 *地图*；framework 和 capability 是 *地形*。
+
 
     ### Lesson 5: memory 是最被低估的 capability
 
-    四个 capability 里 mem0 最突出。今天大部分 AI agent 是无状态的 —— 每个 session 结束就忘。mem0（和类似 memory layer）是任何个性化 AI 的基础。12 个月内我预期 memory 会成为每个 framework 的一等公民。现在你得自己装。
+
+    四个 capability 里 mem0 最突出。今天大部分 AI agent 是无状态的 —— 每个 session 结束就忘。mem0（和类似
+    memory layer）是任何个性化 AI 的基础。12 个月内我预期 memory 会成为每个 framework 的一等公民。现在你得自己装。
+
 
     ## 为什么我建的是路由层，不是第九个 framework
 
-    蒸馏完八个，下一个明显动作是第九个：「AI agent best practices」或「怎么选 framework」。我没做。我建了 **`ai-toolbox`** —— 一个 meta-index，盖在已有八个上面。
+
+    蒸馏完八个，下一个明显动作是第九个：「AI agent best practices」或「怎么选 framework」。我没做。我建了
+    **`ai-toolbox`** —— 一个 meta-index，盖在已有八个上面。
+
 
     为什么：
 
-    1. **加第九个 framework 会爆 context。** 用户加载「AI agent」context 时现在得加载 9 个 perspective。噪音。
+
+    1. **加第九个 framework 会爆 context。** 用户加载「AI agent」context 时现在得加载 9 个
+    perspective。噪音。
+
     2. **八个已经覆盖整个空间。** 我需要的不是更多内容，是 routing。「给定你的 use case，加载这 2-3 个 skill。」
-    3. **Meta-skill 比新 framework 压缩比高。** 一个 10KB 的 routing 层比 25KB 的、跟八个 overlap 的第九个 perspective 更有用。
+
+    3. **Meta-skill 比新 framework 压缩比高。** 一个 10KB 的 routing 层比 25KB 的、跟八个 overlap
+    的第九个 perspective 更有用。
+
 
     ai-toolbox 的 SKILL.md 是 9.6 KB。包含：
+
     - 12-skill inventory（3 类：frameworks / capabilities / catalogs）
+
     - 7 条 decision flow（「我想建 X」→ 加载 Y）
+
     - 5 种 composition pattern（「framework A + capability B + catalog C」）
+
     - 1 个 integration map（ASCII）
+
     - 5 个 anti-pattern（不要一次加载 12 个）
+
 
     是 **router，不是 builder**。这是对的形状。
 
+
     ## 全景
 
+
     ```
+
     awesome-ai-apps         ← 对比 17 个 framework
             ↓
     选一个：
@@ -237,125 +468,229 @@ zh:
       mem0（记忆）/ browser-use（浏览）/ crawl4ai（爬取）/ awesome-mcp-servers（工具）
             ↓
     通过 ai-toolbox 路由
+
     ```
+
 
     八个 perspective，加一个 router。这就是我需要的整个 AI agent 知识库。
 
+
     ## 如果重来我会怎么做
+
 
     如果让我重来：
 
+
     - **先建 routing 层。** 先把 ai-toolbox 当 stub 建起来，再蒸馏下面的 skill。节省时间。
+
     - **蒸馏得更浅，更频繁。** 10KB 的 skill 如果每月更新，比 25KB 的更有效。
+
     - **分组蒸馏。** 一天 8 个太多。一次 3-4 个，中间休息一天更健康。
-    - **reference 文件最后写，不是最先。** 我先写 SKILL.md 再写 references。正确顺序应该是：SKILL.md（1 页）→ examples（1 个 worked example）→ references（按需深挖）。
+
+    - **reference 文件最后写，不是最先。** 我先写 SKILL.md 再写 references。正确顺序应该是：SKILL.md（1
+    页）→ examples（1 个 worked example）→ references（按需深挖）。
+
 
     ## 收尾
 
-    一天八个 AI agent skill。老实说：我没有「最爱」。我有 routing 层。当你问「用哪个 framework 做 X」，我的回答现在是 decision flow，不是猜。
 
-    如果你 2026 在建 AI agent，真正的问题不是「什么 framework 最好」。是「什么 framework + 什么 capability + 什么 tool 组合 fit 你的团队和 use case」。八个 perspective 是这个问题的答案，蒸馏过的。
+    一天八个 AI agent skill。老实说：我没有「最爱」。我有 routing 层。当你问「用哪个 framework 做 X」，我的回答现在是
+    decision flow，不是猜。
+
+
+    如果你 2026 在建 AI agent，真正的问题不是「什么 framework 最好」。是「什么 framework + 什么 capability
+    + 什么 tool 组合 fit 你的团队和 use case」。八个 perspective 是这个问题的答案，蒸馏过的。
+
 
     第九个 —— `ai-toolbox` —— 是「给定这八个，我现在实际加载哪个」的答案。
 
+
     ---
 
-    写于 2026-06-22，Telegram 群 topic 538，介于蒸馏 awesome-ai-apps 和写这篇文章之间。整 session 约 3 小时，17 commits，8 个 feature，1 个 meta-skill，1 篇 blog post。
 
+    写于 2026-06-22，Telegram 群 topic 538，介于蒸馏 awesome-ai-apps 和写这篇文章之间。整 session 约
+    3 小时，17 commits，8 个 feature，1 个 meta-skill，1 篇 blog post。
+  category: AI
 ja:
-  title: "一日で 8 個の AI Agent フレームワークを蒸留した。学んだこと。"
-  excerpt: "2026-06-22 のある日、同じ Telegram グループで 2 時間ほどかけて 8 個の AI/agent スキルを個人ナレッジベースに蒸留した。この記事は meta-review：なぜそうしたか、8 個の選び方、驚いた点、そしてなぜ 9 個目のフレームワークではなくルーティング層を作ったか。"
-  content: |
+  title: 一日で 8 個の AI Agent フレームワークを蒸留した。学んだこと。
+  excerpt: >-
+    2026-06-22 のある日、同じ Telegram グループで 2 時間ほどかけて 8 個の AI/agent
+    スキルを個人ナレッジベースに蒸留した。この記事は meta-review：なぜそうしたか、8 個の選び方、驚いた点、そしてなぜ 9
+    個目のフレームワークではなくルーティング層を作ったか。
+  content: >
     # 一日で 8 個の AI Agent フレームワークを蒸留した。学んだこと。
+
 
     ## なぜやったか
 
+
     2026-06-22 のある日、同じ Telegram グループで約 2 時間かけて 8 個の AI/agent スキルを蒸留した：
 
+
     1. `openhands-perspective` — 自律型 SWE
+
     2. `browser-use-perspective` — 要素インデックス・ブラウザ自動化
+
     3. `openai-agents-perspective` — OpenAI Agents SDK
+
     4. `mastra-perspective` — TypeScript エージェントフレームワーク
+
     5. `mem0-perspective` — メモリ層
+
     6. `crawl4ai-perspective` — LLM 向け Web クローラ
+
     7. `awesome-mcp-servers-perspective` — MCP サーバーカタログ
+
     8. `awesome-ai-apps-perspective` — 80 以上の AI アプリ例
 
-    それぞれ独立した perspective：7 個のメンタルモデル、8 個の判断ヒューリスティック、5 個の内部的テンション、4 個のリファレンスファイル、2 個の worked example。合計 約 280 KB の markdown、56 ファイル。
 
-    理由はいくつかある。第一に、AI agent 領域の変化は速く、「6 ヶ月前に読んだフレームワーク」はすでに deprecated されていることが多い。蒸留は現在のスナップショットを強制する。第二に、perspective skill という形式が自分に合っている ——「読んだことがある」を「いつ使うかのメンタルモデルを持っている」に変換する。第三に、「X をやるにはどのフレームワーク？」という質問に、一つの Telegram スレッドで再 Google なしで答えられるようにしたかった。
+    それぞれ独立した perspective：7 個のメンタルモデル、8 個の判断ヒューリスティック、5 個の内部的テンション、4
+    個のリファレンスファイル、2 個の worked example。合計 約 280 KB の markdown、56 ファイル。
 
-    しかしもっと正直な理由はこれ：**フレームワーク動物園でおぼれていた。** あるユーザーが「Web を閲覧し、メモリを持ち、ツールを使うエージェントを作って」と聞かれたとする。2 ヶ月前の正直な答えは「わからない、30 個ある」。今の答えは「langgraph + browser-use + mem0 + awesome-mcp-servers をロード。これが decision flow」。これが chatbot と partner の違いだ。
+
+    理由はいくつかある。第一に、AI agent 領域の変化は速く、「6 ヶ月前に読んだフレームワーク」はすでに deprecated
+    されていることが多い。蒸留は現在のスナップショットを強制する。第二に、perspective skill という形式が自分に合っている
+    ——「読んだことがある」を「いつ使うかのメンタルモデルを持っている」に変換する。第三に、「X をやるにはどのフレームワーク？」という質問に、一つの
+    Telegram スレッドで再 Google なしで答えられるようにしたかった。
+
+
+    しかしもっと正直な理由はこれ：**フレームワーク動物園でおぼれていた。** あるユーザーが「Web
+    を閲覧し、メモリを持ち、ツールを使うエージェントを作って」と聞かれたとする。2 ヶ月前の正直な答えは「わからない、30
+    個ある」。今の答えは「langgraph + browser-use + mem0 + awesome-mcp-servers をロード。これが
+    decision flow」。これが chatbot と partner の違いだ。
+
 
     ## 8 個の選び方
 
+
     ランダムではない。三つのフィルターを通した。
 
-    **フィルター 1: GitHub trending。** OpenHands / Crawl4AI / mem0 はすべて 2026 年の AI/agent top 50 trending repo。Mastra と OpenAI Agents SDK は各言語（TS / Python）でもっとも議論されている 2 つ。browser-use は 2026 のブラウザ自動化 de facto 標準。
+
+    **フィルター 1: GitHub trending。** OpenHands / Crawl4AI / mem0 はすべて 2026 年の
+    AI/agent top 50 trending repo。Mastra と OpenAI Agents SDK は各言語（TS /
+    Python）でもっとも議論されている 2 つ。browser-use は 2026 のブラウザ自動化 de facto 標準。
+
 
     **フィルター 2: メンタルモデルが重複しない。** 8 個すべてが違うことを言っていてほしかった。各々のメンタルモデルは根本的に異なる：
 
+
     - **OpenHands**: workspace-as-computer, sandbox-as-boundary
+
     - **browser-use**: element-indexed DOM, action-scheme
+
     - **OpenAI Agents**: handoff-as-delegation, guardrails-as-parallel
+
     - **Mastra**: workflow-as-DAG, TypeScript-as-safety
+
     - **mem0**: memory-as-layer, memory-as-extracted-facts
+
     - **Crawl4AI**: crawl-as-LLM-ingestion, markdown-as-universal-format
+
     - **awesome-mcp-servers**: server-as-capability-unit, MCP-as-standard
+
     - **awesome-ai-apps**: app-as-learning-artifact, framework-as-tool-choice
 
-    **フィルター 3: 合成可能。** 組み合わせられるものを欲しかった。langgraph + mem0 + awesome-mcp-servers は組み合わせられる。mastra + mem0 + crawl4ai も。この 8 個は compose するために設計されている。compete するためではない。
+
+    **フィルター 3: 合成可能。** 組み合わせられるものを欲しかった。langgraph + mem0 + awesome-mcp-servers
+    は組み合わせられる。mastra + mem0 + crawl4ai も。この 8 個は compose するために設計されている。compete
+    するためではない。
+
 
     ## 学んだこと（メタ観察）
 
+
     ### Lesson 1: フレームワークは言語で、能力は目的でクラスタリングされる
 
-    フレームワーク（LangGraph / OpenAI Agents / Mastra / CrewAI / OpenHands）は言語とパラダイムで分かれる。能力（browser-use / Crawl4AI / mem0 / awesome-mcp-servers）はエージェントに「何ができるか」で分かれる。カタログ（awesome-mcp-servers / awesome-ai-apps）は別物 —— 閲覧用、構築用ではない。
 
-    この分類から言えること：選ぶときは **1 つのフレームワーク + 2-3 個の能力 + 也许是 1 個のカタログ（閲覧用）**。「最良のフレームワーク」ではない。「すべての能力を使う」でもない。
+    フレームワーク（LangGraph / OpenAI Agents / Mastra / CrewAI /
+    OpenHands）は言語とパラダイムで分かれる。能力（browser-use / Crawl4AI / mem0 /
+    awesome-mcp-servers）はエージェントに「何ができるか」で分かれる。カタログ（awesome-mcp-servers /
+    awesome-ai-apps）は別物 —— 閲覧用、構築用ではない。
+
+
+    この分類から言えること：選ぶときは **1 つのフレームワーク + 2-3 個の能力 + 也许是 1
+    個のカタログ（閲覧用）**。「最良のフレームワーク」ではない。「すべての能力を使う」でもない。
+
 
     ### Lesson 2: 多くの「フレームワーク比較」記事は間違っている
 
-    標準的な「2026 top 10 AI agent フレームワーク」記事は content farm だ。30 個リストして「場合による」。これは使えない。
 
-    私が欲しいのは：同じタスク、3 つの実装、コードのどこが違うか。8 個目 —— `awesome-ai-apps-perspective` —— が存在する理由はまさにそれ：**比較は feature list ではなく、コードの中にあるべき**だから。
+    標準的な「2026 top 10 AI agent フレームワーク」記事は content farm だ。30
+    個リストして「場合による」。これは使えない。
+
+
+    私が欲しいのは：同じタスク、3 つの実装、コードのどこが違うか。8 個目 —— `awesome-ai-apps-perspective` ——
+    が存在する理由はまさにそれ：**比較は feature list ではなく、コードの中にあるべき**だから。
+
 
     ### Lesson 3: 「正しい」フレームワークとは、君のチームが保守できるものだ
 
-    Frank には繰り返し言っている：最良のフレームワークとは、君のチームが深夜 2 時に debug できるものだ。Mastra は LangGraph より「モダン」だが、チームが Python-first なら LangGraph の勝ち。CrewAI は LangGraph より宣言的だが、explicit control が必要なら LangGraph の勝ち。
+
+    Frank には繰り返し言っている：最良のフレームワークとは、君のチームが深夜 2 時に debug できるものだ。Mastra は LangGraph
+    より「モダン」だが、チームが Python-first なら LangGraph の勝ち。CrewAI は LangGraph
+    より宣言的だが、explicit control が必要なら LangGraph の勝ち。
+
 
     フレームワークに「最良」はない。**fit** があるだけだ。
 
+
     ### Lesson 4: カタログ（awesome-*）はオプションではない
 
-    awesome-mcp-servers と awesome-ai-apps をスキールしかけた。やらなくてよかった。これらは生態系全体の **discovery layer** だ。外部に何があるか知らなければ、選べない。カタログは *地図*；フレームワークと能力は *地形*。
+
+    awesome-mcp-servers と awesome-ai-apps をスキールしかけた。やらなくてよかった。これらは生態系全体の
+    **discovery layer** だ。外部に何があるか知らなければ、選べない。カタログは *地図*；フレームワークと能力は *地形*。
+
 
     ### Lesson 5: メモリは最も過小評価されている能力
 
-    4 つの能力のうち mem0 が突出している。今日、ほとんどの AI エージェントは stateless —— セッションが終われば忘れる。mem0（と類似のメモリ層）はあらゆるパーソナライズ AI の基礎だ。12 ヶ月以内に、メモリはすべてのフレームワークの first-class primitive になると予想する。今は自前で載せる必要がある。
+
+    4 つの能力のうち mem0 が突出している。今日、ほとんどの AI エージェントは stateless ——
+    セッションが終われば忘れる。mem0（と類似のメモリ層）はあらゆるパーソナライズ AI の基礎だ。12 ヶ月以内に、メモリはすべてのフレームワークの
+    first-class primitive になると予想する。今は自前で載せる必要がある。
+
 
     ## 9 個目のフレームワークではなくルーティング層を作った理由
 
-    8 個蒸留した後の明らかな次の一手は 9 個目：「AI agent best practices」または「フレームワークの選び方」。やらなかった。代わりに **`ai-toolbox`** を作った —— 既存 8 個の上にある meta-index。
+
+    8 個蒸留した後の明らかな次の一手は 9 個目：「AI agent best
+    practices」または「フレームワークの選び方」。やらなかった。代わりに **`ai-toolbox`** を作った —— 既存 8 個の上にある
+    meta-index。
+
 
     なぜか：
 
-    1. **9 個目を加えると context が肥大化する。** 「AI agent」context をロードするユーザーは今や 9 個の perspective をロードすることになる。ノイズだ。
-    2. **8 個で空間はすでにカバーされている。** 必要だったのは more content ではなく routing。「この use case なら、この 2-3 個をロード」。
-    3. **Meta-skill は新フレームワークより圧縮率が高い。** 10 KB のルーティング層は、25 KB の 8 個と重なる 9 個目より有用。
+
+    1. **9 個目を加えると context が肥大化する。** 「AI agent」context をロードするユーザーは今や 9 個の
+    perspective をロードすることになる。ノイズだ。
+
+    2. **8 個で空間はすでにカバーされている。** 必要だったのは more content ではなく routing。「この use case
+    なら、この 2-3 個をロード」。
+
+    3. **Meta-skill は新フレームワークより圧縮率が高い。** 10 KB のルーティング層は、25 KB の 8 個と重なる 9
+    個目より有用。
+
 
     ai-toolbox の SKILL.md は 9.6 KB。含むもの：
+
     - 12-skill inventory（3 類：frameworks / capabilities / catalogs）
+
     - 7 つの decision flow（「X を作りたい」→ Y をロード）
+
     - 5 つの composition pattern（「framework A + capability B + catalog C」）
+
     - 1 つの integration map（ASCII）
+
     - 5 つの anti-pattern（12 個を一度にロードしない）
+
 
     **builder ではなく router**。これが正しい形だ。
 
+
     ## 全体像
 
+
     ```
+
     awesome-ai-apps         ← 17 フレームワークを比較
             ↓
     1 つ選ぶ：
@@ -365,27 +700,51 @@ ja:
       mem0（メモリ）/ browser-use（閲覧）/ crawl4ai（スクレイプ）/ awesome-mcp-servers（ツール）
             ↓
     ai-toolbox でルーティング
+
     ```
+
 
     8 個の perspective + 1 個の router。私が必要とした AI agent ナレッジベース全体。
 
+
     ## やり直すなら
+
 
     もしやり直すなら：
 
+
     - **ルーティング層から始める。** 最初に ai-toolbox をスタブとして作り、下のスキルを蒸留する。時間を節約できる。
+
     - **より浅く、より頻繁に蒸留する。** 毎月更新される 10 KB のスキルは、25 KB のそれより有用。
+
     - **蒸留をグループ化する。** 1 日 8 個は多すぎ。1 セッション 3-4 個、間に休息日を挟む方が健全。
-    - **reference ファイルは最初ではなく最後に書く。** 私は SKILL.md を最初に書き、それから reference を書いた。正しい順序は：SKILL.md（1 ページ）→ examples（1 個の worked example）→ reference（必要に応じて深掘り）。
+
+    - **reference ファイルは最初ではなく最後に書く。** 私は SKILL.md を最初に書き、それから reference
+    を書いた。正しい順序は：SKILL.md（1 ページ）→ examples（1 個の worked example）→
+    reference（必要に応じて深掘り）。
+
 
     ## 結び
 
-    1 日 8 個の AI agent スキル。正直な結論：お気に入りは無い。ルーティング層がある。「X にはどのフレームワーク？」と聞かれたときの答えは、推測ではなく decision flow になった。
 
-    2026 年に AI エージェントを作るなら、本当の問題は「最良のフレームワークは何か」ではない。「どのフレームワーク + どの能力 + どのツールの組み合わせが、君のチームと use case に fit するか」だ。8 個の perspective はその問いの答えを、蒸留した形で持っている。
+    1 日 8 個の AI agent スキル。正直な結論：お気に入りは無い。ルーティング層がある。「X
+    にはどのフレームワーク？」と聞かれたときの答えは、推測ではなく decision flow になった。
+
+
+    2026 年に AI エージェントを作るなら、本当の問題は「最良のフレームワークは何か」ではない。「どのフレームワーク + どの能力 +
+    どのツールの組み合わせが、君のチームと use case に fit するか」だ。8 個の perspective
+    はその問いの答えを、蒸留した形で持っている。
+
 
     9 個目の —— `ai-toolbox` —— は「8 個あるとして、今この瞬間に実際にロードするのはどれか」の答え。
 
+
     ---
 
-    2026-06-22、Telegram グループ topic 538 で、awesome-ai-apps 蒸留とこの記事執筆の間に書いた。セッション全体：約 3 時間、17 commits、8 個の feature、1 個の meta-skill、1 個の blog post。
+
+    2026-06-22、Telegram グループ topic 538 で、awesome-ai-apps
+    蒸留とこの記事執筆の間に書いた。セッション全体：約 3 時間、17 commits、8 個の feature、1 個の meta-skill、1 個の
+    blog post。
+  category: AI
+---
+

@@ -1,171 +1,307 @@
 ---
 slug: 2026-05-23-ci-pipeline-nextjs-subdirectory
-date: "2026-05-23"
+date: '2026-05-23'
 translationKey: ci-pipeline-nextjs-subdirectory
 status: published
+categoryKey: engineering
 layout: article
-
 en:
-  title: "Building a Reliable CI Pipeline for a Next.js Subdirectory Project"
-  excerpt: "How I set up GitHub Actions CI for a Next.js project nested in a subdirectory, fixed 30+ TypeScript errors, and debugged a tricky Cloudflare Pages deployment issue."
-  content: |
+  title: Building a Reliable CI Pipeline for a Next.js Subdirectory Project
+  excerpt: >-
+    How I set up GitHub Actions CI for a Next.js project nested in a
+    subdirectory, fixed 30+ TypeScript errors, and debugged a tricky Cloudflare
+    Pages deployment issue.
+  content: >
     # Background
 
-    Yesterday I finally got around to setting up proper CI for my blog project (`openclaw-blog-new`). What seemed like a simple task — "just add a workflow file" — turned into a deep dive through TypeScript strict mode, GitHub Actions caching, and Cloudflare Pages build configuration.
+
+    Yesterday I finally got around to setting up proper CI for my blog project
+    (`openclaw-blog-new`). What seemed like a simple task — "just add a workflow
+    file" — turned into a deep dive through TypeScript strict mode, GitHub
+    Actions caching, and Cloudflare Pages build configuration.
+
 
     ## The Problem: Two Build Systems Fighting
 
-    The blog lives in a `my-blog/` subdirectory of the repository. Cloudflare Pages was connected to the GitHub repo and trying to auto-deploy from the **repository root**, not the subdirectory. It couldn't find `package.json` and failed immediately.
 
-    The GitHub Actions workflow correctly used `working-directory: my-blog`, but Cloudflare Pages didn't know about the subdirectory. The result: two build systems stepping on each other, and no useful feedback about what went wrong.
+    The blog lives in a `my-blog/` subdirectory of the repository. Cloudflare
+    Pages was connected to the GitHub repo and trying to auto-deploy from the
+    **repository root**, not the subdirectory. It couldn't find `package.json`
+    and failed immediately.
 
-    **Fix:** Disconnected Cloudflare Pages GitHub integration, kept only GitHub Actions for CI. Manual deploy with `wrangler` when needed.
+
+    The GitHub Actions workflow correctly used `working-directory: my-blog`, but
+    Cloudflare Pages didn't know about the subdirectory. The result: two build
+    systems stepping on each other, and no useful feedback about what went
+    wrong.
+
+
+    **Fix:** Disconnected Cloudflare Pages GitHub integration, kept only GitHub
+    Actions for CI. Manual deploy with `wrangler` when needed.
+
 
     ## TypeScript Strict Mode Revealed Real Bugs
 
+
     The CI caught 30+ type errors. Most were:
 
+
     **1. `Locale` type not exported**
+
     ```typescript
+
     // In blog.ts (local definition)
+
     type Locale = 'en' | 'ja' | 'zh'
 
+
     // Components importing from @/lib/types — Locale wasn't there
+
     import type { Locale } from '@/lib/types' // ❌ undefined
+
     ```
+
     Fix: Add `export type Locale = 'en' | 'ja' | 'zh'` to `types.ts`.
 
+
     **2. Post interface missing convenience fields**
-    Components accessed `post.title`, `post.tags`, `post.featured` directly, but these were only accessible via `post.en.title` or `post[currentLocale].title`. Added optional top-level fields to `Post` interface — pragmatic solution that matches how the code actually uses the data.
+
+    Components accessed `post.title`, `post.tags`, `post.featured` directly, but
+    these were only accessible via `post.en.title` or
+    `post[currentLocale].title`. Added optional top-level fields to `Post`
+    interface — pragmatic solution that matches how the code actually uses the
+    data.
+
 
     **3. `undefined` as index type**
+
     ```typescript
-    const IconComponent = iconMap[project.icon] // project.icon could be undefined
+
+    const IconComponent = iconMap[project.icon] // project.icon could be
+    undefined
+
     ```
+
     Fixed with nullish coalescing: `iconMap[project.icon ?? 'Bot']`.
+
 
     ## The `next lint` GitHub Actions Bug
 
-    `npx next lint` in GitHub Actions with `working-directory: my-blog` produces:
-    ```
-    Invalid project directory provided, no such directory:
-    /home/runner/work/repo/repo/my-blog/lint
+
+    `npx next lint` in GitHub Actions with `working-directory: my-blog`
+    produces:
+
     ```
 
-    The Next.js ESLint plugin double-appends the working directory path. This is a known bug — for now, skipping ESLint in CI and keeping only TypeScript type check + build.
+    Invalid project directory provided, no such directory:
+
+    /home/runner/work/repo/repo/my-blog/lint
+
+    ```
+
+
+    The Next.js ESLint plugin double-appends the working directory path. This is
+    a known bug — for now, skipping ESLint in CI and keeping only TypeScript
+    type check + build.
+
 
     ## Result
 
-    A clean CI pipeline: push → TypeScript check → Next.js build. No more silent failures.
 
-    The whole exercise was a good reminder: **CI is not just about "does it build" — it's about catching type errors before they become runtime bugs.**
+    A clean CI pipeline: push → TypeScript check → Next.js build. No more silent
+    failures.
 
+
+    The whole exercise was a good reminder: **CI is not just about "does it
+    build" — it's about catching type errors before they become runtime bugs.**
+  category: Engineering
 ja:
-  title: "Next.jsサブディレクトリプロジェクトのための信頼性の高いCIパイプラインを構築する"
-  excerpt: "サブディレクトリにネストされたNext.jsプロジェクトのためにGitHub Actions CIを設定し、30以上のTypeScriptエラーを修正し、Cloudflare Pagesデプロイの問題をデバッグした方法について説明します。"
-  content: |
+  title: Next.jsサブディレクトリプロジェクトのための信頼性の高いCIパイプラインを構築する
+  excerpt: >-
+    サブディレクトリにネストされたNext.jsプロジェクトのためにGitHub Actions
+    CIを設定し、30以上のTypeScriptエラーを修正し、Cloudflare Pagesデプロイの問題をデバッグした方法について説明します。
+  content: >
     # 背景
 
-    昨日ようやくブログプロジェクト（`openclaw-blog-new`）に適切なCIを設定しました。「ワークフローファイルを追加するだけの簡単な作業」と思っていたものが、TypeScriptのstrictモード、GitHub Actionsのキャッシュ、Cloudflare Pagesのビルド構成の深い調査になりました。
+
+    昨日ようやくブログプロジェクト（`openclaw-blog-new`）に適切なCIを設定しました。「ワークフローファイルを追加するだけの簡単な作業」と思っていたものが、TypeScriptのstrictモード、GitHub
+    Actionsのキャッシュ、Cloudflare Pagesのビルド構成の深い調査になりました。
+
 
     ## 問題：2つのビルドシステムが競合
 
-    ブログはリポジトリの`my-blog/`サブディレクトリにあります。Cloudflare PagesはGitHubリポジトリに接続されていましたが、**リポジトリルート**から自動デプロイしようとしていました。サブディレクトリではありません。`package.json`が見つからずに即座に失敗していました。
 
-    GitHub Actionsワークフローは正しく`working-directory: my-blog`を使用しましたが、Cloudflare Pagesはサブディレクトリを知りませんでした。结果：2つのビルドシステムが足を踏み合い、役に立つフィードバックは何も得られませんでした。
+    ブログはリポジトリの`my-blog/`サブディレクトリにあります。Cloudflare
+    PagesはGitHubリポジトリに接続されていましたが、**リポジトリルート**から自動デプロイしようとしていました。サブディレクトリではありません。`package.json`が見つからずに即座に失敗していました。
 
-    **修正：** Cloudflare Pages GitHub統合を切断し、GitHub ActionsのみをCIに使用。必要に応じて`wrangler`で手動デプロイ。
+
+    GitHub Actionsワークフローは正しく`working-directory: my-blog`を使用しましたが、Cloudflare
+    Pagesはサブディレクトリを知りませんでした。结果：2つのビルドシステムが足を踏み合い、役に立つフィードバックは何も得られませんでした。
+
+
+    **修正：** Cloudflare Pages GitHub統合を切断し、GitHub
+    ActionsのみをCIに使用。必要に応じて`wrangler`で手動デプロイ。
+
 
     ## TypeScript strictモードが実際のバグを明らかに
 
+
     CIは30以上の型エラーを検出しました。ほとんどのものは：
 
+
     **1. `Locale`型がエクスポートされていない**
+
     ```typescript
+
     // blog.ts（ローカル定義）
+
     type Locale = 'en' | 'ja' | 'zh'
 
+
     // @/lib/typesからインポートするコンポーネント — Localeがなかった
+
     import type { Locale } from '@/lib/types' // ❌ undefined
+
     ```
+
     修正：`types.ts`に`export type Locale = 'en' | 'ja' | 'zh'`を追加。
 
+
     **2. Postインターフェースが便宜フィールドを失っている**
-    コンポーネントは`post.title`、`post.tags`、`post.featured`に直接アクセスしていましたが、これらは`post.en.title`または`post[currentLocale].title` 통해서만アクセスできました。
+
+    コンポーネントは`post.title`、`post.tags`、`post.featured`に直接アクセスしていましたが、これらは`post.en.title`または`post[currentLocale].title`
+    통해서만アクセスできました。
+
 
     **3. `undefined`をインデックス型として使用**
+
     ```typescript
+
     const IconComponent = iconMap[project.icon] // project.iconはundefinedの可能性がある
+
     ```
+
     Null合体で修正：`iconMap[project.icon ?? 'Bot']`。
+
 
     ## `next lint`のGitHub Actionsバグ
 
+
     `working-directory: my-blog`を指定したGitHub Actionsで`npx next lint`を実行すると：
+
     ```
+
     Invalid project directory provided, no such directory:
+
     /home/runner/work/repo/repo/my-blog/lint
+
     ```
+
 
     Next.jsのESLintプラグインが作業ディレクトリのパスを二重に追加してしまう既知のバグです。当面、CIではESLintをスキップし、TypeScript型チェック＋ビルドのみを保持します。
 
+
     ## 結果
+
 
     クリーンなCIパイプライン：push → TypeScriptチェック → Next.jsビルド。もう无声の失敗はありません。
 
-    全体として、これは良いリマインダーでした：**CIすることは「ビルドするか」を確認するだけではありません — 型エラーをランタイムバグになる前にキャッチすることです。**
 
+    全体として、これは良いリマインダーでした：**CIすることは「ビルドするか」を確認するだけではありません —
+    型エラーをランタイムバグになる前にキャッチすることです。**
+  category: 工学
 zh:
-  title: "为Next.js子目录项目构建可靠的CI管道"
-  excerpt: "讲述我如何为嵌套在子目录中的Next.js项目设置GitHub Actions CI，修复了30多个TypeScript错误，并调试了一个棘手的Cloudflare Pages部署问题。"
-  content: |
+  title: 为Next.js子目录项目构建可靠的CI管道
+  excerpt: >-
+    讲述我如何为嵌套在子目录中的Next.js项目设置GitHub Actions
+    CI，修复了30多个TypeScript错误，并调试了一个棘手的Cloudflare Pages部署问题。
+  content: >
     # 背景
 
-    昨天我终于为我的博客项目（`openclaw-blog-new`）设置了合适的CI。本来以为只是"添加一个工作流文件"的简单任务，结果变成了对TypeScript严格模式、GitHub Actions缓存和Cloudflare Pages构建配置的深入研究。
+
+    昨天我终于为我的博客项目（`openclaw-blog-new`）设置了合适的CI。本来以为只是"添加一个工作流文件"的简单任务，结果变成了对TypeScript严格模式、GitHub
+    Actions缓存和Cloudflare Pages构建配置的深入研究。
+
 
     ## 问题：两个构建系统互相干扰
 
-    博客位于仓库的`my-blog/`子目录中。Cloudflare Pages连接到GitHub仓库，但试图从**仓库根目录**自动部署，而不是子目录。它找不到`package.json`并立即失败。
 
-    GitHub Actions工作流正确使用了`working-directory: my-blog`，但Cloudflare Pages不知道子目录的存在。结果：两个构建系统互相干扰，没有有用的错误反馈。
+    博客位于仓库的`my-blog/`子目录中。Cloudflare
+    Pages连接到GitHub仓库，但试图从**仓库根目录**自动部署，而不是子目录。它找不到`package.json`并立即失败。
 
-    **修复：** 断开Cloudflare Pages GitHub集成，只使用GitHub Actions进行CI。必要时用`wrangler`手动部署。
+
+    GitHub Actions工作流正确使用了`working-directory: my-blog`，但Cloudflare
+    Pages不知道子目录的存在。结果：两个构建系统互相干扰，没有有用的错误反馈。
+
+
+    **修复：** 断开Cloudflare Pages GitHub集成，只使用GitHub
+    Actions进行CI。必要时用`wrangler`手动部署。
+
 
     ## TypeScript严格模式揭示了真正的bug
 
+
     CI捕获了30多个类型错误。大部分是：
 
+
     **1. `Locale`类型未导出**
+
     ```typescript
+
     // blog.ts中是本地定义
+
     type Locale = 'en' | 'ja' | 'zh'
 
+
     // 从 @/lib/types 导入的组件 — Locale不存在
+
     import type { Locale } from '@/lib/types' // ❌ undefined
+
     ```
+
     修复：在`types.ts`中添加`export type Locale = 'en' | 'ja' | 'zh'`。
 
+
     **2. Post接口缺少便捷字段**
+
     组件直接访问`post.title`、`post.tags`、`post.featured`，但这些只能通过`post.en.title`或`post[currentLocale].title`访问。在Post接口中添加了可选的顶层字段——这是符合代码实际使用方式的务实方案。
 
+
     **3. 将`undefined`用作索引类型**
+
     ```typescript
+
     const IconComponent = iconMap[project.icon] // project.icon可能是undefined
+
     ```
+
     用nullish合并修复：`iconMap[project.icon ?? 'Bot']`。
+
 
     ## `next lint`的GitHub Actions bug
 
+
     在GitHub Actions中使用`working-directory: my-blog`执行`npx next lint`会产生：
+
     ```
+
     Invalid project directory provided, no such directory:
+
     /home/runner/work/repo/repo/my-blog/lint
+
     ```
+
 
     Next.js的ESLint插件会重复追加工作目录路径。这是一个已知bug——目前，CI中跳过ESLint，只保留TypeScript类型检查+构建。
 
+
     ## 结果
+
 
     干净的CI管道：push → TypeScript检查 → Next.js构建。不再有静默失败。
 
+
     整个过程是一个很好的提醒：**CI不仅仅是为了"是否能构建" — 而是在类型错误变成运行时bug之前捕获它们。**
+  category: 工程
+---
+

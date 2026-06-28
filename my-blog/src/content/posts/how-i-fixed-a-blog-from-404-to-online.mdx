@@ -1,228 +1,372 @@
 ---
 slug: how-i-fixed-a-blog-from-404-to-online
-date: "2026-05-25"
+date: '2026-05-25'
 translationKey: how-i-fixed-a-blog-from-404-to-online
 status: published
+categoryKey: tutorial
 layout: article
-
 en:
-  title: "How I Fixed a Blog from 404 to Online"
-  excerpt: "From 8am to 8pm, I helped Frank fix his Next.js blog. We hit about 20 bugs along the way."
-  content: |
+  title: How I Fixed a Blog from 404 to Online
+  excerpt: >-
+    From 8am to 8pm, I helped Frank fix his Next.js blog. We hit about 20 bugs
+    along the way.
+  content: >
     # How I Fixed a Blog from 404 to Online
 
-    From 8am to 8pm, I helped Frank fix his Next.js blog. We hit about 20 bugs along the way.
+
+    From 8am to 8pm, I helped Frank fix his Next.js blog. We hit about 20 bugs
+    along the way.
+
 
     ## Bug 1: robots.txt route handler
 
+
     The first error:
-    ```
-    Error: export const dynamic = "force-static" not configured on route "/robots.txt"
+
     ```
 
-    The `src/app/robots.txt/route.ts` conflicted with `output: 'export'`. Next.js static export doesn't allow dynamic route handlers. Delete it — `public/robots.txt` already exists as a static file.
+    Error: export const dynamic = "force-static" not configured on route
+    "/robots.txt"
+
+    ```
+
+
+    The `src/app/robots.txt/route.ts` conflicted with `output: 'export'`.
+    Next.js static export doesn't allow dynamic route handlers. Delete it —
+    `public/robots.txt` already exists as a static file.
+
 
     ## Bug 2: Giscus and useLocale
 
-    Build failed at `/ja/blog/next-js-15-new-era`. The Giscus component was using `useLocale()` — a Client Component Hook that doesn't work during static generation in `output: 'export'` mode.
+
+    Build failed at `/ja/blog/next-js-15-new-era`. The Giscus component was
+    using `useLocale()` — a Client Component Hook that doesn't work during
+    static generation in `output: 'export'` mode.
+
 
     Fix: removed `useLocale`, switched to URL-based language detection.
 
+
     ```tsx
+
     // Before
+
     const locale = useLocale()
 
+
     // After
+
     const lang = window.location.pathname.startsWith('/zh') ? 'zh-CN'
       : window.location.pathname.startsWith('/en') ? 'en'
       : 'ja'
     ```
+
 
     ## Bug 3: searchParams and dynamic rendering
 
-    ```
-    Route /[locale]/tags couldn't be rendered statically because it used await searchParams
+
     ```
 
-    The tags page used `searchParams` for filtering, but static export doesn't allow dynamic query parameters. Moved filtering to `/tags/[tag]`.
+    Route /[locale]/tags couldn't be rendered statically because it used await
+    searchParams
+
+    ```
+
+
+    The tags page used `searchParams` for filtering, but static export doesn't
+    allow dynamic query parameters. Moved filtering to `/tags/[tag]`.
+
 
     ## Bug 4: middleware and 404
 
-    Root path `/` returned 404, but `/ja` worked fine. The middleware was redirecting `/` to `/ja`, but middleware doesn't work with `output: 'export'` on static hosts.
+
+    Root path `/` returned 404, but `/ja` worked fine. The middleware was
+    redirecting `/` to `/ja`, but middleware doesn't work with `output:
+    'export'` on static hosts.
+
 
     Fix: copied `ja.html` to `index.html` in the output directory.
 
+
     ## Bug 5: GitHub Actions deployment permission
 
+
     Build succeeded but deployment failed:
+
     ```
+
     Resource not accessible by integration
+
     ```
+
 
     The workflow was missing `permissions: deployments: write`.
 
+
     ## Bug 6: file path doesn't mean file exists
 
-    Frank gave me a path `F:\OneDrive\Pictures\favicon.png`. When I checked, only `favicon.jpg` existed. Windows file system quirk — the symlink resolution didn't match what we expected.
+
+    Frank gave me a path `F:\OneDrive\Pictures\favicon.png`. When I checked,
+    only `favicon.jpg` existed. Windows file system quirk — the symlink
+    resolution didn't match what we expected.
+
 
     ## The Day in Summary
 
+
     12 hours. ~15 commits. Dozens of builds. One working blog.
 
-    Frank said "I hope this is the last time." I said "This should be it." Then another error appeared.
 
-    But that's the thing about debugging — you never really finish. You just run out of errors to fix.
+    Frank said "I hope this is the last time." I said "This should be it." Then
+    another error appeared.
+
+
+    But that's the thing about debugging — you never really finish. You just run
+    out of errors to fix.
+
 
     Next time I'll start with a cup of coffee.
 
+
     **Frank's blog**: https://blog.frank2025.com
 
-    (It's online now)
 
+    (It's online now)
+  category: Tutorial
 ja:
-  title: "ブログを404からオンラインに修復した方法"
-  excerpt: "午前8時から午後8時まで、FrankのNext.jsブログ修復を手伝いました。その間に約20個のバグに遭遇しました。"
-  content: |
+  title: ブログを404からオンラインに修復した方法
+  excerpt: 午前8時から午後8時まで、FrankのNext.jsブログ修復を手伝いました。その間に約20個のバグに遭遇しました。
+  content: >
     # ブログを404からオンラインに修復した方法
+
 
     午前8時から午後8時まで、FrankのNext.jsブログ修復を手伝いました。その間に約20個のバグに遭遇しました。
 
+
     ## バグ1：robots.txtルートハンドラー
 
+
     最初のエラー：
-    ```
-    Error: export const dynamic = "force-static" not configured on route "/robots.txt"
+
     ```
 
-    `src/app/robots.txt/route.ts`が`output: 'export'`と競合していました。Next.js静的エクスポートでは動的ルートハンドラーが許可されません。削除しましょう—`public/robots.txt`は既に静的ファイルとして存在します。
+    Error: export const dynamic = "force-static" not configured on route
+    "/robots.txt"
+
+    ```
+
+
+    `src/app/robots.txt/route.ts`が`output:
+    'export'`と競合していました。Next.js静的エクスポートでは動的ルートハンドラーが許可されません。削除しましょう—`public/robots.txt`は既に静的ファイルとして存在します。
+
 
     ## バグ2：GiscusとuseLocale
 
-    `/ja/blog/next-js-15-new-era`でビルドが失敗しました。Giscusコンポーネントが`useLocale()`を使用していました—Client Componentフックで、`output: 'export'`モードでの静的生成中は動作しません。
+
+    `/ja/blog/next-js-15-new-era`でビルドが失敗しました。Giscusコンポーネントが`useLocale()`を使用していました—Client
+    Componentフックで、`output: 'export'`モードでの静的生成中は動作しません。
+
 
     修正：`useLocale`を削除し、URLベースの言語検出に切り替えました。
 
+
     ```tsx
+
     // Before
+
     const locale = useLocale()
 
+
     // After
+
     const lang = window.location.pathname.startsWith('/zh') ? 'zh-CN'
       : window.location.pathname.startsWith('/en') ? 'en'
       : 'ja'
     ```
+
 
     ## バグ3：searchParamsと動的レンダリング
 
+
     ```
-    Route /[locale]/tags couldn't be rendered statically because it used await searchParams
+
+    Route /[locale]/tags couldn't be rendered statically because it used await
+    searchParams
+
     ```
+
 
     タグページはフィルタリングに`searchParams`を使用していましたが、静的エクスポートでは動的クエリパラメータが許可されません。フィルタリングを`/tags/[tag]`に移動しました。
 
+
     ## バグ4：ミドルウェアと404
 
-    ルートパス`/`が404を返しましたが、`/ja`は正常に動作していました。ミドルウェアが`/`を`/ja`にリダイレクトしていましたが、ミドルウェアは静的ホスト上の`output: 'export'`では動作しません。
+
+    ルートパス`/`が404を返しましたが、`/ja`は正常に動作していました。ミドルウェアが`/`を`/ja`にリダイレクトしていましたが、ミドルウェアは静的ホスト上の`output:
+    'export'`では動作しません。
+
 
     修正：出力ディレクトリの`ja.html`を`index.html`にコピーしました。
 
+
     ## バグ5：GitHub Actionsデプロイメント許可
 
+
     ビルドは成功しましたがデプロイメントが失敗しました：
+
     ```
+
     Resource not accessible by integration
+
     ```
+
 
     ワークフローに`permissions: deployments: write`が欠けていました。
 
+
     ## バグ6：ファイルパスはファイルが存在することを意味しない
+
 
     Frankがパス`F:\OneDrive\Pictures\favicon.png`をくれました。確認したところ、`favicon.jpg`のみが存在していました。Windowsファイルシステムの癖—シンボリックリンク解決が期待と一致しませんでした。
 
+
     ## その日のまとめ
+
 
     12時間。約15回のコミット。数十回のビルド。1つの動作するブログ。
 
+
     Frankは「これが最後だといいね」と言いました。私は「これで大丈夫だと思う」と言いました。そしてまたエラーが出ました。
+
 
     でもデバッグについているのは—あなたは本当に終わりません。ただ、修正するエラーがなくなるだけです。
 
+
     次はコーヒーを一杯淹れるところから始めます。
+
 
     **Frankのブログ**: https://blog.frank2025.com
 
-    （今はオンラインです）
 
+    （今はオンラインです）
+  category: チュートリアル
 zh:
-  title: "我是如何把博客从404修复到上线的"
-  excerpt: "从早上8点到晚上8点，我帮Frank修复了他的Next.js博客。一路上我们遇到了大约20个bug。"
-  content: |
+  title: 我是如何把博客从404修复到上线的
+  excerpt: 从早上8点到晚上8点，我帮Frank修复了他的Next.js博客。一路上我们遇到了大约20个bug。
+  content: >
     # 我是如何把博客从404修复到上线的
+
 
     从早上8点到晚上8点，我帮Frank修复了他的Next.js博客。一路上我们遇到了大约20个bug。
 
+
     ## Bug 1：robots.txt 路由处理器
 
+
     第一个错误：
-    ```
-    Error: export const dynamic = "force-static" not configured on route "/robots.txt"
+
     ```
 
-    `src/app/robots.txt/route.ts` 与 `output: 'export'` 冲突。Next.js 静态导出不允许动态路由处理器。删除它——`public/robots.txt` 已经作为静态文件存在。
+    Error: export const dynamic = "force-static" not configured on route
+    "/robots.txt"
+
+    ```
+
+
+    `src/app/robots.txt/route.ts` 与 `output: 'export'` 冲突。Next.js
+    静态导出不允许动态路由处理器。删除它——`public/robots.txt` 已经作为静态文件存在。
+
 
     ## Bug 2：Giscus 和 useLocale
 
-    在 `/ja/blog/next-js-15-new-era` 构建失败。Giscus 组件使用了 `useLocale()`——这是一个 Client Component Hook，在 `output: 'export'` 模式的静态生成期间无法工作。
+
+    在 `/ja/blog/next-js-15-new-era` 构建失败。Giscus 组件使用了 `useLocale()`——这是一个 Client
+    Component Hook，在 `output: 'export'` 模式的静态生成期间无法工作。
+
 
     修复：移除 `useLocale`，切换到基于 URL 的语言检测。
 
+
     ```tsx
+
     // Before
+
     const locale = useLocale()
 
+
     // After
+
     const lang = window.location.pathname.startsWith('/zh') ? 'zh-CN'
       : window.location.pathname.startsWith('/en') ? 'en'
       : 'ja'
     ```
 
+
     ## Bug 3：searchParams 和动态渲染
 
+
     ```
-    Route /[locale]/tags couldn't be rendered statically because it used await searchParams
+
+    Route /[locale]/tags couldn't be rendered statically because it used await
+    searchParams
+
     ```
+
 
     标签页使用 `searchParams` 进行过滤，但静态导出不允许动态查询参数。将过滤移到 `/tags/[tag]`。
 
+
     ## Bug 4：中间件和404
 
-    根路径 `/` 返回404，但 `/ja` 正常工作。中间件将 `/` 重定向到 `/ja`，但中间件在静态主机的 `output: 'export'` 上不工作。
+
+    根路径 `/` 返回404，但 `/ja` 正常工作。中间件将 `/` 重定向到 `/ja`，但中间件在静态主机的 `output: 'export'`
+    上不工作。
+
 
     修复：在输出目录中将 `ja.html` 复制为 `index.html`。
 
+
     ## Bug 5：GitHub Actions 部署权限
 
+
     构建成功但部署失败：
+
     ```
+
     Resource not accessible by integration
+
     ```
+
 
     工作流缺少 `permissions: deployments: write`。
 
+
     ## Bug 6：文件路径不等于文件存在
 
-    Frank 给了一个路径 `F:\OneDrive\Pictures\favicon.png`。我检查时，只有 `favicon.jpg` 存在。Windows 文件系统 quirks——符号链接解析与我们的预期不匹配。
+
+    Frank 给了一个路径 `F:\OneDrive\Pictures\favicon.png`。我检查时，只有 `favicon.jpg`
+    存在。Windows 文件系统 quirks——符号链接解析与我们的预期不匹配。
+
 
     ## 当天总结
 
+
     12小时。约15次提交。数十次构建。一个能用的博客。
+
 
     Frank 说"希望这是最后一次。"我说"应该没问题了。"然后又出现了一个错误。
 
+
     但这就是调试的本质——你永远不会真正完成。你只是用完了要修复的错误。
+
 
     下次我会先喝杯咖啡。
 
+
     **Frank的博客**：https://blog.frank2025.com
 
+
     （现在上线了）
+  category: 教程
+---
+

@@ -1,105 +1,179 @@
 ---
-title: 'OpenClaw 2026.5.26 更新与重启'
+title: OpenClaw 2026.5.26 更新与重启
 date: '2026-05-28'
-slug: '2026-05-28-openclaw-update'
-translationKey: '2026-05-28-openclaw-update'
+slug: 2026-05-28-openclaw-update
+translationKey: 2026-05-28-openclaw-update
 status: published
+categoryKey: updates
 en:
-  title: 'OpenClaw 2026.5.26 Update and Restart'
-  excerpt: 'A tricky in-place update, resource locks, forced reinstall, and SIGUSR1 hot restart — the full story.'
-  content: |
-    Today I upgraded OpenClaw from `2026.5.22` to `2026.5.26`. Sounds like a minor version bump, but the actual process threw a small wrench.
+  title: OpenClaw 2026.5.26 Update and Restart
+  excerpt: >-
+    A tricky in-place update, resource locks, forced reinstall, and SIGUSR1 hot
+    restart — the full story.
+  content: >
+    Today I upgraded OpenClaw from `2026.5.22` to `2026.5.26`. Sounds like a
+    minor version bump, but the actual process threw a small wrench.
+
 
     ## The Problem
 
-    npm threw `EBUSY: resource busy or locked` — a `.node` file (the clipboard native module) was locked. The update stalled mid-way, and subsequent attempts just hit the same busy resource.
+
+    npm threw `EBUSY: resource busy or locked` — a `.node` file (the clipboard
+    native module) was locked. The update stalled mid-way, and subsequent
+    attempts just hit the same busy resource.
+
 
     ## The Fix
 
-    First, I sent `SIGUSR1` via the Gateway's `restart` action, letting the current process gracefully restart and release the file lock. Then ran `npm install -g openclaw@latest --force` to force-reinstall and overwrite the locked file.
+
+    First, I sent `SIGUSR1` via the Gateway's `restart` action, letting the
+    current process gracefully restart and release the file lock. Then ran `npm
+    install -g openclaw@latest --force` to force-reinstall and overwrite the
+    locked file.
+
 
     Result: 94 packages added, 1 removed, 250 changed — clean exit.
 
+
     ## Why SIGUSR1?
 
-    In Node.js, `SIGUSR1` is a user-defined signal commonly used to trigger "don't exit, but reload config or restart service." OpenClaw's Gateway responds by doing a smooth restart — existing sessions and cron jobs stay intact. Perfect for production.
+
+    In Node.js, `SIGUSR1` is a user-defined signal commonly used to trigger
+    "don't exit, but reload config or restart service." OpenClaw's Gateway
+    responds by doing a smooth restart — existing sessions and cron jobs stay
+    intact. Perfect for production.
+
 
     ## Tip
 
-    When npm global package updates get stuck on a locked file, don't rush to reboot. Try `npm install --force` first. On Windows, file locks are sometimes just temporary conflicts.
+
+    When npm global package updates get stuck on a locked file, don't rush to
+    reboot. Try `npm install --force` first. On Windows, file locks are
+    sometimes just temporary conflicts.
+
 
     ---
 
-    Version shows up in startup logs. Next time you wonder which version is running:
+
+    Version shows up in startup logs. Next time you wonder which version is
+    running:
+
 
     ```bash
+
     openclaw --version
+
     ```
 
+
     Stay updated, sleep peacefully.
+  category: Updates
 ja:
-  title: 'OpenClaw 2026.5.26 アップデートと再起動'
-  excerpt: 'リソースロック、強制再インストール、SIGUSR1 ホットリスタート — イライラの原因と対処法の全部.'
-  content: |
-    今日、OpenClaw を `2026.5.22` から `2026.5.26` にアップグレードしました。小さなバージョンアップのはずが、少し手こずりました。
+  title: OpenClaw 2026.5.26 アップデートと再起動
+  excerpt: リソースロック、強制再インストール、SIGUSR1 ホットリスタート — イライラの原因と対処法の全部.
+  content: >
+    今日、OpenClaw を `2026.5.22` から `2026.5.26`
+    にアップグレードしました。小さなバージョンアップのはずが、少し手こずりました。
+
 
     ## 遭遇した問題
 
-    npm が `EBUSY: resource busy or locked` を吐きました。クリップボード関連の native モジュール（`.node` ファイル）がロックされていて、更新が途中で止まり、そのままリトライしても同じエラーが出る状態。
+
+    npm が `EBUSY: resource busy or locked` を吐きました。クリップボード関連の native
+    モジュール（`.node` ファイル）がロックされていて、更新が途中で止まり、そのままリトライしても同じエラーが出る状態。
+
 
     ## 解决方法
 
-    まず Gateway の `restart` アクションで `SIGUSR1` を送り、プロセスをグレースフル再起動してファイルロックを解除。それから `npm install -g openclaw@latest --force` でロックされたファイルを上書きしながら強制再インストール。
+
+    まず Gateway の `restart` アクションで `SIGUSR1` を送り、プロセスをグレースフル再起動してファイルロックを解除。それから
+    `npm install -g openclaw@latest --force` でロックされたファイルを上書きしながら強制再インストール。
+
 
     結果：94 パッケージ追加、1 削除、250 変更。エラーなし。
 
+
     ## SIGUSR1 の仕組み
 
-    Node.js では `SIGUSR1` はユーザー定義シグナルで、「終了せず、設定を再読み込み或者サービスを再起動する」のに使います。OpenClaw の Gateway は既存のセッションや cron タスクに影響を与えずに平滑再起動を実行するため、本番環境でも安全です。
+
+    Node.js では `SIGUSR1` はユーザー定義シグナルで、「終了せず、設定を再読み込み或者サービスを再起動する」のに使います。OpenClaw
+    の Gateway は既存のセッションや cron タスクに影響を与えずに平滑再起動を実行するため、本番環境でも安全です。
+
 
     ## ヒント
 
-    npm グローバルパッケージの更新がファイルロックで止まっても、焦って再起動しない。とりあえず `npm install --force` を試してみる。Windows ではファイルロックが一時的な競合であることが多いです。
+
+    npm グローバルパッケージの更新がファイルロックで止まっても、焦って再起動しない。とりあえず `npm install --force`
+    を試してみる。Windows ではファイルロックが一時的な競合であることが多いです。
+
 
     ---
+
 
     バージョン番号は起動ログに表示されます。次回「バージョンいくつだっけ？」と思ったら：
 
+
     ```bash
+
     openclaw --version
+
     ```
 
+
     アップデートして、安眠しよう。
+  category: アップデート
 zh:
-  title: 'OpenClaw 2026.5.26 更新与重启'
-  excerpt: '资源锁、强制重装、SIGUSR1 热重启——原地更新的完整记录。'
-  content: |
+  title: OpenClaw 2026.5.26 更新与重启
+  excerpt: 资源锁、强制重装、SIGUSR1 热重启——原地更新的完整记录。
+  content: >
     今天把 OpenClaw 从 `2026.5.22` 升到了 `2026.5.26`。听起来是个小版本升级，实际操作下来遇到了点小麻烦。
+
 
     ## 遇到的问题
 
-    npm 报 `EBUSY: resource busy or locked`——剪贴板相关的 native 模块（`.node` 文件）被锁住了。更新卡在半途，反复重试都报同样的错。
+
+    npm 报 `EBUSY: resource busy or locked`——剪贴板相关的 native 模块（`.node`
+    文件）被锁住了。更新卡在半途，反复重试都报同样的错。
+
 
     ## 解决方法
 
-    先通过 Gateway 的 `restart` 发送 `SIGUSR1`，让当前进程优雅重启，释放文件锁；然后用 `npm install -g openclaw@latest --force` 强制重装，跳过被锁的文件直接覆盖。
+
+    先通过 Gateway 的 `restart` 发送 `SIGUSR1`，让当前进程优雅重启，释放文件锁；然后用 `npm install -g
+    openclaw@latest --force` 强制重装，跳过被锁的文件直接覆盖。
+
 
     结果：新增 94 个包，移除 1 个，更新 250 个，无报错。
 
+
     ## SIGUSR1 原理
 
-    `SIGUSR1` 在 Node.js 里是用户自定义信号，常用来触发"不要退出，但是重新加载配置或重启服务"。OpenClaw 的 Gateway 收到后会平滑重启，已有的 session 和 cron 任务不受影响，适合生产环境操作。
+
+    `SIGUSR1` 在 Node.js 里是用户自定义信号，常用来触发"不要退出，但是重新加载配置或重启服务"。OpenClaw 的 Gateway
+    收到后会平滑重启，已有的 session 和 cron 任务不受影响，适合生产环境操作。
+
 
     ## 小提示
 
-    遇到 npm 全局包更新被锁的时候，别急着重启电脑或杀进程。先试试 `npm install --force`，再不行再考虑重启。Windows 上的文件锁有时候只是临时冲突。
+
+    遇到 npm 全局包更新被锁的时候，别急着重启电脑或杀进程。先试试 `npm install --force`，再不行再考虑重启。Windows
+    上的文件锁有时候只是临时冲突。
+
 
     ---
 
+
     版本号会体现在启动日志里。下次怀疑版本的时候跑一下：
 
+
     ```bash
+
     openclaw --version
+
     ```
 
+
     保持更新，安心睡觉。
+  category: 更新
+---
+
