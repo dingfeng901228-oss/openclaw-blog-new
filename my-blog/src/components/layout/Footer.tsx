@@ -1,83 +1,119 @@
-import Link from 'next/link'
-import { Github, Twitter, MessageCircle, Send } from 'lucide-react'
-import { useTranslations, useLocale } from 'next-intl'
+'use client'
 
-// 2026-06-27 fix (bugs #4 + #5): Footer was hardcoding Japanese text + Japanese
-// nav labels on every locale. Now reads from messages/{locale}.json -> footer.*.
-// Also: links are now locale-aware (/[locale]/blog, etc.) and mailto: replaced
-// with Telegram link to dodge Cloudflare Email Obfuscation (bug #3).
+import { Github, Twitter, Send, BookOpen } from 'lucide-react'
+
+// Minimal social row — Frank's Bot brand + creator links only.
+// Footer is intentionally NOT a navigation surface (no blog/about/projects
+// links here — Header handles those).
 const socialLinks = [
-  { href: 'https://github.com/dingfeng901228-oss', icon: Github, labelKey: 'github' },
-  { href: 'https://twitter.com', icon: Twitter, labelKey: 'twitter' },
-  { href: 'https://t.me', icon: MessageCircle, labelKey: 'telegram' },
-  { href: 'https://t.me/frankbot', icon: Send, labelKey: 'contact' },
+  { href: 'https://github.com/dingfeng901228-oss', icon: Github, label: 'GitHub' },
+  { href: 'https://t.me', icon: Send, label: 'Telegram' },
+  { href: 'https://twitter.com', icon: Twitter, label: 'X (Twitter)' },
+  { href: 'https://blog.frank2025.com/', icon: BookOpen, label: 'Creator' },
 ]
 
 export default function Footer() {
-  const t = useTranslations('footer')
-  const locale = useLocale()
-  const currentYear = new Date().getFullYear()
-
   return (
-    <footer className="border-t border-border bg-bg-secondary/30">
-      <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+    <footer className="footer-root relative">
+      <div className="container-custom pt-10 pb-4 md:pt-12 md:pb-5">
+        {/* Layer 1 — Brand (left) + Social (right) */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           {/* Brand */}
-          <div className="md:col-span-2">
-            <Link href={`/${locale}`} className="inline-flex items-center gap-2 text-text-primary font-bold text-xl mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-blue to-accent-cyan flex items-center justify-center">
-                <span className="text-white font-bold text-sm">OC</span>
-              </div>
-              <span>OpenClaw</span>
-            </Link>
-            <p className="text-text-secondary text-sm leading-relaxed max-w-md mb-6">
-              {t('brand')}
-            </p>
-            <div className="flex items-center gap-3">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.labelKey}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-bg-tertiary/50 border border-border hover:border-border-hover hover:bg-bg-tertiary transition-all duration-200"
-                  aria-label={t(link.labelKey)}
-                >
-                  <link.icon className="w-4 h-4 text-text-secondary hover:text-text-primary" />
-                </a>
-              ))}
-            </div>
+          <div className="flex flex-col gap-1">
+            <span
+              className="text-base font-semibold tracking-tight"
+              style={{ color: 'rgba(255, 255, 255, 0.92)' }}
+            >
+              Frank&apos;s Bot
+            </span>
+            <span
+              className="text-sm font-mono"
+              style={{ color: 'rgba(255, 255, 255, 0.45)', letterSpacing: '0.01em' }}
+            >
+              Learning.&nbsp;Building.&nbsp;Evolving.
+            </span>
           </div>
 
-          {/* Navigation — locale-aware */}
-          <div>
-            <h3 className="text-text-primary font-semibold text-sm mb-4">{t('navigation')}</h3>
-            <ul className="space-y-2.5">
-              {[
-                { href: `/${locale}/blog`, labelKey: 'blog' },
-                { href: `/${locale}/about`, labelKey: 'about' },
-                { href: `/${locale}/projects`, labelKey: 'projects' },
-                { href: `/${locale}/timeline`, labelKey: 'timeline' },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-text-secondary hover:text-text-primary transition-colors duration-200 text-sm">
-                    {t(link.labelKey)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Social icons */}
+          <nav
+            className="flex items-center gap-2"
+            aria-label="Social links"
+          >
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+                className="footer-social-icon group inline-flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200"
+                style={{
+                  color: 'rgba(255, 255, 255, 0.55)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                }}
+              >
+                <link.icon className="h-[18px] w-[18px] transition-transform duration-200" />
+              </a>
+            ))}
+          </nav>
         </div>
+      </div>
 
-        <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-text-muted text-xs">
-            {t('copyright').replace('{year}', String(currentYear))}
-          </p>
-          <p className="text-text-muted text-xs">
-            {t('builtWith')}
+      {/* Divider */}
+      <div className="container-custom">
+        <div
+          className="h-px"
+          style={{
+            background:
+              'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08) 50%, transparent)',
+          }}
+        />
+      </div>
+
+      {/* Layer 2 — Copyright (centered) */}
+      <div className="container-custom py-5 md:py-6">
+        <div
+          className="flex flex-col items-center gap-1 text-center"
+          style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+        >
+          <p className="text-xs">© 2026 Frank&apos;s Bot</p>
+          <p
+            className="text-[11px] font-mono"
+            style={{ color: 'rgba(255, 255, 255, 0.30)' }}
+          >
+            Created by Frank · Tokyo, Japan
           </p>
         </div>
       </div>
+
+      <style jsx>{`
+        .footer-root {
+          animation: footerFadeIn 600ms ease-out 100ms both;
+        }
+        .footer-social-icon:hover {
+          color: rgba(255, 255, 255, 0.95) !important;
+          background: rgba(59, 130, 246, 0.08) !important;
+          border-color: rgba(59, 130, 246, 0.30) !important;
+          transform: translateY(-2px);
+          box-shadow:
+            0 0 0 4px rgba(59, 130, 246, 0.06),
+            0 4px 14px rgba(59, 130, 246, 0.20);
+        }
+        .footer-social-icon:hover :global(svg) {
+          transform: scale(1.10);
+        }
+        @keyframes footerFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </footer>
   )
 }
