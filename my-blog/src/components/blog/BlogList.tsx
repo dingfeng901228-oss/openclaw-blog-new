@@ -397,12 +397,12 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
               <Link
                 href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
                 aria-label={t.prev}
-                className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
+                className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                 style={{
                   fontFamily: 'var(--font-mono)',
                   color: 'rgba(255, 255, 255, 0.85)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                 }}
@@ -418,7 +418,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   <span
                     key={`e-${idx}`}
                     aria-hidden="true"
-                    className="flex items-center justify-center w-9 h-9 text-sm select-none"
+                    className="flex items-center justify-center w-10 h-12 text-sm select-none"
                     style={{
                       fontFamily: 'var(--font-mono)',
                       color: 'rgba(255, 255, 255, 0.45)',
@@ -433,7 +433,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   <span
                     key={p}
                     aria-current="page"
-                    className="flex items-center justify-center w-9 h-9 rounded-lg text-sm font-semibold"
+                    className="flex items-center justify-center w-10 h-12 rounded-lg text-sm font-semibold"
                     style={{
                       fontFamily: 'var(--font-mono)',
                       color: '#ffffff',
@@ -451,12 +451,12 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   key={p}
                   href={p === 1 ? firstPageUrl : firstPageUrl + '/page/' + p}
                   aria-label={`Page ${p}`}
-                  className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
+                  className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                   style={{
                     fontFamily: 'var(--font-mono)',
                     color: 'rgba(255, 255, 255, 0.85)',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
                   }}
@@ -471,12 +471,12 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
               <Link
                 href={firstPageUrl + '/page/' + (currentPage + 1)}
                 aria-label={t.next}
-                className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
+                className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                 style={{
                   fontFamily: 'var(--font-mono)',
                   color: 'rgba(255, 255, 255, 0.85)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                 }}
