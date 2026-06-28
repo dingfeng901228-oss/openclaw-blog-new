@@ -129,18 +129,20 @@ function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdo
     </div>
   )
 }
-import { Search, X } from 'lucide-react'
+import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import ArticleCard from '@/components/blog/ArticleCard'
 import { cn } from '@/lib/utils'
 import type { Post } from '@/lib/types'
 
-const labels: Record<string, { search: string; noResults: string; clearFilters: string; showing: string; allCategories: string }> = {
+const labels: Record<string, { search: string; noResults: string; clearFilters: string; showing: string; allCategories: string; prev: string; next: string }> = {
   ja: {
     search: '記事を検索...',
     noResults: '記事が見つかりません。',
     clearFilters: 'フィルターをクリア',
     showing: '{total}件中{count}件を表示',
     allCategories: '全カテゴリー',
+    prev: '前のページ',
+    next: '次のページ',
   },
   zh: {
     search: '搜索文章...',
@@ -148,6 +150,8 @@ const labels: Record<string, { search: string; noResults: string; clearFilters: 
     clearFilters: '清除筛选',
     showing: '显示 {count} / {total} 篇',
     allCategories: '全部分类',
+    prev: '上一页',
+    next: '下一页',
   },
   en: {
     search: 'Search articles...',
@@ -155,6 +159,8 @@ const labels: Record<string, { search: string; noResults: string; clearFilters: 
     clearFilters: 'Clear filters',
     showing: 'Showing {count} of {total}',
     allCategories: 'All Categories',
+    prev: 'Previous page',
+    next: 'Next page',
   },
 }
 
@@ -162,6 +168,45 @@ const pageTitle: Record<string, { badge: string; title: string; subtitle: string
   ja: { badge: 'Blog', title: 'ブログ', subtitle: 'AI、Web開発、構築についての思考。' },
   zh: { badge: '博客', title: '博客', subtitle: '关于AI、Web开发和构建的思考。' },
   en: { badge: 'Blog', title: 'Blog', subtitle: 'Thoughts on AI, web development, and building things.' },
+}
+
+// Build classic page-number list with ellipsis (matches reference image style).
+// Examples (image shows: [1] 2 3 ... 100 >):
+//   total=5, current=3    -> 1 2 [3] 4 5
+//   total=100, current=1  -> [1] 2 3 ... 100
+//   total=100, current=3  -> 1 2 [3] ... 100
+//   total=100, current=4  -> 1 ... 3 [4] 5 ... 100
+//   total=100, current=50 -> 1 ... 49 [50] 51 ... 100
+//   total=100, current=97 -> 1 ... 95 96 [97] 98 99 100
+function buildPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  const result: (number | 'ellipsis')[] = []
+
+  if (current <= 3) {
+    // near start: 1 2 3 ... total (matches reference image)
+    for (let i = 1; i <= Math.min(3, total); i++) result.push(i)
+    if (total > 4) {
+      result.push('ellipsis')
+      result.push(total)
+    }
+  } else if (current >= total - 2) {
+    // near end: 1 ... (total-2) (total-1) total
+    result.push(1)
+    result.push('ellipsis')
+    for (let i = total - 2; i <= total; i++) result.push(i)
+  } else {
+    // middle: 1 ... (current-1) current (current+1) ... total
+    result.push(1)
+    result.push('ellipsis')
+    result.push(current - 1, current, current + 1)
+    result.push('ellipsis')
+    result.push(total)
+  }
+
+  return result
 }
 
 interface BlogListProps {
@@ -183,10 +228,6 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
   const t = labels[locale] || labels.en
   const meta = pageTitle[locale] || pageTitle.en
 
-  const [jumpValue, setJumpValue] = useState<string>('')
-  const [jumpError, setJumpError] = useState(false)
-  const jumpInputRef = useRef<HTMLInputElement>(null)
-
     const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
       if (post.status === 'draft') return false
@@ -199,27 +240,6 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
       return matchesSearch && matchesTag && matchesCategory
     })
   }, [posts, searchQuery, selectedTag, selectedCategory])
-
-  const handleJump = (raw: string) => {
-    const trimmed = raw.trim()
-    const num = parseInt(trimmed, 10)
-    if (!Number.isFinite(num) || trimmed === '' || num < 1 || num > totalPages) {
-      setJumpError(true)
-      // Auto-clear error after a short delay
-      setTimeout(() => setJumpError(false), 1800)
-      return
-    }
-    if (num === currentPage) {
-      // Already on this page — just clear input, no navigation
-      setJumpValue('')
-      return
-    }
-    setJumpError(false)
-    setJumpValue('')
-    if (typeof window !== 'undefined') {
-      window.location.href = num === 1 ? firstPageUrl : firstPageUrl + '/page/' + num
-    }
-  }
 
     const clearFilters = () => {
     setSearchQuery('')
@@ -369,99 +389,15 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
 
         {totalPages > 1 && (
           <nav
-            className="mt-10 flex flex-col items-center gap-4"
+            className="mt-10 flex flex-wrap items-center justify-center gap-1.5"
             aria-label="Blog pagination"
           >
-            {/* Row 1: Prev / Page / Next */}
-            <div className="flex items-center justify-center gap-2">
-              {currentPage > 1 && (
-                <Link
-                  href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
-                  className="blog-page-link px-4 py-2 rounded-lg text-sm"
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.10)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                  }}
-                >
-                  ← Prev
-                </Link>
-              )}
-              <span
-                className="px-3 text-sm"
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.55)',
-                }}
-              >
-                Page {currentPage} / {totalPages}
-              </span>
-              {currentPage < totalPages && (
-                <Link
-                  href={currentPage + 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage + 1)}
-                  className="blog-page-link px-4 py-2 rounded-lg text-sm"
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.10)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                  }}
-                >
-                  Next →
-                </Link>
-              )}
-            </div>
-
-            {/* Row 2: Jump to [N] [Go] */}
-            <div className="flex items-center justify-center gap-2">
-              <span
-                className="text-xs"
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.45)',
-                }}
-              >
-                {t.jumpTo}
-              </span>
-              <input
-                ref={jumpInputRef}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={jumpValue}
-                onChange={(e) => {
-                  // Auto-filter non-digit characters
-                  const cleaned = e.target.value.replace(/[^0-9]/g, '')
-                  setJumpValue(cleaned)
-                  if (jumpError) setJumpError(false)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleJump(jumpValue)
-                  }
-                }}
-                placeholder={t.pagePlaceholder}
-                aria-label={t.jumpTo}
-                className={`blog-jump-input w-14 px-2 py-1.5 rounded-lg text-sm text-center focus:outline-none ${jumpError ? 'blog-jump-error' : ''}`}
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid ' + (jumpError ? 'rgba(239, 68, 68, 0.6)' : 'rgba(255, 255, 255, 0.10)'),
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => handleJump(jumpValue)}
-                className="blog-page-link px-4 py-1.5 rounded-lg text-sm"
+            {/* Prev */}
+            {currentPage > 1 && (
+              <Link
+                href={currentPage - 1 === 1 ? firstPageUrl : firstPageUrl + '/page/' + (currentPage - 1)}
+                aria-label={t.prev}
+                className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
                 style={{
                   fontFamily: 'var(--font-mono)',
                   color: 'rgba(255, 255, 255, 0.85)',
@@ -471,20 +407,83 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   WebkitBackdropFilter: 'blur(8px)',
                 }}
               >
-                {t.go}
-              </button>
-              {jumpError && (
-                <span
-                  className="blog-jump-error-msg text-xs ml-1"
+                <ChevronLeft className="w-4 h-4" />
+              </Link>
+            )}
+
+            {/* Page numbers + ellipsis */}
+            {buildPageNumbers(currentPage, totalPages).map((p, idx) => {
+              if (p === 'ellipsis') {
+                return (
+                  <span
+                    key={`e-${idx}`}
+                    aria-hidden="true"
+                    className="flex items-center justify-center w-9 h-9 text-sm select-none"
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      color: 'rgba(255, 255, 255, 0.45)',
+                    }}
+                  >
+                    ⋯
+                  </span>
+                )
+              }
+              if (p === currentPage) {
+                return (
+                  <span
+                    key={p}
+                    aria-current="page"
+                    className="flex items-center justify-center w-9 h-9 rounded-lg text-sm font-semibold"
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      color: '#ffffff',
+                      background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                      border: '1px solid rgba(59, 130, 246, 0.5)',
+                      boxShadow: '0 0 16px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                    }}
+                  >
+                    {p}
+                  </span>
+                )
+              }
+              return (
+                <Link
+                  key={p}
+                  href={p === 1 ? firstPageUrl : firstPageUrl + '/page/' + p}
+                  aria-label={`Page ${p}`}
+                  className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
                   style={{
                     fontFamily: 'var(--font-mono)',
-                    color: 'rgba(239, 68, 68, 0.85)',
+                    color: 'rgba(255, 255, 255, 0.85)',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
                   }}
                 >
-                  {t.invalidPage}
-                </span>
-              )}
-            </div>
+                  {p}
+                </Link>
+              )
+            })}
+
+            {/* Next */}
+            {currentPage < totalPages && (
+              <Link
+                href={firstPageUrl + '/page/' + (currentPage + 1)}
+                aria-label={t.next}
+                className="blog-page-link flex items-center justify-center w-9 h-9 rounded-lg text-sm"
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.10)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            )}
           </nav>
         )}
 
@@ -503,32 +502,18 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
         .blog-search {
           transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
         }
-        .blog-jump-input {
-          transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+        .blog-page-link {
+          transition: color 200ms ease, background 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
         }
-        .blog-jump-input:focus {
-          border-color: rgba(59, 130, 246, 0.6) !important;
-          background: rgba(59, 130, 246, 0.05) !important;
-          box-shadow:
-            0 0 0 4px rgba(59, 130, 246, 0.10),
-            0 0 24px rgba(59, 130, 246, 0.18);
+        .blog-page-link:hover {
+          color: #ffffff !important;
+          border-color: rgba(59, 130, 246, 0.5) !important;
+          background: rgba(59, 130, 246, 0.08) !important;
+          box-shadow: 0 0 16px rgba(59, 130, 246, 0.20);
+          transform: translateY(-1px);
         }
-        .blog-jump-error {
-          animation: jumpShake 320ms ease-out;
-        }
-        .blog-jump-error-msg {
-          animation: jumpErrorFadeIn 240ms ease-out;
-        }
-        @keyframes jumpShake {
-          0%, 100% { transform: translateX(0); }
-          20% { transform: translateX(-4px); }
-          40% { transform: translateX(4px); }
-          60% { transform: translateX(-3px); }
-          80% { transform: translateX(2px); }
-        }
-        @keyframes jumpErrorFadeIn {
-          from { opacity: 0; transform: translateX(-6px); }
-          to { opacity: 1; transform: translateX(0); }
+        .blog-page-link:active {
+          transform: translateY(0);
         }
 
         .blog-search:focus {
