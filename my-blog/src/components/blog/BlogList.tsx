@@ -170,7 +170,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
             <select
               value={selectedCategory || ''}
               onChange={(e) => setSelectedCategory(e.target.value || null)}
-              className="rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer"
+              className="blog-select rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer"
               style={{
                 fontFamily: 'var(--font-mono)',
                 color: 'rgba(255, 255, 255, 0.85)',
@@ -311,6 +311,17 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
       <style jsx>{`
         .blog-search {
           transition: border-color 200ms ease, background 200ms ease;
+        }
+        .blog-select {
+          color-scheme: dark;
+        }
+        .blog-select option {
+          color: rgba(255, 255, 255, 0.95);
+          background: rgba(15, 23, 42, 0.98);
+        }
+        .blog-select option:checked {
+          color: #ffffff;
+          background: rgba(59, 130, 246, 0.4);
         }
         .blog-search:focus {
           border-color: rgba(59, 130, 246, 0.5) !important;
