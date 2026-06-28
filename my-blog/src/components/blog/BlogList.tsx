@@ -2,6 +2,132 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
+
+// ============================================================================
+// CategoryDropdown — custom dark-themed dropdown replacing native <select>
+// ============================================================================
+
+interface CategoryDropdownProps {
+  categories: string[]
+  value: string | null
+  onChange: (value: string | null) => void
+  label: string
+}
+
+function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdownProps) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener('keydown', handleKey)
+    }
+  }, [open])
+
+  const display = value ?? label
+
+  return (
+    <div ref={ref} className="blog-dropdown relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer flex items-center gap-2"
+        style={{
+          fontFamily: 'var(--font-mono)',
+          color: 'rgba(255, 255, 255, 0.85)',
+          background: 'rgba(255, 255, 255, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.10)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+        }}
+      >
+        <span>{display}</span>
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 200ms ease',
+          }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+      {open && (
+        <ul
+          role="listbox"
+          className="blog-dropdown-panel absolute z-50 mt-2 min-w-[180px] max-h-72 overflow-y-auto rounded-lg py-1"
+          style={{
+            background: 'rgba(15, 23, 42, 0.98)',
+            border: '1px solid rgba(255, 255, 255, 0.10)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04)',
+          }}
+        >
+          <li>
+            <button
+              type="button"
+              role="option"
+              aria-selected={value === null}
+              onClick={() => { onChange(null); setOpen(false) }}
+              className="blog-dropdown-item w-full text-left px-4 py-2 text-sm transition-colors"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                color: value === null ? '#ffffff' : 'rgba(255, 255, 255, 0.85)',
+                background: value === null ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
+              }}
+            >
+              {label}
+            </button>
+          </li>
+          {categories.map((cat) => {
+            const selected = value === cat
+            return (
+              <li key={cat}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  onClick={() => { onChange(cat); setOpen(false) }}
+                  className="blog-dropdown-item w-full text-left px-4 py-2 text-sm transition-colors"
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    color: selected ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
+                    background: selected ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
+                  }}
+                >
+                  {cat}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </div>
+  )
+}
 import { Search, X } from 'lucide-react'
 import ArticleCard from '@/components/blog/ArticleCard'
 import { cn } from '@/lib/utils'
@@ -167,24 +293,12 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
 
           {/* Filters */}
           <div className="flex flex-wrap items-center gap-3">
-            <select
-              value={selectedCategory || ''}
-              onChange={(e) => setSelectedCategory(e.target.value || null)}
-              className="blog-select rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-mono)',
-                color: 'rgba(255, 255, 255, 0.85)',
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.10)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-              }}
-            >
-              <option value="">{t.allCategories}</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
+            <CategoryDropdown
+              categories={categories}
+              value={selectedCategory}
+              onChange={(v) => setSelectedCategory(v)}
+              label={t.allCategories}
+            />
 
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
@@ -312,17 +426,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
         .blog-search {
           transition: border-color 200ms ease, background 200ms ease;
         }
-        .blog-select {
-          color-scheme: dark;
-        }
-        .blog-select option {
-          color: rgba(255, 255, 255, 0.95);
-          background: rgba(15, 23, 42, 0.98);
-        }
-        .blog-select option:checked {
-          color: #ffffff;
-          background: rgba(59, 130, 246, 0.4);
-        }
+
         .blog-search:focus {
           border-color: rgba(59, 130, 246, 0.5) !important;
           background: rgba(59, 130, 246, 0.05) !important;
