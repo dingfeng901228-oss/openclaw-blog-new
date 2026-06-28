@@ -84,6 +84,8 @@ function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdo
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04)',
+            transformOrigin: 'top right',
+            animation: 'dropdownOpen 180ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           <li>
@@ -258,12 +260,19 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
           </p>
         </div>
 
-        {/* Search + filters — glassmorphic */}
-        <div className="mb-10 space-y-4">
-          <div className="relative">
+        {/* Filters — PC: dropdown + search on one row; Mobile: stacked */}
+        <div className="mb-12 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <CategoryDropdown
+            categories={categories}
+            value={selectedCategory}
+            onChange={(v) => setSelectedCategory(v)}
+            label={t.allCategories}
+          />
+
+          <div className="relative flex-1">
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+              style={{ color: 'rgba(255, 255, 255, 0.45)' }}
             />
             <input
               type="text"
@@ -291,56 +300,28 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
             )}
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3">
-            <CategoryDropdown
-              categories={categories}
-              value={selectedCategory}
-              onChange={(v) => setSelectedCategory(v)}
-              label={t.allCategories}
-            />
-
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                  className={cn('px-3 py-1.5 rounded-full text-xs font-medium blog-tag')}
-                  style={
-                    selectedTag === tag
-                      ? {
-                          fontFamily: 'var(--font-mono)',
-                          color: '#FFFFFF',
-                          background: 'rgba(59, 130, 246, 0.20)',
-                          border: '1px solid rgba(59, 130, 246, 0.6)',
-                        }
-                      : {
-                          fontFamily: 'var(--font-mono)',
-                          color: 'rgba(255, 255, 255, 0.75)',
-                          background: 'rgba(255, 255, 255, 0.04)',
-                          border: '1px solid rgba(255, 255, 255, 0.10)',
-                        }
-                  }
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="text-xs ml-auto blog-clear-link"
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.55)',
-                }}
-              >
-                {t.clearFilters}
-              </button>
-            )}
-          </div>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-xs sm:ml-2 self-start sm:self-auto blog-clear-link"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                color: 'rgba(255, 255, 255, 0.55)',
+              }}
+            >
+              {t.clearFilters}
+            </button>
+          )}
         </div>
+
+        {/* Subtle divider */}
+        <div
+          className="mb-10 h-px"
+          style={{
+            background:
+              'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.10) 50%, transparent)',
+          }}
+        />
 
         {/* Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -424,19 +405,30 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
 
       <style jsx>{`
         .blog-search {
-          transition: border-color 200ms ease, background 200ms ease;
+          transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
         }
 
         .blog-search:focus {
-          border-color: rgba(59, 130, 246, 0.5) !important;
+          border-color: rgba(59, 130, 246, 0.6) !important;
           background: rgba(59, 130, 246, 0.05) !important;
+          box-shadow:
+            0 0 0 4px rgba(59, 130, 246, 0.10),
+            0 0 24px rgba(59, 130, 246, 0.18);
+        }
+        @keyframes dropdownOpen {
+          from {
+            opacity: 0;
+            transform: scale(0.96) translateY(-6px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
         }
         .blog-clear { color: rgba(255, 255, 255, 0.5); transition: color 200ms ease; }
         .blog-clear:hover { color: #3b82f6; }
         .blog-clear-link { transition: color 200ms ease; }
         .blog-clear-link:hover { color: #3b82f6 !important; }
-        .blog-tag { transition: color 200ms ease, border-color 200ms ease; }
-        .blog-tag:hover { color: #3b82f6 !important; border-color: rgba(59, 130, 246, 0.4) !important; }
         .blog-cta-link { transition: text-decoration 200ms ease; }
         .blog-cta-link:hover { text-decoration: underline; }
       `}</style>
