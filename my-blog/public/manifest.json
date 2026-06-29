@@ -1,9 +1,11 @@
 {
-  "name": "Frank's Bot",
-  "short_name": "Frank's Bot",
-  "description": "AI Engineer & Independent Developer",
+  "name": "OpenClaw Blog",
+  "short_name": "OpenClaw",
+  "description": "AI Engineer & Independent Developer — Thoughts on AI, web development, and automation.",
   "start_url": "/ja",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#3b82f6",
   "icons": [

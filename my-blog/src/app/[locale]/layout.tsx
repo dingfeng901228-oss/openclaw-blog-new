@@ -3,6 +3,8 @@ import { Inter, Noto_Sans_SC, Noto_Sans_JP } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
+import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister'
+import InstallPrompt from '@/components/pwa/InstallPrompt'
 import '@/styles/globals.css'
 
 const inter = Inter({
@@ -139,10 +141,12 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-screen bg-bg-primary font-sans antialiased">
+        <ServiceWorkerRegister />
         <NextIntlClientProvider messages={messages}>
           <div className="relative flex min-h-screen flex-col">
             <div className="flex-1">{children}</div>
           </div>
+          <InstallPrompt />
         </NextIntlClientProvider>
       </body>
     </html>
