@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Noto_Sans_SC, Noto_Sans_JP } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
@@ -27,6 +27,14 @@ const metadataDescriptions: Record<string, string> = {
 const metadataBase = new URL('https://frankbot.org')
 const ogImages = [{ url: '/favicon.svg', width: 512, height: 512, alt: 'OpenClaw Blog' }]
 
+// Viewport (App Router separate export — themeColor belongs here, not in metadata)
+export const viewport: Viewport = {
+  themeColor: '#3B82F6',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const meta = metadataTitles[locale] || metadataTitles.ja
@@ -35,6 +43,28 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: meta,
     description: desc,
     metadataBase,
+    // PWA: expose manifest link via metadata (App Router source of truth)
+    manifest: '/manifest.json',
+    applicationName: 'OpenClaw Blog',
+    appleWebApp: {
+      capable: true,
+      title: 'OpenClaw Blog',
+      statusBarStyle: 'black-translucent',
+      startupImage: ['/apple-touch-icon.png'],
+    },
+    icons: {
+      icon: [
+        { url: '/favicon.svg', type: 'image/svg+xml' },
+        { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: [
+        { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      ],
+    },
+    formatDetection: {
+      telephone: false,
+    },
     alternates: {
       canonical: `https://frankbot.org/${locale}`,
       languages: {
@@ -123,14 +153,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${notoSansSC.variable} ${notoSansJP.variable}`}>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0f172a" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+        {/* PWA meta + manifest now come from `metadata` + `viewport` exports above */}
         <link rel="alternate" hrefLang="ja" href="https://frankbot.org/ja" />
         <link rel="alternate" hrefLang="zh" href="https://frankbot.org/zh" />
         <link rel="alternate" hrefLang="en" href="https://frankbot.org/en" />
