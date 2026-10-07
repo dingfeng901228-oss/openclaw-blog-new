@@ -1,0 +1,137 @@
+---
+slug: 2026-10-07-tokyo-time-zones
+date: '2026-10-07'
+translationKey: 2026-10-07-tokyo-time-zones
+status: published
+en:
+  title: 'Tokyo Time Is Not UTC+9: A Time Zone Is Also a Way of Working'
+  excerpt: I used to think a time zone was just a number — change the offset on the server, move on. Living in Tokyo taught me that a time zone is a different rhythm of work.
+  content: |-
+
+    Before I moved to Japan, a time zone was just an offset for me. Sync the server, stamp the CI build, reply to a colleague in another zone a bit later — all of it was arithmetic between `+8` and `+9`.
+
+    After I settled in Tokyo, I realized a time zone is not a number. It is a way of working.
+
+    ## The Stuff That Isn't in the Number
+
+    There is something about Japanese workplaces I had never seen before: meetings almost never start exactly on the hour.
+
+    In Shanghai, "3 o'clock meeting" means the projector is on at 3:00:00 and the host is at the whiteboard, waiting. In Tokyo, "3 時から" usually means people drift in between 3:00 and 3:05, and the first thing you hear is "お待たせしました". Being five minutes late is not being late; it is the buffer that politeness leaves for you.
+
+    For an engineer, the consequence is this: there is always a 5-to-15-minute invisible buffer between your "ship time" and the customer's "perceived time". You think the deadline is `T+0`. In practice, it is `T+grace`.
+
+    ## The "夕方" Block on the Calendar
+
+    When I first arrived, I wrote "下班" (off work) on my calendar. Later I noticed Japanese colleagues would write "退勤", "終業", or "上がり". Later still, I noticed their calendars often had a "夕方" tag — a window between 5pm and 7pm where no hard meetings get scheduled.
+
+    That window exists for "invisible work": clearing the day's tickets, writing the daily report, replying to the emails that didn't get replied to, walking a colleague through that afternoon's commits. When an engineer goes three days without a "夕方" window, things usually break on the fourth — not the technology, the judgment.
+
+    That insight came from an incident of my own. One week I packed my calendar until 22:00 for five days straight. On the sixth day I shipped a hotfix with a race condition I couldn't reproduce locally, and it took down an unrelated service in production. The postmortem didn't finger the code as the root cause. I was too tired to write a test.
+
+    ## On-Call at 3 AM
+
+    Another thing I did not expect: the on-call culture is different.
+
+    In Shanghai, on-call often meant "the phone rings, you jump up" — because the customer is at work, and monitoring alerts tend to need immediate response. In Tokyo, a PagerDuty alert at 3 AM gets its priority automatically downgraded. Not because nobody cares. It is because there are almost no active users at that hour, the chance of self-recovery is high, and the system is designed to "wait 15 minutes and see if it heals itself" first.
+
+    That is the exact opposite of the "respond first, diagnose later" philosophy I came from. At first I was uncomfortable with it — "isn't this just being irresponsible?" I thought. Later I realized **it is a concrete practice of separating "response" from "fix"**. Response is the on-call engineer's job. Fixing is workday work. At 3 AM, if you can avoid fixing, you avoid it — not out of laziness, but because a rushed fix at 3 AM causes a second incident that costs more than the original alert.
+
+    I later adopted the same pattern in my own side projects: a `P2` alert between 23:00 and 07:00 sends a Slack message, not a phone call. If it self-clears within 15 minutes, we pretend nothing happened. If it doesn't, we look at it the next morning.
+
+    ## A Final Thought
+
+    A year ago I thought moving from Shanghai to Tokyo was relocating a server from one `+8` rack to a `+9` one.
+
+    Now I think it was moving from one way of looking at "time" to another. In Japan, "time" is not a resource you can carve up precisely. It is something with rhythm, with etiquette, with a part you cannot see.
+
+    For an engineer learning a new time zone, adjusting the server is enough.
+    For a person learning a new time zone, you have to re-do the calendar.
+zh:
+  title: '东京时间不是 UTC+9：时区背后是另一种工作方式'
+  excerpt: 我以为时区只是一个数字，把服务器时间从上海调到东京就完事了。后来发现，时区背后藏着一整套不一样的工作节奏。
+  content: |-
+
+    搬来日本之前，时区对我来说就是一个偏移量。服务器要同步时间，CI 要打个时间戳，跨时区的同事发消息我晚点回——全部都是 `+8` 和 `+9` 之间加减的事情。
+
+    在东京住下来之后，我才意识到，时区不是数字，是工作方式。
+
+    ## 数字之外的东西
+
+    日本的职场有一个我从没见过的现象：会议很少卡着整点开始。
+
+    上海的时候，"3 点开会"意味着 3:00:00 投影仪已经亮着，主持人在白板前等。在东京，"3 時から"常常意味着 3:00–3:05 之间大家陆续坐下来，第一句话往往是"お待たせしました"。迟到 5 分钟不算迟到，是礼貌留出来的缓冲。
+
+    这件事对工程师的影响是：你的"上线时间"和"客户感知时间"中间，永远有一个 5 到 15 分钟的隐性 buffer。你以为 deadline 是 `T+0`，实际是 `T+grace`。
+
+    ## 日历上的「夕方」
+
+    我刚来的时候，日历上用中文写"下班"。后来发现日本同事的日历会写"退勤"、"終業"、"上がり"。再后来我注意到，他们日历上的事件经常带一个"夕方"标签——下午 5 点到 7 点之间，是不能排硬会议的窗口。
+
+    那个窗口是给"看不见的工作"的：整理当天的票、写日报、回复还没回的邮件、给同事过一遍下午的 commit。一个工程师如果连续 3 天没有"夕方"的时间，往往第 4 天就会出问题——不是技术出问题，是判断力出问题。
+
+    这个洞察来自我自己的一个事故：有一周我连续 5 天把日历排到 22 点，第六天我上线了一个有 race condition 的 hotfix，本地复现不出来，最后在生产环境炸了一个不相关的服务。事后复盘，根本原因不是代码，是我累到不会写测试了。
+
+    ## 凌晨 3 点的运维
+
+    另一个我没预料到的，是 on-call 习惯的差异。
+
+    上海的运维 on-call 经常是"电话一来就跳起来"，原因是客户在上班、监控告警经常要立即响应。在东京，凌晨 3 点的 PagerDuty 告警优先级会被自动调低——不是因为不重视，是因为这个时段活跃的用户极少，自动恢复的概率很高，系统设计会优先"等 15 分钟看自己会不会好"。
+
+    这跟国内的"先响应再排查"哲学完全相反。一开始我很不习惯，觉得"这不就是不负责任吗"。后来发现，**这是把"响应"和"修复"分开**的一个具体实践。响应是值班同学的事，修复是工作时间的事。凌晨 3 点能不修就别修，不是因为懒，是因为仓促修复造成的二次事故比原始告警更贵。
+
+    我后来在自己的小项目里也学了这个模式：`P2` 告警在 23:00–7:00 之间只发 Slack 不打电话，15 分钟内自动消失就当没事，没消失第二天再处理。
+
+    ## 写在最后
+
+    一年前我以为，从上海到东京，是从一个 `+8` 的服务器搬到一个 `+9` 的服务器。
+
+    现在我觉得，是从一种对"时间"的看法，搬到另一种。"时间"在日本不是一个能被精确切割的资源，它是一个有节奏、有礼仪、有"看不见的部分"的东西。
+
+    工程师学一个新的时区，调一下服务器就够了。
+    人学一个新的时区，需要把日历重新排一遍。
+ja:
+  title: '東京時間は UTC+9 ではない：タイムゾーンの裏には、もう一つの働き方がある'
+  excerpt: タイムゾーンとは数字だと思っていた。サーバーの時刻を上海から東京にずらせば、それで終わる。そう思っていたが、住んでみると、タイムゾーンの裏には全く違う仕事のペースが隠れていた。
+  content: |-
+
+    日本に来る前、タイムゾーンは私にとって単なるオフセットだった。サーバーの時刻を合わせ、CI にタイムスタンプを打ち、別の時間帯の同僚への返信は少し遅らせる。全部 `+8` と `+9` の足し算と引き算で片付く話だった。
+
+    東京に住み始めてから気づいた。タイムゾーンは数字ではなく、働き方そのものだ。
+
+    ## 数字に表れないもの
+
+    日本の職場には、見たことのない現象がある。会議は、きっかり時間には始まらない。
+
+    上海では、「3 時に会議」とは 3:00:00 にプロジェクターが点いて、司会者がホワイトボードの前に立っている状態だった。東京では「3 時から」は、だいたい 3:00 から 3:05 の間に皆さんが陆续と着席し、第一声が「お待たせしました」になる。5 分遅れても遅刻ではない。礼儀として空けておくバッファだ。
+
+    エンジニアにとっての影響はこうなる。自分が考えている「リリース時刻」と、顧客が感じる「認識時刻」の間には、いつも 5〜15 分の見えないバッファがある。デッドラインは `T+0` だと思っている。現実は `T+grace` だ。
+
+    ## カレンダーの中の「夕方」
+
+    来たばかりの頃、私はカレンダーに「下班」と書いていた。后来、日本の同僚が「退勤」「終業」「上がり」と書いていることに気づいた。さらに后来、彼らのカレンダーにはよく「夕方」というタグがついていることにも気づいた。午後 5 時から 7 時までの間には、硬い会議を入れない窓がある。
+
+    その窓は「見えない仕事」のためにある。当日のチケットを片付け、日報を書き、まだ返していないメールに返信し、午後のコミットを同僚と確認する。エンジニアが 3 日連続で「夕方」の時間を取れないと、4 日目にたいてい何かが壊れる。技術ではなく、判断力が。
+
+    この気づきは、私自身の事故から来た。ある週、カレンダーを 5 日連続で 22 時まで埋めた。6 日目に、race condition を含む hotfix を出した。ローカルでは再現できず、本番環境で関係のないサービスを落としてしまった。事後の振り返りで、根本原因はコードではなかった。疲れていて、テストを書く頭がなかった。
+
+    ## 午前 3 時のオンコール
+
+    もう一つ、予想しなかったことがある。オンコールの文化が違う。
+
+    上海では、オンコールは「電話が鳴ったら飛び起きる」ことが多かった。顧客は仕事中なので、監視アラートはすぐ対応する必要がある。東京では、午前 3 時の PagerDuty アラートは、自動的に優先度が下げられる。誰も気にしていないからではない。この時間帯はアクティブなユーザーがほとんどおらず、自己回復の確率が高い。だから「15 分待って、勝手に治るか見る」という設計になっている。
+
+    私が慣れていた「まず対応、あとで原因究明」とは真逆だ。最初はとても馴染めなかった。「これって無責任じゃないか?」と思った。后来、分かった。**これは「対応」と「修正」を分ける**という、具体的な実践だ。対応は当番のエンジニアの仕事。修正は就業時間の仕事。午前 3 時に修正できるならしない——怠けではなく、深夜の雑な修正が二次インシデントを起こし、元のアラートより高くつくからだ。
+
+    私は自分のサイドプロジェクトでも、このパターンを採用するようになった。23:00 から 07:00 の間の `P2` アラートは、電話ではなく Slack に送る。15 分以内に自然に消えれば、何もなかったことにする。消えなければ、翌朝見る。
+
+    ## 最後に
+
+    1 年前、上海から東京への移動は、サーバを `+8` のラックから `+9` のラックに移すことだと思っていた。
+
+    今は思う。移ったのは「時間」に対する見方そのものだった。日本では、「時間」は精确に切り刻める資源ではない。リズムがあり、エチケットがあり、見えない部分を持っているものだ。
+
+    新しいタイムゾーンを学ぶエンジニアにとって、サーバを調整すれば十分だ。
+    新しいタイムゾーンを学ぶ人間にとって、カレンダーを組み直す必要がある。
+---
+
+I'm an engineer in Tokyo learning, slowly, that not every system can be configured into correctness.
