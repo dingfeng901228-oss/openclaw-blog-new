@@ -47,7 +47,7 @@ function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdo
         aria-expanded={open}
         className="rounded-lg px-3 py-2 text-sm focus:outline-none cursor-pointer flex items-center gap-2"
         style={{
-          fontFamily: 'var(--font-mono)',
+          fontFamily: 'var(--font-body)',
           color: 'rgba(255, 255, 255, 0.85)',
           background: 'rgba(255, 255, 255, 0.04)',
           border: '1px solid rgba(255, 255, 255, 0.10)',
@@ -95,7 +95,7 @@ function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdo
               onClick={() => { onChange(null); setOpen(false) }}
               className="blog-dropdown-item w-full text-left px-4 py-2 text-sm transition-colors"
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 color: value === null ? '#ffffff' : 'rgba(255, 255, 255, 0.85)',
                 background: value === null ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
               }}
@@ -114,7 +114,7 @@ function CategoryDropdown({ categories, value, onChange, label }: CategoryDropdo
                   onClick={() => { onChange(cat); setOpen(false) }}
                   className="blog-dropdown-item w-full text-left px-4 py-2 text-sm transition-colors"
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     color: selected ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
                     background: selected ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
                   }}
@@ -266,7 +266,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
           <span
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] tracking-[0.12em] uppercase mb-6"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'rgba(255, 255, 255, 0.75)',
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.10)',
@@ -286,7 +286,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
           <h1
             className="text-white tracking-tight mb-5"
             style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-body)',
               fontWeight: 600,
               fontSize: 'clamp(36px, 5vw, 56px)',
               lineHeight: 1.15,
@@ -349,7 +349,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
               onClick={clearFilters}
               className="text-xs sm:ml-2 self-start sm:self-auto blog-clear-link"
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 color: 'rgba(255, 255, 255, 0.55)',
               }}
             >
@@ -399,7 +399,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                 aria-label={t.prev}
                 className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   color: 'rgba(255, 255, 255, 0.85)',
                   background: 'rgba(255, 255, 255, 0.06)',
                   border: '1px solid rgba(255, 255, 255, 0.16)',
@@ -420,7 +420,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                     aria-hidden="true"
                     className="flex items-center justify-center w-10 h-12 text-sm select-none"
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       color: 'rgba(255, 255, 255, 0.45)',
                     }}
                   >
@@ -435,7 +435,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                     aria-current="page"
                     className="flex items-center justify-center w-10 h-12 rounded-lg text-sm font-semibold"
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-body)',
                       color: '#ffffff',
                       background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)',
                       border: '1px solid rgba(59, 130, 246, 0.5)',
@@ -453,7 +453,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                   aria-label={`Page ${p}`}
                   className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     color: 'rgba(255, 255, 255, 0.85)',
                     background: 'rgba(255, 255, 255, 0.06)',
                     border: '1px solid rgba(255, 255, 255, 0.16)',
@@ -473,7 +473,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                 aria-label={t.next}
                 className="blog-page-link flex items-center justify-center w-10 h-12 rounded-lg text-sm"
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   color: 'rgba(255, 255, 255, 0.85)',
                   background: 'rgba(255, 255, 255, 0.06)',
                   border: '1px solid rgba(255, 255, 255, 0.16)',
@@ -490,7 +490,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
         <div
           className="mt-6 text-xs text-center"
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             color: 'rgba(255, 255, 255, 0.45)',
           }}
         >
