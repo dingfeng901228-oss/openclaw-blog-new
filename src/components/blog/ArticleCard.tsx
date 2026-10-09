@@ -42,7 +42,7 @@ export default function ArticleCard({ post, locale, featured = false }: ArticleC
                   key={tag}
                   className="px-2 py-0.5 rounded-md text-[10px] font-medium tracking-wide"
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     color: 'rgba(59, 130, 246, 0.95)',
                     background: 'rgba(59, 130, 246, 0.10)',
                     border: '1px solid rgba(59, 130, 246, 0.25)',
@@ -58,7 +58,7 @@ export default function ArticleCard({ post, locale, featured = false }: ArticleC
           <h3
             className="tracking-tight mb-3 transition-colors duration-200"
             style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-body)',
               fontWeight: 500,
               fontSize: featured ? '24px' : '19px',
               lineHeight: 1.35,
@@ -83,7 +83,7 @@ export default function ArticleCard({ post, locale, featured = false }: ArticleC
           <div
             className="flex items-center gap-4 text-xs"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'rgba(255, 255, 255, 0.5)',
             }}
           >
@@ -101,7 +101,7 @@ export default function ArticleCard({ post, locale, featured = false }: ArticleC
           <div
             className="mt-4 flex items-center text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: '#FFFFFF',
             }}
           >

@@ -60,7 +60,7 @@ export default async function OfflinePage({ params }: { params: Promise<{ locale
         </div>
         <h1
           style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font-body)',
             fontWeight: 600,
             fontSize: '32px',
             color: '#ffffff',
