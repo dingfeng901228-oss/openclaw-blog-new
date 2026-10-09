@@ -9,7 +9,7 @@ export default function OfflineRetryButton({ label }: { label: string }) {
       style={{
         padding: '10px 20px',
         borderRadius: '10px',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-body)',
         fontSize: '13px',
         color: '#ffffff',
         background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)',
