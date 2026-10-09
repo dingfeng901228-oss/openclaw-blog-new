@@ -77,122 +77,56 @@ export default function InstallPrompt() {
 
   return (
     <>
-      {/* Floating install button */}
+      {/* Quiet text-link in the bottom-left corner. No button, no pill,
+          no emoji, no glow. Just a small caption that says "you can install this". */}
       <button
         onClick={triggerInstall}
-        aria-label="Install OpenClaw as app"
-        title="Install OpenClaw as app"
-        className="pwa-install-btn"
+        className="text-xs text-text-muted hover:text-text-secondary transition-colors duration-200"
         style={{
           position: 'fixed',
-          bottom: '20px',
-          right: '20px',
+          bottom: '16px',
+          left: '16px',
           zIndex: 40,
-          padding: '10px 16px',
-          borderRadius: '9999px',
-          fontFamily: 'var(--font-body)',
-          fontSize: '13px',
-          color: '#ffffff',
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)',
-          border: '1px solid rgba(59, 130, 246, 0.5)',
-          boxShadow: '0 8px 24px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
+          padding: '4px 8px',
         }}
       >
-        <span style={{ fontSize: '14px' }}>📲</span>
-        <span>Install App</span>
+        Add to Home Screen
       </button>
 
+      {/* iOS instructions — opens as an inline disclosure, not a modal */}
       {showIOSHelp && (
         <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setShowIOSHelp(false)}
-          className="pwa-ios-overlay"
+          onClick={dismiss}
+          className="text-xs text-text-secondary"
           style={{
             position: 'fixed',
-            inset: 0,
-            zIndex: 50,
-            background: 'rgba(0, 0, 0, 0.6)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
+            bottom: '16px',
+            left: '16px',
+            right: '16px',
+            zIndex: 40,
+            padding: '12px 16px',
+            maxWidth: '420px',
+            background: 'rgba(10, 10, 10, 0.95)',
+            border: '1px solid rgba(255, 255, 255, 0.10)',
+            borderRadius: '6px',
+            lineHeight: 1.6,
           }}
         >
+          <div style={{ fontWeight: 500, marginBottom: '6px', color: 'var(--text-primary, #FAFAFA)' }}>
+            Add to Home Screen
+          </div>
+          <ol style={{ paddingLeft: '18px', margin: 0 }}>
+            <li>Tap the <strong>Share</strong> button (square with arrow).</li>
+            <li>Scroll and tap <strong>Add to Home Screen</strong>.</li>
+            <li>Confirm by tapping <strong>Add</strong>.</li>
+          </ol>
           <div
             onClick={(e) => e.stopPropagation()}
-            className="pwa-ios-modal"
-            style={{
-              maxWidth: '380px',
-              width: '100%',
-              padding: '24px',
-              borderRadius: '14px',
-              fontFamily: 'var(--font-body)',
-              color: '#e5e7eb',
-              background: 'rgba(15, 23, 42, 0.98)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
-            }}
+            style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-muted, #6B6B6B)' }}
           >
-            <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: '#ffffff' }}>
-              Install on iOS
-            </h3>
-            <ol style={{ paddingLeft: '20px', lineHeight: 1.7, fontSize: '14px' }}>
-              <li>Tap the <strong>Share</strong> button (⎋ square with arrow).</li>
-              <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-              <li>Confirm by tapping <strong>Add</strong>.</li>
-            </ol>
-            <button
-              onClick={() => setShowIOSHelp(false)}
-              style={{
-                marginTop: '16px',
-                width: '100%',
-                padding: '10px',
-                borderRadius: '10px',
-                fontFamily: 'var(--font-body)',
-                fontSize: '13px',
-                color: 'rgba(255, 255, 255, 0.85)',
-                background: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
-                cursor: 'pointer',
-              }}
-            >
-              Got it
-            </button>
+            Tap anywhere to dismiss
           </div>
         </div>
-      )}
-
-      {deferred && (
-        <button
-          onClick={dismiss}
-          aria-label="Dismiss install prompt"
-          className="pwa-dismiss"
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            right: '156px',
-            zIndex: 40,
-            width: '28px',
-            height: '28px',
-            borderRadius: '9999px',
-            fontFamily: 'var(--font-body)',
-            fontSize: '14px',
-            lineHeight: 1,
-            color: 'rgba(255, 255, 255, 0.6)',
-            background: 'rgba(15, 23, 42, 0.85)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            backdropFilter: 'blur(8px)',
-            cursor: 'pointer',
-          }}
-        >
-          ×
-        </button>
       )}
     </>
   )
