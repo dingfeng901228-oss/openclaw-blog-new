@@ -90,7 +90,7 @@ export default function AboutContent({ locale }: { locale: string }) {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] pointer-events-none opacity-50"
         style={{
           background:
-            'radial-gradient(ellipse at center top, rgba(59,130,246,0.18) 0%, rgba(139,92,246,0.08) 40%, rgba(15,20,40,0) 70%)',
+            'radial-gradient(ellipse at center top, rgba(255, 255, 255,0.18) 0%, rgba(255, 255, 255,0.08) 40%, rgba(15,20,40,0) 70%)',
         }}
       />
 
@@ -100,7 +100,7 @@ export default function AboutContent({ locale }: { locale: string }) {
           <span
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] tracking-[0.12em] uppercase mb-6"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'rgba(255, 255, 255, 0.75)',
               background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid rgba(255, 255, 255, 0.10)',
@@ -111,8 +111,8 @@ export default function AboutContent({ locale }: { locale: string }) {
             <span
               className="inline-block w-1.5 h-1.5 rounded-full"
               style={{
-                background: '#3B82F6',
-                boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)',
+                background: '#FFFFFF',
+                boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
               }}
             />
             {t.badge}
@@ -120,12 +120,12 @@ export default function AboutContent({ locale }: { locale: string }) {
           <h1
             className="text-white tracking-tight mb-5"
             style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-body)',
               fontWeight: 600,
               fontSize: 'clamp(36px, 5vw, 56px)',
               lineHeight: 1.15,
               textShadow:
-                '0 0 40px rgba(59, 130, 246, 0.25), 0 0 80px rgba(139, 92, 246, 0.12)',
+                '0 0 40px rgba(255, 255, 255, 0.25), 0 0 80px rgba(255, 255, 255, 0.12)',
             }}
           >
             {t.title}
@@ -146,7 +146,7 @@ export default function AboutContent({ locale }: { locale: string }) {
           <h2
             className="mb-8 tracking-tight"
             style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-body)',
               fontWeight: 500,
               fontSize: 'clamp(20px, 2.4vw, 26px)',
               color: 'rgba(255, 255, 255, 0.92)',
@@ -181,11 +181,11 @@ export default function AboutContent({ locale }: { locale: string }) {
             <p
               className="mb-12"
               style={{
-                fontFamily: 'var(--font-display)',
+                fontFamily: 'var(--font-body)',
                 fontWeight: 600,
                 fontSize: 'clamp(18px, 2.2vw, 22px)',
                 color: 'rgba(255, 255, 255, 0.95)',
-                textShadow: '0 0 24px rgba(59, 130, 246, 0.25)',
+                textShadow: '0 0 24px rgba(255, 255, 255, 0.25)',
                 lineHeight: 1.6,
               }}
             >
@@ -200,7 +200,7 @@ export default function AboutContent({ locale }: { locale: string }) {
                 key={i}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl about-info-card"
               >
-                <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
+                <Icon className="w-4 h-4 flex-shrink-0" style={{ color: '#FFFFFF' }} />
                 <span
                   className="text-sm about-info-text"
                   style={{ color: 'rgba(255, 255, 255, 0.85)' }}
@@ -211,7 +211,7 @@ export default function AboutContent({ locale }: { locale: string }) {
             ))}
             {/* Telegram — full width on its own row so it never gets truncated */}
             <div className="sm:col-span-2 flex items-center gap-3 px-4 py-3 rounded-xl about-info-card">
-              <telegramItem.icon className="w-4 h-4 flex-shrink-0" style={{ color: '#3B82F6' }} />
+              <telegramItem.icon className="w-4 h-4 flex-shrink-0" style={{ color: '#FFFFFF' }} />
               <a
                 href={telegramItem.href}
                 className="text-sm about-info-text"
@@ -227,7 +227,7 @@ export default function AboutContent({ locale }: { locale: string }) {
             <div
               className="text-xs tracking-[0.18em] uppercase mb-4"
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-body)',
                 color: 'rgba(255, 255, 255, 0.5)',
               }}
             >
@@ -239,7 +239,7 @@ export default function AboutContent({ locale }: { locale: string }) {
                   key={tag}
                   className="px-3 py-1.5 rounded-full text-xs cursor-default about-tech-tag"
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     color: 'rgba(255, 255, 255, 0.75)',
                     background: 'rgba(255, 255, 255, 0.04)',
                     border: '1px solid rgba(255, 255, 255, 0.10)',
@@ -272,16 +272,16 @@ export default function AboutContent({ locale }: { locale: string }) {
           transition: border-color 200ms ease, background 200ms ease;
         }
         .about-info-card:hover {
-          border-color: rgba(59, 130, 246, 0.4);
-          background: rgba(59, 130, 246, 0.06);
+          border-color: rgba(255, 255, 255, 0.4);
+          background: rgba(255, 255, 255, 0.06);
         }
         .about-info-card:hover .about-info-text {
           color: #ffffff;
         }
         .about-tech-tag:hover {
           color: #3b82f6 !important;
-          border-color: rgba(59, 130, 246, 0.4) !important;
-          background: rgba(59, 130, 246, 0.08) !important;
+          border-color: rgba(255, 255, 255, 0.4) !important;
+          background: rgba(255, 255, 255, 0.08) !important;
         }
       `}</style>
     </div>

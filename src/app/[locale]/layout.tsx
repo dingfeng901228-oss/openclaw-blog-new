@@ -29,7 +29,7 @@ const ogImages = [{ url: '/favicon.svg', width: 512, height: 512, alt: 'OpenClaw
 
 // Viewport (App Router separate export — themeColor belongs here, not in metadata)
 export const viewport: Viewport = {
-  themeColor: '#3B82F6',
+  themeColor: '#FFFFFF',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',

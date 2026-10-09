@@ -49,8 +49,8 @@ export default function FeaturedPosts({ posts, locale }: FeaturedPostsProps) {
               <span
                 className="text-[10px] uppercase tracking-[0.12em] px-1.5 py-0.5 rounded"
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: '#00D4C8',
+                  fontFamily: 'var(--font-body)',
+                  color: '#FFFFFF',
                   background: 'rgba(0,212,200,0.08)',
                   border: '1px solid rgba(0,212,200,0.15)',
                 }}
@@ -60,13 +60,13 @@ export default function FeaturedPosts({ posts, locale }: FeaturedPostsProps) {
             </div>
             <h2
               className="text-2xl md:text-3xl font-semibold tracking-tight"
-              style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}
             >
               {t.title}
             </h2>
             <p
               className="text-sm mt-2"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
             >
               {t.subtitle}
             </p>
@@ -75,7 +75,7 @@ export default function FeaturedPosts({ posts, locale }: FeaturedPostsProps) {
             href={`/${locale}/blog`}
             className="hidden md:inline-flex items-center gap-1.5 text-xs transition-colors duration-200"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'var(--text-muted)',
             }}
           >
@@ -102,7 +102,7 @@ export default function FeaturedPosts({ posts, locale }: FeaturedPostsProps) {
           <Link
             href={`/${locale}/blog`}
             className="inline-flex items-center gap-1.5 text-xs"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
           >
             {t.cta}
             <ArrowUpRight className="w-3 h-3" />
@@ -159,13 +159,13 @@ function FeaturedCard({
         <div className="flex items-start justify-between mb-8">
           <span
             className="text-[10px] uppercase tracking-[0.1em]"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
           >
             {dateStr}
           </span>
           <span
             className="text-xs font-mono opacity-30 group-hover:opacity-100 transition-opacity duration-300"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
           >
             0{index + 1}
           </span>
@@ -173,8 +173,8 @@ function FeaturedCard({
 
         {/* Title */}
         <h3
-          className="text-base md:text-lg font-semibold leading-snug mb-3 transition-colors duration-200 group-hover:!text-[#00D4C8]"
-          style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+          className="text-base md:text-lg font-semibold leading-snug mb-3 transition-colors duration-200 group-hover:!text-[#FFFFFF]"
+          style={{ fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}
         >
           {post.title}
         </h3>
@@ -194,7 +194,7 @@ function FeaturedCard({
               <span
                 className="text-[10px] px-1.5 py-0.5 rounded"
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   background: 'rgba(255,255,255,0.04)',
                   color: 'var(--text-muted)',
                   border: '1px solid rgba(255,255,255,0.04)',
@@ -206,7 +206,7 @@ function FeaturedCard({
             {readingMinutes && (
               <span
                 className="text-[10px]"
-                style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+                style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
               >
                 {readingMinutes}
               </span>
@@ -214,7 +214,7 @@ function FeaturedCard({
           </div>
           <span
             className="text-[10px] inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            style={{ fontFamily: 'var(--font-mono)', color: '#00D4C8' }}
+            style={{ fontFamily: 'var(--font-body)', color: '#FFFFFF' }}
           >
             {readingLabel}
             <ArrowUpRight className="w-2.5 h-2.5" />

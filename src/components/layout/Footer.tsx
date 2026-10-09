@@ -20,17 +20,11 @@ export default function Footer() {
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           {/* Brand */}
           <div className="flex flex-col gap-1">
-            <span
-              className="text-base font-semibold tracking-tight"
-              style={{ color: 'rgba(255, 255, 255, 0.92)' }}
-            >
+            <span className="text-base font-semibold tracking-tight text-text-primary">
               Frank&apos;s Bot
             </span>
-            <span
-              className="text-sm font-mono"
-              style={{ color: 'rgba(255, 255, 255, 0.45)', letterSpacing: '0.01em' }}
-            >
-              Learning.&nbsp;Building.&nbsp;Evolving.
+            <span className="text-sm text-text-muted">
+              Notes from Tokyo.
             </span>
           </div>
 
@@ -46,12 +40,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="footer-social-icon group inline-flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-200"
-                style={{
-                  color: 'rgba(255, 255, 255, 0.55)',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                }}
+                className="footer-social-icon group inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-200 border border-border text-text-secondary hover:text-text-primary hover:border-border-hover"
               >
                 <link.icon className="h-[18px] w-[18px] transition-transform duration-200" />
               </a>
@@ -62,27 +51,15 @@ export default function Footer() {
 
       {/* Divider */}
       <div className="container-custom">
-        <div
-          className="h-px"
-          style={{
-            background:
-              'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08) 50%, transparent)',
-          }}
-        />
+        <div className="h-px bg-border" />
       </div>
 
       {/* Layer 2 — Copyright (centered) */}
       <div className="container-custom py-5 md:py-6">
-        <div
-          className="flex flex-col items-center gap-1 text-center"
-          style={{ color: 'rgba(255, 255, 255, 0.35)' }}
-        >
+        <div className="flex flex-col items-center gap-1 text-center text-text-muted">
           <p className="text-xs">© 2026 Frank&apos;s Bot</p>
-          <p
-            className="text-[11px] font-mono"
-            style={{ color: 'rgba(255, 255, 255, 0.30)' }}
-          >
-            Created by Frank · Tokyo, Japan
+          <p className="text-[11px] text-text-muted">
+            Tokyo, Japan
           </p>
         </div>
       </div>
@@ -90,15 +67,6 @@ export default function Footer() {
       <style jsx>{`
         .footer-root {
           animation: footerFadeIn 600ms ease-out 100ms both;
-        }
-        .footer-social-icon:hover {
-          color: rgba(255, 255, 255, 0.95) !important;
-          background: rgba(59, 130, 246, 0.08) !important;
-          border-color: rgba(59, 130, 246, 0.30) !important;
-          transform: translateY(-2px);
-          box-shadow:
-            0 0 0 4px rgba(59, 130, 246, 0.06),
-            0 4px 14px rgba(59, 130, 246, 0.20);
         }
         .footer-social-icon:hover :global(svg) {
           transform: scale(1.10);

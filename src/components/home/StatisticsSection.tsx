@@ -70,7 +70,7 @@ function StatItem({ icon: Icon, value, suffix, label, delay, inView, format = 'n
           <Icon className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
           <span
             className="text-[9px] uppercase tracking-[0.12em]"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
           >
             {label}
           </span>
@@ -80,7 +80,7 @@ function StatItem({ icon: Icon, value, suffix, label, delay, inView, format = 'n
           <span
             className="text-3xl md:text-4xl font-semibold tabular-nums"
             style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-body)',
               color: 'var(--text-primary)',
               letterSpacing: '-0.02em',
             }}
@@ -90,7 +90,7 @@ function StatItem({ icon: Icon, value, suffix, label, delay, inView, format = 'n
           {suffix && (
             <span
               className="text-base md:text-lg"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
             >
               {suffix}
             </span>

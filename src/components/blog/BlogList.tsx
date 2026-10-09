@@ -256,7 +256,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] pointer-events-none opacity-40"
         style={{
           background:
-            'radial-gradient(ellipse at center top, rgba(59,130,246,0.18) 0%, rgba(139,92,246,0.08) 40%, rgba(15,20,40,0) 70%)',
+            'radial-gradient(ellipse at center top, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 40%, rgba(15,20,40,0) 70%)',
         }}
       />
 
@@ -277,7 +277,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
             <span
               className="inline-block w-1.5 h-1.5 rounded-full"
               style={{
-                background: '#3B82F6',
+                background: '#FFFFFF',
                 boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)',
               }}
             />
@@ -379,7 +379,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
               <button
                 onClick={clearFilters}
                 className="mt-4 text-sm blog-cta-link"
-                style={{ color: '#3B82F6' }}
+                style={{ color: '#FFFFFF' }}
               >
                 {t.clearFilters}
               </button>
@@ -437,7 +437,7 @@ export default function BlogList({ posts, tags, categories, locale, totalPosts, 
                     style={{
                       fontFamily: 'var(--font-mono)',
                       color: '#ffffff',
-                      background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                      background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)',
                       border: '1px solid rgba(59, 130, 246, 0.5)',
                       boxShadow: '0 0 16px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                     }}

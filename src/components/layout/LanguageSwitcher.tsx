@@ -43,10 +43,10 @@ export default function LanguageSwitcher() {
           onClick={() => switchLocale(lang.code)}
           disabled={isPending || lang.code === currentLocale}
           className={cn(
-            'px-2.5 py-1 text-xs font-medium rounded transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-accent-blue/50',
+            'px-2.5 py-1 text-xs font-medium rounded transition-colors duration-200',
+            'focus:outline-none focus:ring-1 focus:ring-text-primary/30',
             lang.code === currentLocale
-              ? 'bg-accent-blue text-white shadow-sm'
+              ? 'bg-text-primary text-bg-primary'
               : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary/50'
           )}
         >

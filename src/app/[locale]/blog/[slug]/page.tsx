@@ -192,7 +192,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           {availableLocales.length > 1 && availableLocales.filter(l => l !== locale).length > 0 && (
             <div className="mb-8 p-4 rounded-lg bg-bg-secondary/50 border border-border">
               <div className="flex items-center gap-2 text-sm text-text-secondary mb-3">
-                <Globe className="w-4 h-4 text-accent-blue" />
+                <Globe className="w-4 h-4 text-text-primary" />
                 <span>{t.readIn}</span>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -202,7 +202,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     <Link
                       key={loc}
                       href={`/${loc}/blog/${slug}`}
-                      className="px-3 py-1.5 rounded-lg bg-bg-tertiary/50 border border-border hover:border-accent-blue hover:text-accent-blue text-sm transition-all duration-200"
+                      className="px-3 py-1.5 rounded-lg bg-bg-tertiary/50 border border-border hover:border-border-hover hover:text-text-primary text-sm transition-all duration-200"
                     >
                       {localeNames[loc]}
                     </Link>
@@ -219,7 +219,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {displayPost.tags.map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue text-sm font-medium flex items-center gap-1"
+                    className="px-3 py-1 rounded-full bg-text-primary/10 text-text-primary text-sm font-medium flex items-center gap-1"
                   >
                     <Tag className="w-3 h-3" />
                     {tag}
@@ -311,12 +311,12 @@ function convertMarkdown(content: string): string {
     .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold text-text-primary mt-10 mb-6">$1</h1>')
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-text-primary">$1</strong>')
     .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-    .replace(/`([^`]+)`/g, '<code class="bg-bg-tertiary px-1.5 py-0.5 rounded text-accent-blue text-sm font-mono">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="bg-bg-tertiary px-1.5 py-0.5 rounded text-text-primary text-sm font-mono">$1</code>')
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="rounded-lg my-6 w-full" loading="lazy" />')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent-blue hover:underline" target="_blank" rel="noopener">$1</a>')
-    .replace(/^- (.*$)/gm, '<li class="ml-6 text-text-secondary list-disc marker:text-accent-blue">$1</li>')
-    .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-6 text-text-secondary list-decimal marker:text-accent-blue">$2</li>')
-    .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-accent-blue pl-4 my-4 text-text-secondary italic">$1</blockquote>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-text-primary hover:underline" target="_blank" rel="noopener">$1</a>')
+    .replace(/^- (.*$)/gm, '<li class="ml-6 text-text-secondary list-disc marker:text-text-primary">$1</li>')
+    .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-6 text-text-secondary list-decimal marker:text-text-primary">$2</li>')
+    .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-border-hover pl-4 my-4 text-text-secondary italic">$1</blockquote>')
     .replace(/\n\n/g, '</p><p class="text-text-secondary leading-relaxed my-4">')
     .replace(/\n/g, '<br />')
 

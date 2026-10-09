@@ -32,7 +32,7 @@ export default async function NotFound({ params }: Props) {
       <Header />
       <main className="min-h-screen pt-32">
         <div className="container-custom text-center">
-          <h1 className="text-6xl font-bold text-accent-blue mb-4">404</h1>
+          <h1 className="text-6xl font-bold text-text-primary mb-4">404</h1>
           <h2 className="heading-2 mb-4">{titles[locale] || titles.en}</h2>
           <p className="text-text-secondary mb-8">
             {messages[locale] || messages.en}

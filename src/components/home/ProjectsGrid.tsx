@@ -63,7 +63,7 @@ export default function ProjectsGrid({ locale }: ProjectsGridProps) {
                   </div>
 
                   {/* Title & Desc */}
-                  <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">
+                  <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-text-primary transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-text-secondary text-sm leading-relaxed mb-4 flex-1">
@@ -73,11 +73,11 @@ export default function ProjectsGrid({ locale }: ProjectsGridProps) {
                   {/* Problem/Solution */}
                   <div className="space-y-2 mb-4 p-3 rounded-lg bg-bg-tertiary/30 text-xs">
                     <div>
-                      <span className="text-accent-blue font-medium">{locale === 'ja' ? '課題: ' : locale === 'zh' ? '课题: ' : 'Problem: '}</span>
+                      <span className="text-text-primary font-medium">{locale === 'ja' ? '課題: ' : locale === 'zh' ? '课题: ' : 'Problem: '}</span>
                       <span className="text-text-muted">{project.problem}</span>
                     </div>
                     <div>
-                      <span className="text-accent-cyan font-medium">{locale === 'ja' ? '挑戦: ' : locale === 'zh' ? '挑战: ' : 'Challenge: '}</span>
+                      <span className="text-text-primary font-medium">{locale === 'ja' ? '挑戦: ' : locale === 'zh' ? '挑战: ' : 'Challenge: '}</span>
                       <span className="text-text-muted">{project.challenge}</span>
                     </div>
                   </div>

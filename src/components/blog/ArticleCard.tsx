@@ -102,7 +102,7 @@ export default function ArticleCard({ post, locale, featured = false }: ArticleC
             className="mt-4 flex items-center text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             style={{
               fontFamily: 'var(--font-mono)',
-              color: '#3B82F6',
+              color: '#FFFFFF',
             }}
           >
             {locale === 'ja' ? '記事を読む' : locale === 'zh' ? '阅读全文' : 'Read Article'}

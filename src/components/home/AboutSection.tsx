@@ -7,10 +7,10 @@ import { useParams } from 'next/navigation'
 import { Code2, Brain, Cloud, Terminal, MapPin, Mail, Calendar } from 'lucide-react'
 
 const skills = [
-  { icon: Code2, titleKey: 'web', descKey: 'webDesc', color: 'from-blue-500 to-cyan-500' },
-  { icon: Brain, titleKey: 'ai', descKey: 'aiDesc', color: 'from-purple-500 to-pink-500' },
-  { icon: Cloud, titleKey: 'devops', descKey: 'devopsDesc', color: 'from-orange-500 to-red-500' },
-  { icon: Terminal, titleKey: 'automation', descKey: 'automationDesc', color: 'from-green-500 to-emerald-500' },
+  { icon: Code2, titleKey: 'web', descKey: 'webDesc', color: 'from-text-primary to-text-muted' },
+  { icon: Brain, titleKey: 'ai', descKey: 'aiDesc', color: 'from-text-primary to-text-muted' },
+  { icon: Cloud, titleKey: 'devops', descKey: 'devopsDesc', color: 'from-text-primary to-text-muted' },
+  { icon: Terminal, titleKey: 'automation', descKey: 'automationDesc', color: 'from-text-primary to-text-muted' },
 ]
 
 export default function AboutSection() {
@@ -49,7 +49,7 @@ export default function AboutSection() {
             {/* Greeting */}
             <div className="space-y-2">
               <h3 className="text-2xl font-bold text-text-primary">
-                {t('greeting')}<span className="bg-gradient-to-r from-accent-blue to-accent-cyan bg-clip-text text-transparent">{t('name')}</span> 🦞
+                {t('greeting')}<span className="bg-gradient-to-r from-text-primary to-text-primary bg-clip-text text-transparent">{t('name')}</span> 🦞
               </h3>
             </div>
 
@@ -63,17 +63,17 @@ export default function AboutSection() {
             {/* Quick Info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
               <div className="flex items-center gap-3 text-sm text-text-secondary">
-                <MapPin className="w-4 h-4 text-accent-blue flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-text-primary flex-shrink-0" />
                 <span>{t('location')}</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-text-secondary">
-                <Mail className="w-4 h-4 text-accent-blue flex-shrink-0" />
+                <Mail className="w-4 h-4 text-text-primary flex-shrink-0" />
                 <a href="mailto:hello@frankbot.org" className="hover:text-text-primary transition-colors">
                   {t('email')}
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm text-text-secondary">
-                <Calendar className="w-4 h-4 text-accent-blue flex-shrink-0" />
+                <Calendar className="w-4 h-4 text-text-primary flex-shrink-0" />
                 <span>{t('codingSince')}</span>
               </div>
             </div>
@@ -83,7 +83,7 @@ export default function AboutSection() {
               {['Next.js', 'TypeScript', 'Python', 'Docker', 'Linux', 'AI', 'React', 'Node.js'].map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 rounded-full bg-bg-tertiary/50 border border-border text-xs text-text-secondary hover:border-accent-blue/50 hover:text-accent-blue transition-all duration-200"
+                  className="px-3 py-1 rounded-full bg-bg-tertiary/50 border border-border text-xs text-text-secondary hover:border-border-hover hover:text-text-primary transition-all duration-200"
                 >
                   {tag}
                 </span>

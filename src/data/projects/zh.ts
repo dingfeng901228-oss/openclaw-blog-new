@@ -14,7 +14,7 @@ export const projects = [
     github: 'https://github.com',
     stars: '340',
     icon: 'Bot',
-    gradient: 'from-blue-500 to-cyan-500',
+    gradient: 'from-text-primary to-text-muted',
   },
   {
     slug: 'ai-dashboard',
@@ -26,7 +26,7 @@ export const projects = [
     github: 'https://github.com',
     stars: '89',
     icon: 'Zap',
-    gradient: 'from-purple-500 to-pink-500',
+    gradient: 'from-text-primary to-text-muted',
   },
   {
     slug: 'trading-bot',
@@ -38,7 +38,7 @@ export const projects = [
     github: 'https://github.com',
     stars: '127',
     icon: 'Code2',
-    gradient: 'from-orange-500 to-red-500',
+    gradient: 'from-text-primary to-text-muted',
   },
 ]
 

@@ -131,7 +131,7 @@ export default function TimelineSection({ locale }: { locale: string }) {
                   {/* Content */}
                   <div className={`md:w-[calc(50%-2rem)] ${isLeft ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
                     <div className="p-5 rounded-xl bg-bg-secondary/50 border border-border hover:border-border-hover transition-all duration-300">
-                      <span className="text-xs text-accent-blue font-medium mb-1 block">
+                      <span className="text-xs text-text-primary font-medium mb-1 block">
                         {item.date}
                       </span>
                       <h3 className="text-base font-bold text-text-primary mb-1">

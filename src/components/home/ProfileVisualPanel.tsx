@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 const terminalLines = [
-  'Learning AI...',
-  'Building Websites...',
-  'Automating Workflows...',
-  'Exploring Japan IT...',
-  'Status: Online',
+  'Reading docs...',
+  'Writing notes...',
+  'Deploying...',
+  'Tokyo, Japan',
+  'All systems normal',
 ]
 
 export default function ProfileVisualPanel() {
@@ -35,7 +35,7 @@ export default function ProfileVisualPanel() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full pointer-events-none"
           style={{
             background:
-              'radial-gradient(circle, rgba(59,130,246,0.25) 0%, rgba(59,130,246,0.08) 40%, transparent 70%)',
+              'radial-gradient(circle, rgba(255, 255, 255,0.25) 0%, rgba(255, 255, 255,0.08) 40%, transparent 70%)',
           }}
         />
 
@@ -54,7 +54,7 @@ export default function ProfileVisualPanel() {
             className="absolute inset-0 rounded-full"
             style={{
               background:
-                'radial-gradient(circle, rgba(59,130,246,0.4) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(255, 255, 255,0.4) 0%, transparent 70%)',
               filter: 'blur(12px)',
               transform: 'scale(1.15)',
             }}
@@ -64,9 +64,9 @@ export default function ProfileVisualPanel() {
           <div
             className="relative w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.10))',
-              border: '1.5px solid rgba(59,130,246,0.25)',
-              boxShadow: '0 0 30px rgba(59,130,246,0.12), inset 0 0 30px rgba(59,130,246,0.04)',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255,0.15), rgba(255, 255, 255,0.10))',
+              border: '1.5px solid rgba(255, 255, 255,0.25)',
+              boxShadow: '0 0 30px rgba(255, 255, 255,0.12), inset 0 0 30px rgba(255, 255, 255,0.04)',
             }}
           >
             {/* OpenClaw lobster SVG */}
@@ -82,16 +82,16 @@ export default function ProfileVisualPanel() {
               <path d="M62 30 Q70 8 80 6" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
 
               {/* Left claw */}
-              <path d="M20 38 Q14 28 18 22 Q22 18 26 24 Q30 30 28 38" fill="rgba(59,130,246,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
+              <path d="M20 38 Q14 28 18 22 Q22 18 26 24 Q30 30 28 38" fill="rgba(255, 255, 255,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
               {/* Right claw */}
-              <path d="M80 38 Q86 28 82 22 Q78 18 74 24 Q70 30 72 38" fill="rgba(59,130,246,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
+              <path d="M80 38 Q86 28 82 22 Q78 18 74 24 Q70 30 72 38" fill="rgba(255, 255, 255,0.12)" stroke="url(#avatarGrad)" strokeWidth="1.3" strokeLinejoin="round" />
 
               {/* Body - head */}
-              <ellipse cx="50" cy="34" rx="22" ry="12" fill="rgba(59,130,246,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" />
+              <ellipse cx="50" cy="34" rx="22" ry="12" fill="rgba(255, 255, 255,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" />
 
               {/* Eyes */}
-              <circle cx="42" cy="33" r="2.5" fill="#3B82F6" opacity="0.8" />
-              <circle cx="58" cy="33" r="2.5" fill="#3B82F6" opacity="0.8" />
+              <circle cx="42" cy="33" r="2.5" fill="#FFFFFF" opacity="0.8" />
+              <circle cx="58" cy="33" r="2.5" fill="#FFFFFF" opacity="0.8" />
               <circle cx="42" cy="32" r="1.2" fill="rgba(255,255,255,0.6)" />
               <circle cx="58" cy="32" r="1.2" fill="rgba(255,255,255,0.6)" />
 
@@ -101,7 +101,7 @@ export default function ProfileVisualPanel() {
               <path d="M36 56 Q50 62 64 56" stroke="url(#avatarGrad)" strokeWidth="1.3" fill="none" opacity="0.6" />
 
               {/* Tail */}
-              <path d="M40 62 Q50 82 60 62" fill="rgba(59,130,246,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M40 62 Q50 82 60 62" fill="rgba(255, 255, 255,0.08)" stroke="url(#avatarGrad)" strokeWidth="1.5" strokeLinecap="round" />
               {/* Tail fan */}
               <path d="M42 75 Q36 80 38 85" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
               <path d="M50 78 L50 86" stroke="url(#avatarGrad)" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
@@ -116,8 +116,8 @@ export default function ProfileVisualPanel() {
               {/* Gradient definition */}
               <defs>
                 <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#3B82F6" />
-                  <stop offset="100%" stopColor="#8B5CF6" />
+                  <stop offset="0%" stopColor="#FFFFFF" />
+                  <stop offset="100%" stopColor="#FFFFFF" />
                 </linearGradient>
               </defs>
             </svg>
@@ -128,14 +128,14 @@ export default function ProfileVisualPanel() {
         <motion.p
           className="mt-4 text-xs tracking-[0.2em] uppercase"
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-body)',
             color: 'rgba(255,255,255,0.45)',
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          Frank's Bot AI
+          Frank's Bot
         </motion.p>
       </motion.div>
 
@@ -169,7 +169,7 @@ export default function ProfileVisualPanel() {
           <span
             className="ml-auto text-[10px] tracking-[0.15em] uppercase"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'rgba(255,255,255,0.25)',
             }}
           >
@@ -183,8 +183,8 @@ export default function ProfileVisualPanel() {
           <span
             className="text-xs"
             style={{
-              fontFamily: 'var(--font-mono)',
-              color: 'rgba(59,130,246,0.5)',
+              fontFamily: 'var(--font-body)',
+              color: 'rgba(255, 255, 255,0.5)',
             }}
           >
             $
@@ -195,8 +195,8 @@ export default function ProfileVisualPanel() {
             <span
               className="inline-block w-2 h-2 mt-[5px] rounded-full flex-shrink-0"
               style={{
-                background: '#3B82F6',
-                boxShadow: '0 0 6px rgba(59,130,246,0.5)',
+                background: '#FFFFFF',
+                boxShadow: '0 0 6px rgba(255, 255, 255,0.5)',
               }}
             />
             <div className="min-h-[22px] relative flex items-center">
@@ -205,7 +205,7 @@ export default function ProfileVisualPanel() {
                   key={terminalLines[lineIndex]}
                   className="text-sm"
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-body)',
                     color: 'rgba(255,255,255,0.8)',
                   }}
                   initial={{ opacity: 0, y: 6 }}
@@ -220,7 +220,7 @@ export default function ProfileVisualPanel() {
               {/* Blinking cursor */}
               <motion.span
                 className="inline-block w-[2px] h-4 ml-1"
-                style={{ background: 'rgba(59,130,246,0.6)' }}
+                style={{ background: 'rgba(255, 255, 255,0.6)' }}
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
@@ -232,17 +232,17 @@ export default function ProfileVisualPanel() {
             className="flex items-center gap-1.5 mt-4 pt-3 text-[10px]"
             style={{
               borderTop: '1px solid rgba(255,255,255,0.04)',
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-body)',
               color: 'rgba(255,255,255,0.2)',
             }}
           >
-            <span style={{ color: 'rgba(59,130,246,0.35)' }}>$</span>
+            <span style={{ color: 'rgba(255, 255, 255,0.35)' }}>$</span>
             <span>─── system.health ───</span>
             <span
               className="inline-block w-1.5 h-1.5 rounded-full ml-1"
               style={{
-                background: '#22C55E',
-                boxShadow: '0 0 4px rgba(34,197,94,0.5)',
+                background: '#FFFFFF',
+                boxShadow: '0 0 4px rgba(255,255,255,0.5)',
               }}
             />
           </div>

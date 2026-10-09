@@ -84,20 +84,20 @@ export default function PersonalCard({ locale }: { locale: string }) {
             <span className="relative flex h-1.5 w-1.5">
               <span
                 className="absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping"
-                style={{ background: '#00D4C8' }}
+                style={{ background: '#FFFFFF' }}
               />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#00D4C8' }} />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#FFFFFF' }} />
             </span>
             <span
               className="text-[10px] uppercase tracking-[0.12em]"
-              style={{ fontFamily: 'var(--font-mono)', color: '#00D4C8' }}
+              style={{ fontFamily: 'var(--font-body)', color: '#FFFFFF' }}
             >
               {t.status}
             </span>
           </div>
           <span
             className="text-[10px] uppercase tracking-[0.08em]"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
           >
             {t.statusSub}
           </span>
@@ -124,26 +124,26 @@ export default function PersonalCard({ locale }: { locale: string }) {
               className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
               style={{ background: '#0A0A0F', border: '1px solid rgba(255,255,255,0.08)' }}
             >
-              <Sparkles className="w-2.5 h-2.5" style={{ color: '#00D4C8' }} />
+              <Sparkles className="w-2.5 h-2.5" style={{ color: '#FFFFFF' }} />
             </div>
           </div>
 
           <div className="min-w-0 flex-1">
             <h3
               className="text-lg font-semibold leading-tight"
-              style={{ fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-primary)' }}
             >
               {t.name}
             </h3>
             <p
               className="text-xs mt-1 leading-relaxed"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-secondary)' }}
             >
               {t.role}
             </p>
             <p
               className="text-xs leading-relaxed"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
             >
               {t.sub}
             </p>
@@ -158,7 +158,7 @@ export default function PersonalCard({ locale }: { locale: string }) {
           <MapPin className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
           <span
             className="text-[11px]"
-            style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}
+            style={{ fontFamily: 'var(--font-body)', color: 'var(--text-secondary)' }}
           >
             {t.location}
           </span>
@@ -190,7 +190,7 @@ export default function PersonalCard({ locale }: { locale: string }) {
             <Code2 className="w-2.5 h-2.5" style={{ color: 'var(--text-muted)' }} />
             <span
               className="text-[9px] uppercase tracking-[0.12em]"
-              style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}
+              style={{ fontFamily: 'var(--font-body)', color: 'var(--text-muted)' }}
             >
               {locale === 'ja' ? '技術スタック' : locale === 'zh' ? '技术栈' : 'Stack'}
             </span>
@@ -201,7 +201,7 @@ export default function PersonalCard({ locale }: { locale: string }) {
                 key={tag}
                 className="px-1.5 py-0.5 rounded text-[10px]"
                 style={{
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-body)',
                   background: 'rgba(255,255,255,0.04)',
                   color: 'var(--text-muted)',
                   border: '1px solid rgba(255,255,255,0.04)',
@@ -240,12 +240,12 @@ function CardLink({
         ;(e.currentTarget as HTMLElement).style.background = 'transparent'
       }}
     >
-      <span style={{ color: 'var(--text-muted)' }} className="group-hover:!text-[#00D4C8] transition-colors">
+      <span style={{ color: 'var(--text-muted)' }} className="group-hover:!text-[#FFFFFF] transition-colors">
         {icon}
       </span>
       <span
         className="text-xs flex-1"
-        style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}
+        style={{ fontFamily: 'var(--font-body)', color: 'var(--text-secondary)' }}
       >
         {label}
       </span>
