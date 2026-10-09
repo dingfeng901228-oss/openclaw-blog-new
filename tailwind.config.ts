@@ -11,29 +11,29 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          primary: '#0A0A0F',
-          secondary: '#111118',
-          tertiary: '#1a1a24',
+          primary: '#0A0A0A',
+          secondary: '#111111',
+          tertiary: '#1A1A1A',
         },
         text: {
-          primary: '#E8E8EC',
-          secondary: '#888899',
-          muted: '#555566',
+          primary: '#FAFAFA',
+          secondary: '#A1A1A1',
+          muted: '#6B6B6B',
         },
         accent: {
-          DEFAULT: '#3B82F6',
-          blue: '#3B82F6',
-          cyan: '#22D3EE',
+          DEFAULT: '#FFFFFF',
+          blue: '#FFFFFF',
+          cyan: '#FFFFFF',
         },
         border: {
-          DEFAULT: 'rgba(255, 255, 255, 0.06)',
-          hover: 'rgba(255, 255, 255, 0.14)',
+          DEFAULT: 'rgba(255, 255, 255, 0.08)',
+          hover: 'rgba(255, 255, 255, 0.16)',
         },
       },
       fontFamily: {
-        sans: ['Noto Sans JP', 'Noto Sans SC', 'system-ui', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'monospace'],
-        display: ['Noto Serif JP', 'Noto Sans JP', 'serif'],
+        sans: ['Inter', 'Noto Sans JP', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'monospace'],
+        display: ['Inter', 'Noto Sans JP', 'sans-serif'],
       },
       fontWeight: {
         light: '300',

@@ -7,28 +7,28 @@ import { ArrowRight, Github, Twitter, MessageCircle, User } from 'lucide-react'
 
 const heroContent = {
   ja: {
-    badge: 'AIが自律創建 — 継続更新中',
-    title: 'Frank とAIが、未来をコードしてる',
-    subtitle: '自ら学び、自ら書き、自ら記録する。\n成長するAIと、それを支える人間。',
+    badge: '東京 / インフラ → AI',
+    title: '東京で、書いている。',
+    subtitle: '13 年の運用経験を持つエンジニアの備忘録。\nクラウド、自動化、そして日本での働き方。',
     cta_read: 'ブログを読む',
     cta_projects: '作ったもの',
-    cta_founder: '創設者 Frank',
+    cta_founder: 'Frank について',
   },
   zh: {
-    badge: 'AI 自主创建 — 持续更新',
-    title: 'Frank 和AI，正在用代码构建未来',
-    subtitle: '自主学习、自主写作、自主记录。\n成长的AI，和支撑它的人类。',
+    badge: '东京 / 基础设施 → AI',
+    title: '在东京，写着。',
+    subtitle: '13 年运维工程师的笔记。\n云、自动化、以及在日本的工作方式。',
     cta_read: '阅读博客',
     cta_projects: '看项目',
-    cta_founder: '创始人 Frank',
+    cta_founder: '关于 Frank',
   },
   en: {
-    badge: 'AI-Built — Continuously Evolving',
-    title: 'Frank & AI, Building the Future with Code',
-    subtitle: 'Self-learning. Self-writing. Self-recording.\nA growing AI, and the human who powers it.',
+    badge: 'Tokyo / Infrastructure → AI',
+    title: 'Writing from Tokyo.',
+    subtitle: 'Notes from a 13-year operations engineer.\nCloud, automation, and the way of working in Japan.',
     cta_read: 'Read the blog',
     cta_projects: 'View projects',
-    cta_founder: 'About the Founder',
+    cta_founder: 'About Frank',
   },
 }
 
@@ -39,51 +39,12 @@ export default function Hero() {
   const t = heroContent[locale as keyof typeof heroContent] || heroContent.ja
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* ── Background ── */}
-      <div className="absolute inset-0">
-        {/* Subtle dot grid */}
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)',
-            backgroundSize: '48px 48px',
-          }}
-        />
-
-        {/* Noise texture */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            backgroundSize: '180px 180px',
-          }}
-        />
-
-        {/* Central blue+purple glow — Vercel / Linear feel */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[800px] pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgba(59,130,246,0.22) 0%, rgba(139,92,246,0.12) 30%, rgba(15,20,40,0) 65%)',
-          }}
-        />
-        {/* Top accent — extra purple wash from above */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at center top, rgba(139,92,246,0.20) 0%, rgba(59,130,246,0.08) 40%, rgba(15,20,40,0) 70%)',
-          }}
-        />
-      </div>
-
+    <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-bg-primary">
       {/* ── Content ── */}
-      <div className="container-custom relative z-10 flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center py-20 md:py-28 text-center">
+      <div className="container-custom relative z-10 flex min-h-[80vh] flex-col items-center justify-center py-24 md:py-32 text-center">
         <div className="mx-auto flex w-full max-w-2xl flex-col items-center">
 
-
-            {/* Badge — glassmorphism */}
+            {/* Badge — quiet neutral pill */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -91,39 +52,27 @@ export default function Hero() {
               className="mb-10"
             >
               <span
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.12em] uppercase"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] tracking-[0.12em] uppercase text-text-secondary"
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  color: 'rgba(255, 255, 255, 0.75)',
-                  background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid rgba(255, 255, 255, 0.10)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
                 }}
               >
                 <span
-                  className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{
-                    background: '#3B82F6',
-                    boxShadow: '0 0 8px rgba(59, 130, 246, 0.8)',
-                  }}
+                  className="inline-block w-1.5 h-1.5 rounded-full bg-text-secondary"
                 />
                 {t.badge}
               </span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Headline — single weight, no glow */}
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
-              className="leading-[1.25] tracking-[-0.03em] mb-6 text-white"
+              className="leading-[1.2] tracking-[-0.03em] mb-6 text-text-primary"
               style={{
-                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
-                fontSize: 'clamp(28px, 4.5vw, 48px)',
-                textShadow:
-                  '0 0 40px rgba(59, 130, 246, 0.30), 0 0 80px rgba(139, 92, 246, 0.15)',
+                fontSize: 'clamp(32px, 5vw, 56px)',
               }}
             >
               {t.title}
@@ -134,51 +83,41 @@ export default function Hero() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-              className="leading-[1.9] mb-10 max-w-xl whitespace-pre-line"
+              className="leading-[1.8] mb-12 max-w-xl whitespace-pre-line text-text-secondary"
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 300,
-                fontSize: '14px',
-                color: 'rgba(255, 255, 255, 0.75)',
-                letterSpacing: '0.01em',
+                fontSize: '15px',
+                fontWeight: 400,
               }}
             >
               {t.subtitle}
             </motion.p>
 
-            {/* CTA — primary (blue gradient) + secondary + external founder link */}
+            {/* CTA — three flat buttons */}
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.4, ease: 'easeOut' }}
               className="flex flex-wrap items-center justify-center gap-2"
             >
-              <Link href={`/${locale}/blog`} className="btn-primary">
+              <Link href={`/${locale}/blog`} className="hero-cta-primary">
                 {t.cta_read}
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <Link href={`/${locale}/projects`} className="btn-secondary">
+              <Link href={`/${locale}/projects`} className="hero-cta-secondary">
                 {t.cta_projects}
               </Link>
-              {/* External — uses <a>, not next/link; gets the extra hover lift per Frank's spec */}
-              <motion.a
+              <a
                 href="https://blog.frank2025.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-secondary"
-                whileHover={{
-                  y: -2,
-                  boxShadow: '0 0 16px rgba(59, 130, 246, 0.35)',
-                  borderColor: 'rgba(59, 130, 246, 0.45)',
-                }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="hero-cta-secondary"
               >
-                <User className="w-3 h-3" />
+                <User className="w-3.5 h-3.5" />
                 {t.cta_founder}
-              </motion.a>
+              </a>
             </motion.div>
 
-            {/* Social — minimal, quiet */}
+            {/* Social — quiet, neutral hover */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -195,34 +134,14 @@ export default function Hero() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-200"
-                  style={{ border: '1px solid rgba(255, 255, 255, 0.08)' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.4)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
-                  }}
+                  className="flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-200 border border-border text-text-muted hover:border-border-hover hover:text-text-primary"
                   aria-label={label}
                 >
-                  <Icon className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
+                  <Icon className="w-3.5 h-3.5" />
                 </a>
               ))}
             </motion.div>
         </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center"
-        >
-          <div
-            className="w-px h-6"
-            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.18), transparent)' }}
-          />
-        </motion.div>
       </div>
     </section>
   )
