@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 const terminalLines = [
-  'Reading docs...',
-  'Writing notes...',
-  'Deploying...',
-  'Tokyo, Japan',
-  'All systems normal',
+  'Learning AI...',
+  'Building Websites...',
+  'Automating Workflows...',
+  'Exploring Japan IT...',
+  'Status: Online',
 ]
 
 export default function ProfileVisualPanel() {
@@ -135,7 +135,7 @@ export default function ProfileVisualPanel() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          Frank's Bot
+          Frank's Bot AI
         </motion.p>
       </motion.div>
 

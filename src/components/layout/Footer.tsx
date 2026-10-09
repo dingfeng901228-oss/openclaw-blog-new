@@ -24,7 +24,7 @@ export default function Footer() {
               Frank&apos;s Bot
             </span>
             <span className="text-sm text-text-muted">
-              Notes from Tokyo.
+              Learning.&nbsp;Building.&nbsp;Evolving.
             </span>
           </div>
 
@@ -59,7 +59,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-1 text-center text-text-muted">
           <p className="text-xs">© 2026 Frank&apos;s Bot</p>
           <p className="text-[11px] text-text-muted">
-            Tokyo, Japan
+            Created by Frank · Tokyo, Japan
           </p>
         </div>
       </div>

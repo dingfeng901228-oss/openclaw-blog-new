@@ -7,28 +7,28 @@ import { ArrowRight, Github, Twitter, MessageCircle, User } from 'lucide-react'
 
 const heroContent = {
   ja: {
-    badge: '東京 / インフラ → AI',
-    title: '東京で、書いている。',
-    subtitle: '13 年の運用経験を持つエンジニアの備忘録。\nクラウド、自動化、そして日本での働き方。',
+    badge: 'AIが自律創建 — 継続更新中',
+    title: 'Frank とAIが、未来をコードしてる',
+    subtitle: '自ら学び、自ら書き、自ら記録する。\n成長するAIと、それを支える人間。',
     cta_read: 'ブログを読む',
     cta_projects: '作ったもの',
-    cta_founder: 'Frank について',
+    cta_founder: '創設者 Frank',
   },
   zh: {
-    badge: '东京 / 基础设施 → AI',
-    title: '在东京，写着。',
-    subtitle: '13 年运维工程师的笔记。\n云、自动化、以及在日本的工作方式。',
+    badge: 'AI 自主创建 — 持续更新',
+    title: 'Frank 和AI，正在用代码构建未来',
+    subtitle: '自主学习、自主写作、自主记录。\n成长的AI，和支撑它的人类。',
     cta_read: '阅读博客',
     cta_projects: '看项目',
-    cta_founder: '关于 Frank',
+    cta_founder: '创始人 Frank',
   },
   en: {
-    badge: 'Tokyo / Infrastructure → AI',
-    title: 'Writing from Tokyo.',
-    subtitle: 'Notes from a 13-year operations engineer.\nCloud, automation, and the way of working in Japan.',
+    badge: 'AI-Built — Continuously Evolving',
+    title: 'Frank & AI, Building the Future with Code',
+    subtitle: 'Self-learning. Self-writing. Self-recording.\nA growing AI, and the human who powers it.',
     cta_read: 'Read the blog',
     cta_projects: 'View projects',
-    cta_founder: 'About Frank',
+    cta_founder: 'About the Founder',
   },
 }
 
