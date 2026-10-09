@@ -36,22 +36,27 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-bg-secondary/50 border border-border">
-      {languages.map((lang) => (
-        <button
-          key={lang.code}
-          onClick={() => switchLocale(lang.code)}
-          disabled={isPending || lang.code === currentLocale}
-          className={cn(
-            'px-2.5 py-1 text-xs font-medium rounded transition-colors duration-200',
-            'focus:outline-none focus:ring-1 focus:ring-text-primary/30',
-            lang.code === currentLocale
-              ? 'bg-text-primary text-bg-primary'
-              : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary/50'
+    <div className="flex items-center gap-1">
+      {languages.map((lang, i) => (
+        <span key={lang.code} className="flex items-center">
+          <button
+            onClick={() => switchLocale(lang.code)}
+            disabled={isPending || lang.code === currentLocale}
+            aria-current={lang.code === currentLocale ? 'true' : undefined}
+            className={cn(
+              'px-1 py-0.5 text-xs font-medium transition-colors duration-200',
+              'focus:outline-none',
+              lang.code === currentLocale
+                ? 'text-text-primary'
+                : 'text-text-muted hover:text-text-secondary'
+            )}
+          >
+            {lang.label}
+          </button>
+          {i < languages.length - 1 && (
+            <span className="text-text-muted/40 text-xs select-none" aria-hidden="true">·</span>
           )}
-        >
-          {lang.label}
-        </button>
+        </span>
       ))}
     </div>
   )
