@@ -22,12 +22,31 @@ REPO="$(cd "$HERE/.." && pwd)"
 PROJECT="${1:-$REPO}"
 OUT="${2:-$REPO/out-rs}"
 
+# Record the failing line, so the log says where it stopped.
+trap 'echo "FAILED at line $LINENO: $BASH_COMMAND" | tee -a "$OUT/build-log.txt" 2>/dev/null || true' ERR
+
 # The toolchain channel comes from rust-toolchain.toml, so the file is
 # the single source of truth.
 RUST_CHANNEL="$(sed -n 's/^channel *= *"\(.*\)"/\1/p' "$HERE/rust-toolchain.toml" | head -1)"
 : "${RUST_CHANNEL:=stable}"
 
-echo "==> 1/4 rust toolchain ($RUST_CHANNEL)"
+# A diagnostic log, written next to the output so that a failed
+# build still leaves a trace of how far it got. Pages keeps the
+# output directory even when the build command fails.
+mkdir -p "$OUT"
+DIAG="$OUT/build-log.txt"
+: > "$DIAG"
+diag() { echo "$*" | tee -a "$DIAG"; }
+diag "build-pages.sh started at $(date -u +%FT%TZ)"
+diag "uname: $(uname -srm)"
+diag "project: $PROJECT"
+diag "out: $OUT"
+diag "HOME: $HOME"
+diag "PATH has cc: $(command -v cc || echo no)"
+diag "PATH has gcc: $(command -v gcc || echo no)"
+diag "PATH has curl: $(command -v curl || echo no)"
+
+diag "==> 1/4 rust toolchain ($RUST_CHANNEL)"
 if ! command -v cargo >/dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --no-modify-path --profile minimal --default-toolchain "$RUST_CHANNEL"
@@ -38,7 +57,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 cargo --version
 rustc --version
 
-echo "==> 2/4 tailwind css"
+diag "==> 2/4 tailwind css"
 # The Tailwind CLI is the only npm package the build needs. It is
 # installed into a scratch prefix rather than into the project, so no
 # package.json / node_modules is required and a developer's local
@@ -86,7 +105,7 @@ MSYS_NO_PATHCONV=1 "$TW_PREFIX/node_modules/.bin/tailwindcss" \
   --minify
 rm -rf "$TW_PREFIX"
 
-echo "==> 3/4 cargo build"
+diag "==> 3/4 cargo build"
 # Linking needs a C compiler. The Pages image is not documented to
 # ship one, so on Linux fall back in this order:
 #   1. the system linker (cc/gcc), if the image has it
@@ -109,17 +128,25 @@ case "$(uname -s)" in
       echo "    using the system linker"
     else
       echo "    no system C compiler; building the musl target with rust-lld"
-      # The musl target carries its own libc and CRT objects, so the
+      # The musl target ships its own libc and CRT objects, so the
       # link needs nothing from the system.
+      #
+      # `link-self-contained=yes` is the stable spelling. The `+linker`
+      # form is unstable and needs -Z unstable-options, which a
+      # stable toolchain does not accept.
+      # The build scripts and the proc macros are compiled for the
+      # *host*, so they need a linker too. `--target-applies-to-host`
+      # makes the RUSTFLAGS apply to them as well, which is what lets
+      # them link with rust-lld and the musl libc.
       rustup target add x86_64-unknown-linux-musl
-      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
-      export RUSTFLAGS="-C link-self-contained=+linker -C linker=rust-lld"
+      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl --target-applies-to-host)
+      export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld"
     fi
     ;;
 esac
 cargo build --release --locked "${CARGO_TARGET_ARGS[@]}"
 
-echo "==> 4/4 generate"
+diag "==> 4/4 generate"
 # The generator clears the output directory, so the assets have to be
 # copied *after* it runs.
 #
@@ -152,6 +179,13 @@ if [ -d "$ASSETS" ]; then
   cp "$ASSETS"/css/*.css "$OUT/_next/static/css/"
   cp "$ASSETS"/media/*.woff2 "$OUT/_next/static/media/"
 fi
+
+# The generator clears the output directory, so the diagnostic log is
+# written again at the end.
+{
+  echo "build-pages.sh finished successfully"
+  echo "at $(date -u +%FT%TZ)"
+} > "$OUT/build-log.txt"
 
 echo
 echo "built -> $OUT"
