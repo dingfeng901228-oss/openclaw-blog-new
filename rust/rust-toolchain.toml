@@ -1,0 +1,12 @@
+# The Rust toolchain the Pages build installs.
+#
+# The Cloudflare Pages build image (v3, Ubuntu 22.04) ships Node,
+# Python, Go, Ruby and Bun -- but no Rust -- so `rust/build-pages.sh`
+# installs the toolchain with rustup. Pinning the version here keeps
+# the Pages build reproducible.
+#
+# rustup reads this file automatically, so a local `cargo build` also
+# uses the same toolchain.
+[toolchain]
+channel = "stable"
+profile = "minimal"

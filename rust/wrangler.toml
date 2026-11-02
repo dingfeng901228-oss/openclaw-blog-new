@@ -1,0 +1,15 @@
+# Cloudflare Pages project for the Rust preview.
+#
+# The production project (openclaw-blog-new) is Git-connected and
+# builds this repository directly, so it needs no wrangler config.
+# This one is deployed by hand:
+#
+#   ./rust/build-pages.sh
+#   npx wrangler pages deploy --config rust/wrangler.toml
+#
+# The production Pages project is named `openclaw-blog-new`, NOT the
+# `openclaw-blog` in the repository-root wrangler.toml -- that one is
+# stale.
+name = "frankbot-rs-preview"
+compatibility_date = "2026-05-21"
+pages_build_output_dir = "out-rs"

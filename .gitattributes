@@ -1,0 +1,11 @@
+# The shell scripts and the CI workflow must keep LF endings: Git Bash
+# on Windows would otherwise check them out with CRLF, and the Linux
+# Pages build would fail with `bad interpreter: /bin/sh^M`.
+*.sh text eol=lf
+.github/workflows/*.yml text eol=lf
+rust/rust-toolchain.toml text eol=lf
+rust/tailwind.config.js text eol=lf
+rust/wrangler.toml text eol=lf
+
+# Binary font assets.
+*.woff2 binary

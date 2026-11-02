@@ -1,0 +1,11 @@
+# Build configuration for the MSVC target without a full Visual Studio install.
+#
+# Rust ships `rust-lld.exe` (LLVM's lld linker) inside the toolchain, so we
+# can link MSVC-target binaries without the MSVC link.exe that the empty
+# BuildTools directory does not provide.
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"
+rustflags = [
+    "-C", "link-arg=/DEFAULTLIB:msvcrt",
+]

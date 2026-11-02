@@ -1,6 +1,7 @@
 node_modules/
 .next/
 out/
+out-rs/
 .wrangler/
 *.log
 .DS_Store
@@ -8,3 +9,9 @@ out/
 .env.local
 src/content/blog.backup/
 src/articles/
+
+# Rust generator build artifacts
+rust/target/
+rust/site.css
+rust/reference.json
+rust/scripts/__pycache__/
