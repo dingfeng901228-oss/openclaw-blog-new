@@ -177,7 +177,9 @@ case "$(uname -s)" in
       mkdir -p "$SHIM_DIR"
       cat > "$SHIM_DIR/cc" <<'SHIMEOF'
 #!/bin/sh
-exec "$FRANKBOT_RUST_LLD" "$@"
+# rust-lld dispatches on its name: called as "rust-lld" it is a
+# generic driver. "-flavor gnu" makes it behave like ld.lld.
+exec "$FRANKBOT_RUST_LLD" -flavor gnu "$@"
 SHIMEOF
       chmod +x "$SHIM_DIR/cc"
       export FRANKBOT_RUST_LLD="$LLD"
