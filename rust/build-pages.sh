@@ -90,9 +90,10 @@ echo "==> 3/4 cargo build"
 # Linking needs a C compiler. The Pages image is not documented to
 # ship one, so on Linux fall back in this order:
 #   1. the system linker (cc/gcc), if the image has it
-#   2. rustup's bundled rust-lld with the self-contained CRT objects,
-#      which needs no system toolchain at all
-# The second path is what makes the build independent of the image.
+#   2. the musl target, which rustup ships with its own libc and
+#      CRT objects, linked by rustup's bundled rust-lld
+# The second path needs no system toolchain at all, which is what
+# makes the build independent of the image.
 #
 # On Windows the MSVC target is used instead, with rust-lld.exe as the
 # linker -- configured in rust/.cargo/config.toml, so that the build
@@ -107,7 +108,11 @@ case "$(uname -s)" in
     if command -v cc >/dev/null 2>&1 || command -v gcc >/dev/null 2>&1; then
       echo "    using the system linker"
     else
-      echo "    no system C compiler; linking with rust-lld (self-contained)"
+      echo "    no system C compiler; building the musl target with rust-lld"
+      # The musl target carries its own libc and CRT objects, so the
+      # link needs nothing from the system.
+      rustup target add x86_64-unknown-linux-musl
+      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
       export RUSTFLAGS="-C link-self-contained=+linker -C linker=rust-lld"
     fi
     ;;
