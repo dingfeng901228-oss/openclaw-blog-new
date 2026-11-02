@@ -49,7 +49,10 @@ REPORT="$OUT/env-report.txt"
   free -h 2>/dev/null || cat /proc/meminfo 2>/dev/null | head -3
   echo
   echo "--- the environment variables ---"
-  env | grep -E "^(HOME|PATH|USER|CI|CF_|NODE_|SKIP_|NPM_|PWD|SHELL)=" | sort
+  # The prefixes are matched with a trailing dot, not "=": "NODE_="
+  # would only match a variable literally called "NODE_", and
+  # NODE_VERSION would be missed.
+  env | grep -E "^(HOME|PATH|USER|CI|CF_|NODE_|SKIP_|NPM_|PWD|SHELL)[A-Z_]*=" | sort
   echo
   echo "--- the repository ---"
   echo "  pwd:     $(pwd)"
