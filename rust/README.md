@@ -92,12 +92,22 @@ Rust links through the system linker, and the Pages image is not
 documented to ship one. `build-pages.sh` handles this:
 
 - If `cc` or `gcc` is present, it is used.
-- Otherwise the build falls back to rustup's bundled `rust-lld` with
-  the self-contained CRT objects (`-C link-self-contained=+linker`),
-  which needs no system toolchain at all.
+- Otherwise the build falls back to rustup's bundled `rust-lld`:
+  - the **target** is switched to `x86_64-unknown-linux-musl`, which
+    ships its own libc and CRT objects;
+  - the **host** artifacts (the build scripts and the proc macros)
+    are compiled for the gnu target, which ships *no* self-contained
+    CRT objects, so they get a `cc` shim that forwards to
+    `rust-lld`.
 
-Both paths produce the same binary. The fallback is untested on the
-real Pages image -- the first Pages build is the test.
+The gnu target is the reason the host needs the shim. It cannot be
+worked around with `target-applies-to-host`, because that setting is
+unstable on a stable toolchain (it needs `-Z unstable-options`), and
+`-C link-self-contained=+linker` is unstable too -- the stable
+spelling is `-C link-self-contained=yes`.
+
+Run `rust/build-linux-container.sh --no-cc` to test that path in a
+container without a C compiler.
 
 ### The line endings have to be LF everywhere
 

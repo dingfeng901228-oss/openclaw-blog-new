@@ -132,7 +132,6 @@ diag "==> 3/4 cargo build"
 # linker -- configured in rust/.cargo/config.toml, so that the build
 # works without a full Visual Studio install.
 CARGO_TARGET_ARGS=()
-CARGO_EXTRA_ARGS=()
 case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN*)
     echo "    windows: building the MSVC target with rust-lld"
@@ -150,25 +149,45 @@ case "$(uname -s)" in
       # form is unstable and needs -Z unstable-options, which a
       # stable toolchain does not accept.
       # The build scripts and the proc macros are compiled for the
-      # *host*, not for the target, so the RUSTFLAGS do not reach them
-      # and they still need a linker of their own.
+      # *host*, and only the musl target ships self-contained CRT
+      # objects -- the gnu target does not. So the host artifacts
+      # cannot be linked without a system compiler.
       #
-      # `target-applies-to-host` is a cargo *configuration* setting,
-      # not a command line flag. It makes the RUSTFLAGS apply to the
-      # host artifacts as well, so the build scripts link with rust-lld
-      # and the musl libc too.
+      # `target-applies-to-host` would let the RUSTFLAGS reach them,
+      # but it is unstable on a stable toolchain (it needs -Z).
       #
-      # It is passed with cargo's `--config` option, which *merges*
-      # with the existing .cargo/config.toml instead of replacing it
-      # (that file holds the Windows MSVC linker settings).
+      # So the host gets its own linker: a `cc` shim that calls
+      # rust-lld. The build scripts ask for `cc`; the shim forwards
+      # the arguments to rust-lld, which is what the linker would
+      # have been anyway.
       rustup target add x86_64-unknown-linux-musl
       CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
       export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld"
-      CARGO_EXTRA_ARGS=(--config 'target-applies-to-host = true')
+
+      # Find rust-lld inside the toolchain.
+      LLD="$(find "$HOME/.rustup/toolchains" -name 'rust-lld' -type f 2>/dev/null | head -1)"
+      if [ -z "$LLD" ]; then
+        echo "    could not find rust-lld in the toolchain" >&2
+        exit 1
+      fi
+      diag "    rust-lld: $LLD"
+
+      # The shim: `cc` -> rust-lld.
+      SHIM_DIR="$HERE/.tooling/bin"
+      mkdir -p "$SHIM_DIR"
+      cat > "$SHIM_DIR/cc" <<'SHIMEOF'
+#!/bin/sh
+exec "$FRANKBOT_RUST_LLD" "$@"
+SHIMEOF
+      chmod +x "$SHIM_DIR/cc"
+      export FRANKBOT_RUST_LLD="$LLD"
+      export PATH="$SHIM_DIR:$PATH"
+      export CC="$SHIM_DIR/cc"
+      export CXX="$SHIM_DIR/cc"
     fi
     ;;
 esac
-cargo build --release --locked "${CARGO_TARGET_ARGS[@]}" "${CARGO_EXTRA_ARGS[@]:-}"
+cargo build --release --locked "${CARGO_TARGET_ARGS[@]}"
 
 diag "==> 4/4 generate"
 # The generator clears the output directory, so the assets have to be
