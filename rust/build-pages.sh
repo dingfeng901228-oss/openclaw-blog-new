@@ -11,30 +11,60 @@
 # npm dependency tree is out of the build. That is the point of the
 # Rust rewrite: the Pages build must not need node_modules.
 #
-# Output: ./out-rs  (the Pages "output directory" setting).
+# Output: the "out" directory, which is what the repository root's
+# wrangler.toml names (pages_build_output_dir = "out"). Pages reads
+# that file in preference to the dashboard setting -- the build log
+# shows it validating "out" and ignoring the dashboard's output
+# directory -- so the Pages build has to write there.
 #
 # Usage: ./rust/build-pages.sh [project-root] [out-dir]
+#
+# Both arguments are resolved to absolute paths before the script
+# changes directory, so they may be given relative to the repository
+# root.
+#
+# The default output directory is "out-rs", NOT "out". The local
+# workflow keeps the Next.js baseline in "out" and the Rust output in
+# "out-rs" so the two can be compared; a build into "out" would
+# overwrite the baseline and make the comparison compare the Rust
+# output with itself. The Pages build passes "out" explicitly.
 
 set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/.." && pwd)"
-PROJECT="${1:-$REPO}"
-OUT="${2:-$REPO/out-rs}"
+
+# Resolve a path against the current directory without requiring it to
+# exist yet.
+abspath() {
+  case "$1" in
+    /*) printf '%s\n' "$1" ;;
+    *)  printf '%s/%s\n' "$PWD" "$1" ;;
+  esac
+}
+
+PROJECT="$(abspath "${1:-$REPO}")"
+OUT="$(abspath "${2:-$REPO/out-rs}")"
 
 # Record the failing line, so the log says where it stopped.
-# On failure, publish the log into the output directory so it can be
-# read from the deployed site. `FB_DEBUG_DEPLOY=1` also makes the
-# script exit 0, so Pages deploys the (partial) output and the log
-# becomes reachable. It is off by default: a failed build must fail.
+# The log is written next to the repository, not into the output
+# directory: the output directory is what gets deployed, and a build
+# log does not belong on the public site.
+#
+# `FB_DEBUG_DEPLOY=1` copies the log into the output directory and
+# makes the script exit 0, so Pages deploys the partial output and
+# the log becomes reachable. It is off by default: a failed build
+# must fail.
 on_error() {
   local code=$?
   {
     echo "FAILED at line $LINENO: $BASH_COMMAND"
     echo "exit code: $code"
-  } >> "$REPO/build-log.txt" 2>/dev/null || true
-  cp "$REPO/build-log.txt" "$OUT/build-log.txt" 2>/dev/null || true
-  [ "${FB_DEBUG_DEPLOY:-0}" = "1" ] && exit 0
+  } >> "$DIAG" 2>/dev/null || true
+  if [ "${FB_DEBUG_DEPLOY:-0}" = "1" ]; then
+    cp "$DIAG" "$OUT/build-log.txt" 2>/dev/null || true
+    exit 0
+  fi
   exit "$code"
 }
 trap on_error ERR
@@ -44,9 +74,8 @@ trap on_error ERR
 RUST_CHANNEL="$(sed -n 's/^channel *= *"\(.*\)"/\1/p' "$HERE/rust-toolchain.toml" | head -1)"
 : "${RUST_CHANNEL:=stable}"
 
-# A diagnostic log, written next to the output so that a failed
-# build still leaves a trace of how far it got. Pages keeps the
-# output directory even when the build command fails.
+# A diagnostic log. It stays outside the output directory so that it
+# is never deployed.
 mkdir -p "$OUT"
 DIAG="$REPO/build-log.txt"
 : > "$DIAG"
@@ -59,6 +88,8 @@ diag "HOME: $HOME"
 diag "PATH has cc: $(command -v cc || echo no)"
 diag "PATH has gcc: $(command -v gcc || echo no)"
 diag "PATH has curl: $(command -v curl || echo no)"
+diag "NODE_VERSION: ${NODE_VERSION:-unset}"
+diag "SKIP_DEPENDENCY_INSTALL: ${SKIP_DEPENDENCY_INSTALL:-unset}"
 
 diag "==> 1/4 rust toolchain ($RUST_CHANNEL)"
 if ! command -v cargo >/dev/null 2>&1; then
@@ -120,18 +151,23 @@ MSYS_NO_PATHCONV=1 "$TW_PREFIX/node_modules/.bin/tailwindcss" \
 rm -rf "$TW_PREFIX"
 
 diag "==> 3/4 cargo build"
-# Linking needs a C compiler. The Pages image is not documented to
-# ship one, so on Linux fall back in this order:
-#   1. the system linker (cc/gcc), if the image has it
-#   2. the musl target, which rustup ships with its own libc and
-#      CRT objects, linked by rustup's bundled rust-lld
-# The second path needs no system toolchain at all, which is what
-# makes the build independent of the image.
+# Linking needs a C compiler. The Pages v3 build image was measured
+# from inside the build (rust/env-report.sh): it ships cc, gcc, ld,
+# make and ar under /usr/bin, so the system linker is the normal
+# path there.
+#
+# The fallback for an image without a C compiler is a musl-HOSTED
+# Rust toolchain. The earlier attempt shimmed `cc` to rust-lld, but
+# rust-lld is not a gcc driver: it rejects -Wl,... options and
+# -nodefaultlibs, so the host build scripts failed to link. With a
+# musl host the HOST artifacts link against the musl CRT objects the
+# toolchain ships, so nothing from the system is needed at all.
 #
 # On Windows the MSVC target is used instead, with rust-lld.exe as the
 # linker -- configured in rust/.cargo/config.toml, so that the build
 # works without a full Visual Studio install.
 CARGO_TARGET_ARGS=()
+CARGO_TOOLCHAIN=""
 case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN*)
     echo "    windows: building the MSVC target with rust-lld"
@@ -141,55 +177,23 @@ case "$(uname -s)" in
     if command -v cc >/dev/null 2>&1 || command -v gcc >/dev/null 2>&1; then
       echo "    using the system linker"
     else
-      echo "    no system C compiler; building the musl target with rust-lld"
-      # The musl target ships its own libc and CRT objects, so the
-      # link needs nothing from the system.
+      echo "    no system C compiler; building with a musl-hosted toolchain"
+      # The musl-hosted toolchain makes the HOST musl as well, so the
+      # build scripts and the proc macros link against the musl CRT
+      # objects that come with the toolchain.
       #
-      # `link-self-contained=yes` is the stable spelling. The `+linker`
-      # form is unstable and needs -Z unstable-options, which a
-      # stable toolchain does not accept.
-      # The build scripts and the proc macros are compiled for the
-      # *host*, and only the musl target ships self-contained CRT
-      # objects -- the gnu target does not. So the host artifacts
-      # cannot be linked without a system compiler.
-      #
-      # `target-applies-to-host` would let the RUSTFLAGS reach them,
-      # but it is unstable on a stable toolchain (it needs -Z).
-      #
-      # So the host gets its own linker: a `cc` shim that calls
-      # rust-lld. The build scripts ask for `cc`; the shim forwards
-      # the arguments to rust-lld, which is what the linker would
-      # have been anyway.
-      rustup target add x86_64-unknown-linux-musl
+      # `link-self-contained=yes` is the stable spelling; the
+      # `+linker` form is unstable and needs -Z unstable-options.
+      # `linker-flavor=ld.lld` tells rustc to pass linker arguments
+      # in the lld style instead of the gcc driver style.
+      rustup toolchain install x86_64-unknown-linux-musl --profile minimal
+      CARGO_TOOLCHAIN="+x86_64-unknown-linux-musl"
       CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
-      export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld"
-
-      # Find rust-lld inside the toolchain.
-      LLD="$(find "$HOME/.rustup/toolchains" -name 'rust-lld' -type f 2>/dev/null | head -1)"
-      if [ -z "$LLD" ]; then
-        echo "    could not find rust-lld in the toolchain" >&2
-        exit 1
-      fi
-      diag "    rust-lld: $LLD"
-
-      # The shim: `cc` -> rust-lld.
-      SHIM_DIR="$HERE/.tooling/bin"
-      mkdir -p "$SHIM_DIR"
-      cat > "$SHIM_DIR/cc" <<'SHIMEOF'
-#!/bin/sh
-# rust-lld dispatches on its name: called as "rust-lld" it is a
-# generic driver. "-flavor gnu" makes it behave like ld.lld.
-exec "$FRANKBOT_RUST_LLD" -flavor gnu "$@"
-SHIMEOF
-      chmod +x "$SHIM_DIR/cc"
-      export FRANKBOT_RUST_LLD="$LLD"
-      export PATH="$SHIM_DIR:$PATH"
-      export CC="$SHIM_DIR/cc"
-      export CXX="$SHIM_DIR/cc"
+      export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld -C linker-flavor=ld.lld"
     fi
     ;;
 esac
-cargo build --release --locked "${CARGO_TARGET_ARGS[@]}"
+cargo ${CARGO_TOOLCHAIN:+$CARGO_TOOLCHAIN} build --release --locked "${CARGO_TARGET_ARGS[@]}"
 
 diag "==> 4/4 generate"
 # The generator clears the output directory, so the assets have to be
@@ -226,12 +230,15 @@ if [ -d "$ASSETS" ]; then
 fi
 
 # The generator clears the output directory, so the diagnostic log is
-# copied into it again at the end.
-{
-  cat "$REPO/build-log.txt"
-  echo "build-pages.sh finished successfully"
-  echo "at $(date -u +%FT%TZ)"
-} > "$OUT/build-log.txt"
+# copied into it again at the end -- but only when the debug mode is
+# on. A build log does not belong on the public site.
+if [ "${FB_DEBUG_DEPLOY:-0}" = "1" ]; then
+  {
+    cat "$DIAG"
+    echo "build-pages.sh finished successfully"
+    echo "at $(date -u +%FT%TZ)"
+  } > "$OUT/build-log.txt"
+fi
 
 echo
 echo "built -> $OUT"

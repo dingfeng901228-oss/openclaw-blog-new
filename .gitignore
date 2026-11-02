@@ -15,3 +15,7 @@ rust/target/
 rust/site.css
 rust/reference.json
 rust/scripts/__pycache__/
+rust/.tooling/
+
+# The build diagnostic log
+build-log.txt
