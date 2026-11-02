@@ -56,58 +56,73 @@ the dashboard under **Settings > Builds & deployments**:
 | Setting | Value |
 |---|---|
 | Framework preset | None |
-| Build command | `./rust/build-pages.sh` |
-| Build output directory | `out-rs` |
+| Build command | `./rust/build-pages.sh "$PWD" "$PWD/out"` |
+| Build output directory | `out` |
 | Root directory | `/` (repository root) |
 | Node.js version | `22` |
 
 `NODE_VERSION=22` can also be set as an environment variable.
 
-### Skip the automatic npm install
+### The output directory has to be `out`
 
-Pages runs `npm install` automatically when the repository has a
-`package.json`, and this repository does -- it is the Next.js
-project. That would pull the whole dependency tree (about 670 MB)
-into a build that does not need it.
-
-Set the environment variable
+**A `wrangler.toml` at the repository root overrides the dashboard's
+output directory.** The build log says so verbatim:
 
 ```
-SKIP_DEPENDENCY_INSTALL=1
+Found wrangler.toml file. Reading build configuration...
+pages_build_output_dir: out
 ```
 
-on the Pages project. The Rust build installs the one npm package it
-needs (the Tailwind CLI) into a scratch prefix of its own, so nothing
-from `package.json` is required.
+Pages then validates *that* directory, and fails with
+`Error: Output directory "out" not found.` when it is missing. The
+repository root has a `wrangler.toml` with `pages_build_output_dir =
+"out"`, so the dashboard's value is ignored and the build has to
+write to `out`.
 
-The Pages API keeps the environment variables under
-`deployment_configs.<preview|production>.env_vars`, not at the top
-level of the project. A `PATCH` with a top-level `env_vars` returns
-`success: true` and silently stores nothing -- always read the
-project back and check that the variables are there.
+That is also why the build command passes the directory explicitly:
+the local default is `out-rs`, so the Next.js baseline in `out/`
+survives for the parity comparison, while the Pages build writes to
+`out`.
 
-### The build needs a C compiler
+### The automatic npm install cannot be skipped
 
-Rust links through the system linker, and the Pages image is not
-documented to ship one. `build-pages.sh` handles this:
+Pages runs `npm clean-install` automatically whenever the repository
+has a `package.json`, and this repository does -- it is the Next.js
+project. That pulls the whole dependency tree (about 670 MB) into a
+build that does not need it.
 
-- If `cc` or `gcc` is present, it is used.
-- Otherwise the build falls back to rustup's bundled `rust-lld`:
-  - the **target** is switched to `x86_64-unknown-linux-musl`, which
-    ships its own libc and CRT objects;
-  - the **host** artifacts (the build scripts and the proc macros)
-    are compiled for the gnu target, which ships *no* self-contained
-    CRT objects, so they get a `cc` shim that forwards to
-    `rust-lld`.
+`SKIP_DEPENDENCY_INSTALL=1` does **not** help. The dashboard
+environment variables are ignored while a root `wrangler.toml` is
+present, and the build log confirms it:
+`Build environment variables: (none found)`.
 
-The gnu target is the reason the host needs the shim. It cannot be
-worked around with `target-applies-to-host`, because that setting is
-unstable on a stable toolchain (it needs `-Z unstable-options`), and
-`-C link-self-contained=+linker` is unstable too -- the stable
-spelling is `-C link-self-contained=yes`.
+The Rust build installs the one npm package it needs (the Tailwind
+CLI) into a scratch prefix of its own, so nothing from `package.json`
+is required -- the install is simply wasted work.
 
-Run `rust/build-linux-container.sh --no-cc` to test that path in a
-container without a C compiler.
+If the dependency tree has to go, the repository needs a `package.json`
+that Pages does not recognise, or the Next.js project has to move out
+of the repository root. That is a bigger change than it looks, and it
+is not required for the Rust build to work.
+
+### The build image has a C compiler
+
+The Pages v3 build image (Ubuntu 22.04) **does** ship `cc`, `gcc`,
+`ld`, `make` and `ar`, in `/usr/bin`. The build log shows them:
+
+```
+Detected the following tools from environment: cc, gcc, ld, make, ar
+```
+
+So the system linker is used, which is the normal path.
+
+**Do not shim `cc` to `rust-lld`.** rust-lld is not a gcc driver: it
+rejects `-Wl,...` and `-nodefaultlibs`, so the host build scripts fail
+to link. The musl-hosted toolchain is only a fallback for an image
+without a C compiler, and it is not reachable on the real image.
+
+Run `rust/build-linux-container.sh --no-cc` to exercise that fallback
+in a container without a C compiler.
 
 ### The line endings have to be LF everywhere
 
@@ -188,6 +203,45 @@ byte. The differences that do exist are deliberate:
 - The `next/font` CSS and the woff2 subsets are copied rather than
   re-emitted.
 - The service worker is not part of the static output.
+
+## The CI baseline build does not use Google Fonts
+
+next/font has no disk cache, so every Next.js build downloads the
+fonts from Google again. Google intermittently answers with an
+extensionless URL (`/l/font?kit=...`), and the loader then crashes on
+the missing file extension -- vercel/next.js#99114. That made the CI
+baseline build fail at random.
+
+`rust/ci/font-mock.cjs` fixes it. next/font reads
+`NEXT_FONT_GOOGLE_MOCKED_RESPONSES` as a module path and requires it;
+the module maps a Google Fonts CSS URL to the CSS text. The mock
+returns the captured CSS with every font URL rewritten to a local
+path, and the loader reads the file from disk because the URL starts
+with `/`.
+
+The output is byte-identical to a live Google build: **2313 of 2315
+files match**, the two exceptions being the manifests under the random
+build id. The emitted font name is `xxhash64(content)`, so it does
+not depend on the checkout path -- the same names appear on Windows
+and on the Linux runner.
+
+Regenerate it with:
+
+```bash
+node scripts/capture-font-mock.mjs
+```
+
+The capture patches next/font in `node_modules` for one build and
+restores it, so it has to clear `.next` first -- a webpack cache
+skips the font loader and the capture comes out empty. A CI step
+fails when the mock no longer covers the vendored fonts, so a font
+change cannot silently leave the baseline stale.
+
+Two traps: `npm` is a shell script on Windows, so `execFileSync`
+cannot spawn it -- the script invokes `node node_modules/next/dist/bin/
+next build --webpack` directly. And `NEXT_FONT_GOOGLE_MOCKED_RESPONSES`
+needs a **native** path (`F:/...`); the MSYS path (`/f/...`) is not
+resolvable by `require`.
 
 ## Local builds
 
