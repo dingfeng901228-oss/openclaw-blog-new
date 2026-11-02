@@ -31,6 +31,10 @@ _ARTIFACT_LINK = re.compile(
     r'<link\s+(?:rel="(?:stylesheet|preload|modulepreload)"[^>]*|'
     r'rel="[^"]*"\s+as="[^"]*"[^>]*)>')
 _ARTIFACT_SCRIPT = re.compile(r"<script\b[^>]*>.*?</script>", re.S)
+# next/font emits this meta tag with the fallback font metrics. The
+# Next.js build emits it on Linux but not on Windows, so it is a
+# build-environment difference rather than a content difference.
+_NEXT_SIZE_ADJUST = re.compile(r'<meta name="next-size-adjust"[^>]*>')
 _HEADER = re.compile(r"<header\b[^>]*>.*?</header>", re.S)
 _FOOTER = re.compile(r"<footer\b[^>]*footer-root[^>]*>.*?</footer>", re.S)
 
@@ -108,7 +112,12 @@ def head_of(doc):
         return ""
     j = doc.find(">", i)
     k = doc.find("</head>", j)
-    return strip_artifacts(doc[j + 1 : k]) if k > 0 else ""
+    head = doc[j + 1 : k] if k > 0 else ""
+    # The next/font fallback metrics meta tag is a build-environment
+    # difference (the Next.js build emits it on Linux, not on
+    # Windows), so it is not a content difference.
+    head = _NEXT_SIZE_ADJUST.sub("", head)
+    return strip_artifacts(head)
 
 
 def first_diff(a, b):
@@ -122,6 +131,19 @@ def first_diff(a, b):
     return i, a[lo : i + 60], b[lo : i + 60]
 
 
+# The styled-jsx scope id (`jsx-<hash>`) is a hash of the *text* of
+# the component's `<style jsx>` block, so the line endings of the
+# source file change it. A Windows checkout with CRLF and a Linux
+# checkout with LF therefore produce different scope ids for the same
+# source. The class names are normalised here so the comparison is
+# about the markup, not about the platform.
+_JSX_SCOPE = re.compile(r"jsx-[a-f0-9]{16}")
+
+
+def normalize_jsx(text):
+    return _JSX_SCOPE.sub("jsx-SCOPE", text)
+
+
 def compare_page(base_path, cand_path):
     base = read(base_path)
     cand = read(cand_path)
@@ -132,8 +154,9 @@ def compare_page(base_path, cand_path):
         i, x, y = first_diff(skeleton(bb), skeleton(cb))
         problems.append(("body", f"at {i}\n      base: {x!r}\n      cand: {y!r}"))
 
-    if head_of(base) != head_of(cand):
-        i, x, y = first_diff(head_of(base), head_of(cand))
+    hb, hc = head_of(base), head_of(cand)
+    if normalize_jsx(hb) != normalize_jsx(hc):
+        i, x, y = first_diff(normalize_jsx(hb), normalize_jsx(hc))
         problems.append(("head", f"at {i}\n      base: {x!r}\n      cand: {y!r}"))
 
     tb, tc = visible_text(base), visible_text(cand)
@@ -148,6 +171,10 @@ def compare_page(base_path, cand_path):
         mb, mc = pattern.search(base), pattern.search(cand)
         sb = mb.group(0) if mb else None
         sc = mc.group(0) if mc else None
+        if sb is not None:
+            sb = normalize_jsx(sb)
+        if sc is not None:
+            sc = normalize_jsx(sc)
         if sb != sc:
             if sb is None or sc is None:
                 problems.append(

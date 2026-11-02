@@ -1,11 +1,38 @@
-# The shell scripts and the CI workflow must keep LF endings: Git Bash
-# on Windows would otherwise check them out with CRLF, and the Linux
-# Pages build would fail with `bad interpreter: /bin/sh^M`.
+# Normalise the line endings of the source files.
+#
+# The blog is built on Windows (locally) and on Linux (Cloudflare
+# Pages). A file whose line endings differ between the two platforms
+# produces different output:
+#
+#   - styled-jsx hashes the *text* of a `<style jsx>` block to build
+#     its scope class name (`jsx-<hash>`). CRLF and LF produce
+#     different hashes, so the same source file yields a different
+#     class name on each platform.
+#   - `src/components/layout/Footer.tsx` was the only file still
+#     checked out with CRLF, so it was the only one whose scope hash
+#     differed.
+#
+# `text=auto` lets git normalise the line endings in the repository,
+# and `eol=lf` makes every platform check the files out with LF.
+# That keeps the build output identical everywhere.
+* text=auto eol=lf
+
+# Binary assets must never be touched.
+*.woff2 binary
+*.woff  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.svg   text eol=lf
+*.webmanifest text eol=lf
+
+# The shell scripts and the CI workflow must keep LF endings: Git
+# Bash on Windows would otherwise check them out with CRLF, and the
+# Linux Pages build would fail with `bad interpreter: /bin/sh^M`.
 *.sh text eol=lf
 .github/workflows/*.yml text eol=lf
 rust/rust-toolchain.toml text eol=lf
 rust/tailwind.config.js text eol=lf
 rust/wrangler.toml text eol=lf
-
-# Binary font assets.
-*.woff2 binary
