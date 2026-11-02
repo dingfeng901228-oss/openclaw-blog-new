@@ -68,10 +68,43 @@ jobs:
       - name: Install blog dependencies
         run: npm ci
 
+      # The baseline build must not depend on Google Fonts. Google
+      # intermittently answers with extensionless URLs, which crashes
+      # the next/font loader (vercel/next.js#99114), so the build
+      # failed at random. The mock serves the captured responses from
+      # the vendored font files, which makes the build offline and
+      # reproducible.
       - name: Build the Next.js baseline
         run: npm run build
         env:
           NODE_ENV: production
+          NEXT_FONT_GOOGLE_MOCKED_RESPONSES: ${{ github.workspace }}/rust/ci/font-mock.cjs
+
+      # The mock has to stay in sync with the vendored fonts: if the
+      # fonts change, the captured responses are stale and the
+      # baseline no longer matches production.
+      - name: Check the font mock against the vendored fonts
+        run: |
+          set -euo pipefail
+          test -f rust/ci/font-mock.cjs
+          node -e '
+            const fs = require("node:fs");
+            const path = require("node:path");
+            const media = path.join("rust", "assets", "_next", "static", "media");
+            const names = fs.readdirSync(media).filter((n) => n.endsWith(".woff2"));
+            const mock = fs.readFileSync(path.join("rust", "ci", "font-mock.cjs"), "utf8");
+            const missing = names.filter((n) => !mock.includes(n));
+            if (missing.length) {
+              console.error("the font mock is stale, missing:", missing.length, "files");
+              console.error("regenerate it with node scripts/capture-font-mock.mjs");
+              process.exit(1);
+            }
+            if (mock.includes("fonts.gstatic.com")) {
+              console.error("the font mock still points at Google");
+              process.exit(1);
+            }
+            console.log("  " + names.length + " vendored fonts, all referenced by the mock");
+          '
 
       - name: Download the Rust build output
         uses: actions/download-artifact@v4
