@@ -80,6 +80,12 @@ on the Pages project. The Rust build installs the one npm package it
 needs (the Tailwind CLI) into a scratch prefix of its own, so nothing
 from `package.json` is required.
 
+The Pages API keeps the environment variables under
+`deployment_configs.<preview|production>.env_vars`, not at the top
+level of the project. A `PATCH` with a top-level `env_vars` returns
+`success: true` and silently stores nothing -- always read the
+project back and check that the variables are there.
+
 ### The build needs a C compiler
 
 Rust links through the system linker, and the Pages image is not
@@ -92,6 +98,37 @@ documented to ship one. `build-pages.sh` handles this:
 
 Both paths produce the same binary. The fallback is untested on the
 real Pages image -- the first Pages build is the test.
+
+### The line endings have to be LF everywhere
+
+styled-jsx hashes the **text** of a `<style jsx>` block to build its
+scope class name (`jsx-<hash>`). CRLF and LF therefore produce
+different hashes, so the same source file yields a different class
+name on Windows and on Linux.
+
+`src/components/layout/Footer.tsx` was checked out with CRLF (the
+repository has `core.autocrlf=true`), so the footer got a different
+scope id on Windows:
+
+```
+Windows  jsx-e24d6c53b6876061
+Linux    jsx-a2842b1a1a80f4d8   <- what production serves
+```
+
+The `.gitattributes` at the repository root fixes this:
+
+```
+* text=auto eol=lf
+```
+
+Every platform now checks the files out with LF, and the build output
+is identical everywhere. If a scope id ever differs again, check the
+line endings of the component before looking anywhere else.
+
+Two head elements also differ between the platforms, because next/font
+behaves differently: the three font preload links and the
+`next-size-adjust` meta tag. The Linux build emits both, so the
+generator emits both.
 
 ### Cutover
 
