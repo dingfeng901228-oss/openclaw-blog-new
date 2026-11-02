@@ -132,6 +132,7 @@ diag "==> 3/4 cargo build"
 # linker -- configured in rust/.cargo/config.toml, so that the build
 # works without a full Visual Studio install.
 CARGO_TARGET_ARGS=()
+CARGO_EXTRA_ARGS=()
 case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN*)
     echo "    windows: building the MSVC target with rust-lld"
@@ -149,16 +150,25 @@ case "$(uname -s)" in
       # form is unstable and needs -Z unstable-options, which a
       # stable toolchain does not accept.
       # The build scripts and the proc macros are compiled for the
-      # *host*, so they need a linker too. `--target-applies-to-host`
-      # makes the RUSTFLAGS apply to them as well, which is what lets
-      # them link with rust-lld and the musl libc.
+      # *host*, not for the target, so the RUSTFLAGS do not reach them
+      # and they still need a linker of their own.
+      #
+      # `target-applies-to-host` is a cargo *configuration* setting,
+      # not a command line flag. It makes the RUSTFLAGS apply to the
+      # host artifacts as well, so the build scripts link with rust-lld
+      # and the musl libc too.
+      #
+      # It is passed with cargo's `--config` option, which *merges*
+      # with the existing .cargo/config.toml instead of replacing it
+      # (that file holds the Windows MSVC linker settings).
       rustup target add x86_64-unknown-linux-musl
-      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl --target-applies-to-host)
+      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
       export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld"
+      CARGO_EXTRA_ARGS=(--config 'target-applies-to-host = true')
     fi
     ;;
 esac
-cargo build --release --locked "${CARGO_TARGET_ARGS[@]}"
+cargo build --release --locked "${CARGO_TARGET_ARGS[@]}" "${CARGO_EXTRA_ARGS[@]:-}"
 
 diag "==> 4/4 generate"
 # The generator clears the output directory, so the assets have to be
