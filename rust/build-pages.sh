@@ -23,7 +23,21 @@ PROJECT="${1:-$REPO}"
 OUT="${2:-$REPO/out-rs}"
 
 # Record the failing line, so the log says where it stopped.
-trap 'echo "FAILED at line $LINENO: $BASH_COMMAND" | tee -a "$OUT/build-log.txt" 2>/dev/null || true' ERR
+# On failure, publish the log into the output directory so it can be
+# read from the deployed site. `FB_DEBUG_DEPLOY=1` also makes the
+# script exit 0, so Pages deploys the (partial) output and the log
+# becomes reachable. It is off by default: a failed build must fail.
+on_error() {
+  local code=$?
+  {
+    echo "FAILED at line $LINENO: $BASH_COMMAND"
+    echo "exit code: $code"
+  } >> "$REPO/build-log.txt" 2>/dev/null || true
+  cp "$REPO/build-log.txt" "$OUT/build-log.txt" 2>/dev/null || true
+  [ "${FB_DEBUG_DEPLOY:-0}" = "1" ] && exit 0
+  exit "$code"
+}
+trap on_error ERR
 
 # The toolchain channel comes from rust-toolchain.toml, so the file is
 # the single source of truth.
@@ -34,7 +48,7 @@ RUST_CHANNEL="$(sed -n 's/^channel *= *"\(.*\)"/\1/p' "$HERE/rust-toolchain.toml
 # build still leaves a trace of how far it got. Pages keeps the
 # output directory even when the build command fails.
 mkdir -p "$OUT"
-DIAG="$OUT/build-log.txt"
+DIAG="$REPO/build-log.txt"
 : > "$DIAG"
 diag() { echo "$*" | tee -a "$DIAG"; }
 diag "build-pages.sh started at $(date -u +%FT%TZ)"
@@ -181,8 +195,9 @@ if [ -d "$ASSETS" ]; then
 fi
 
 # The generator clears the output directory, so the diagnostic log is
-# written again at the end.
+# copied into it again at the end.
 {
+  cat "$REPO/build-log.txt"
   echo "build-pages.sh finished successfully"
   echo "at $(date -u +%FT%TZ)"
 } > "$OUT/build-log.txt"
