@@ -214,13 +214,25 @@ case "$(uname -s)" in
       # build scripts and the proc macros link against the musl CRT
       # objects that come with the toolchain.
       #
+      # The toolchain name is the channel with the host tuple
+      # appended: rustup rejects a bare target triple as a toolchain
+      # name ("invalid toolchain name"). The target triple is also
+      # passed to cargo, because a custom toolchain does not change
+      # the default target.
+      #
+      # `--force-non-host` is required: rustup refuses a musl host on
+      # a gnu system otherwise ("may not be able to run on this
+      # system"). The musl binaries rustup ships are statically
+      # linked, so they run on any Linux kernel.
+      #
       # `link-self-contained=yes` is the stable spelling; the
       # `+linker` form is unstable and needs -Z unstable-options.
       # `linker-flavor=ld.lld` tells rustc to pass linker arguments
       # in the lld style instead of the gcc driver style.
-      rustup toolchain install x86_64-unknown-linux-musl --profile minimal
-      CARGO_TOOLCHAIN="+x86_64-unknown-linux-musl"
-      CARGO_TARGET_ARGS=(--target x86_64-unknown-linux-musl)
+      MUSL_HOST="x86_64-unknown-linux-musl"
+      rustup toolchain install "stable-${MUSL_HOST}" --profile minimal --force-non-host
+      CARGO_TOOLCHAIN="+stable-${MUSL_HOST}"
+      CARGO_TARGET_ARGS=(--target "$MUSL_HOST")
       export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld -C linker-flavor=ld.lld"
     fi
     ;;
