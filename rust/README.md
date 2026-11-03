@@ -158,25 +158,64 @@ generator emits both.
 ### Cutover
 
 The current production build is `npm run build` with the output in
-`out/`. Switching the build command and the output directory is the
-whole cutover -- there is no separate deploy step.
+`out/`. Switching the build command is the whole cutover -- there is
+no separate deploy step.
 
 **Before switching**, verify the branch build:
 
 ```bash
 # The exact Pages build, in the same OS the build image uses.
-./rust/build-in-docker.sh
+./rust/build-linux-container.sh
 
 # The output must match the Next.js baseline.
 python rust/scripts/parity.py out out-rs
 ```
 
+The branch project `frankbot-rs-branch` already does this on every
+push: it is Git-connected to `feat/rust-pages`, runs the same build
+command, and its CI compares the result against the Next.js baseline.
+Watch <https://frankbot-rs-branch.pages.dev/> before switching.
+
+### The switch
+
+1. Merge `feat/rust-pages` into `master`.
+2. On the `openclaw-blog-new` Pages project, set the build command to
+   `./rust/build-pages.sh "$PWD" "$PWD/out"`. Leave the output
+   directory at `out` -- the root `wrangler.toml` already says `out`,
+   so the dashboard value is not what decides it.
+3. Push to `master` and wait for the deployment.
+
+The production project is not touched by anything on this branch. The
+branch project builds from the same repository, with a different
+Pages project, so both can run at the same time.
+
 ### Rollback
 
-Set the build command back to `npm run build` and the output
-directory back to `out`. The Next.js application is still in this
-repository and still builds, so the rollback is a two-field change
-plus a redeploy. Nothing is deleted during the cutover.
+Set the build command back to `npm run build`. The Next.js
+application is still in this repository and still builds, so the
+rollback is a one-field change plus a redeploy. Nothing is deleted
+during the cutover.
+
+The output directory does not need to change on rollback: it is
+`out` for both builds.
+
+### Verify after the switch
+
+```bash
+# The deployed site must answer on every route.
+for u in / /en.html /ja/blog /zh/about.html /site.js; do
+  curl -sS -o /dev/null -w "%{http_code} $u\n" "https://frankbot.org$u"
+done
+
+# The build log must not be public.
+curl -sS -o /dev/null -w "%{http_code} build-log.txt\n" \
+  "https://frankbot.org/build-log.txt"
+```
+
+A deployed site is not byte-identical to a local build. The root
+`index.html` is really `/ja/` (the `_redirects` redirect), and the
+Windows checkout has CRLF where the Linux build has LF. Compare with
+the line endings normalised.
 
 ## The generator
 
