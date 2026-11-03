@@ -139,13 +139,33 @@ jobs:
       # `include_str!`, so the crate cannot compile without it. It is
       # regenerated here rather than taken from the artifact, so this
       # job does not need to download the whole site.
+      #
+      # The build has to run from the rust/ directory: the Tailwind
+      # content globs are relative to the working directory, and
+      # browserslist looks for its config from there as well. Running
+      # it from the repository root scanned the wrong tree and
+      # produced a 5 KB stylesheet instead of the real 27 KB one.
+      #
+      # The browser targets are pinned the same way the build pins
+      # them, so the two produce the same stylesheet.
       - name: Build the stylesheet
+        working-directory: rust
+        env:
+          BROWSERSLIST: "chrome >= 111, edge >= 111, firefox >= 111, safari >= 18, ios_saf >= 18, opera >= 97, and_chr >= 111, and_ff >= 111, and_qq >= 12, samsung >= 22"
         run: |
           npx --yes tailwindcss@3.4.19 \
-            -i src/styles/globals.css \
-            -c rust/tailwind.config.js \
-            -o rust/site.css \
+            -i ../src/styles/globals.css \
+            -c tailwind.config.js \
+            -o site.css \
             --minify
+
+      # The stylesheet has to be the same one the build produces, or
+      # the lint job checks a different file than the site serves.
+      - name: Check the stylesheet is complete
+        run: |
+          set -euo pipefail
+          test "$(wc -c < rust/site.css)" -gt 20000
+          echo "  rust/site.css: $(wc -c < rust/site.css) bytes"
 
       - name: Format check
         working-directory: rust

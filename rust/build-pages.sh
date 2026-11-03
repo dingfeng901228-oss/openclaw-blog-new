@@ -46,6 +46,17 @@ abspath() {
 PROJECT="$(abspath "${1:-$REPO}")"
 OUT="$(abspath "${2:-$REPO/out-rs}")"
 
+# The generator is a native binary. On Windows it cannot read the
+# MSYS paths the shell uses (/f/... instead of F:/...), so the paths
+# are converted before they are handed to it. On Linux they are
+# already native.
+PROJECT_NATIVE="$PROJECT"
+OUT_NATIVE="$OUT"
+if command -v cygpath >/dev/null 2>&1; then
+  PROJECT_NATIVE="$(cygpath -m "$PROJECT")"
+  OUT_NATIVE="$(cygpath -m "$OUT")"
+fi
+
 # Record the failing line, so the log says where it stopped.
 # The log is written next to the repository, not into the output
 # directory: the output directory is what gets deployed, and a build
@@ -92,13 +103,22 @@ diag "NODE_VERSION: ${NODE_VERSION:-unset}"
 diag "SKIP_DEPENDENCY_INSTALL: ${SKIP_DEPENDENCY_INSTALL:-unset}"
 
 diag "==> 1/4 rust toolchain ($RUST_CHANNEL)"
+# rustup is installed into $HOME/.cargo/bin, but that directory is
+# not always on PATH: a rustup installed with --no-modify-path does
+# not write $HOME/.cargo/env either. Look there before downloading a
+# second toolchain.
+CARGO_BIN="$HOME/.cargo/bin"
+if ! command -v cargo >/dev/null 2>&1 && [ -x "$CARGO_BIN/cargo" ]; then
+  export PATH="$CARGO_BIN:$PATH"
+fi
 if ! command -v cargo >/dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     | sh -s -- -y --no-modify-path --profile minimal --default-toolchain "$RUST_CHANNEL"
+  export PATH="$CARGO_BIN:$PATH"
 fi
 # shellcheck disable=SC1091
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$CARGO_BIN:$PATH"
 cargo --version
 rustc --version
 
@@ -132,6 +152,19 @@ MSYS_NO_PATHCONV=1 npm install --silent --no-audit --no-fund --prefix "$TW_PREFI
   "tailwindcss@${TAILWIND_VERSION}" >/dev/null
 cd "$HERE"
 
+# Tailwind resolves its browser targets through browserslist, and the
+# default query ("last 2 versions") is resolved against whatever
+# caniuse-lite happens to be installed. That made the generated CSS
+# depend on the machine: the Windows build emitted no
+# -webkit-backdrop-filter and a Linux build with an older caniuse-lite
+# did, so the same source produced two different stylesheets.
+#
+# The targets are pinned here, as an environment variable, because
+# browserslist resolves them from the directory that holds
+# package.json -- the repository root -- and a config file there
+# would also change the Next.js build.
+export BROWSERSLIST="chrome >= 111, edge >= 111, firefox >= 111, safari >= 18, ios_saf >= 18, opera >= 97, and_chr >= 111, and_ff >= 111, and_qq >= 12, samsung >= 22"
+
 # Tailwind's own arguments are read by a native Windows binary, so
 # they need native paths too. On Linux these are already native.
 if command -v cygpath >/dev/null 2>&1; then
@@ -149,7 +182,6 @@ MSYS_NO_PATHCONV=1 "$TW_PREFIX/node_modules/.bin/tailwindcss" \
   -o "$CSS_OUT_NATIVE" \
   --minify
 rm -rf "$TW_PREFIX"
-
 diag "==> 3/4 cargo build"
 # Linking needs a C compiler. The Pages v3 build image was measured
 # from inside the build (rust/env-report.sh): it ships cc, gcc, ld,
@@ -209,7 +241,7 @@ if [ -z "$BIN" ] || [ ! -x "$BIN" ]; then
   exit 1
 fi
 echo "    $BIN"
-"$BIN" "$PROJECT" "$OUT"
+"$BIN" "$PROJECT_NATIVE" "$OUT_NATIVE"
 
 echo "==> runtime"
 # The static runtime: one dependency-free file that restores the
