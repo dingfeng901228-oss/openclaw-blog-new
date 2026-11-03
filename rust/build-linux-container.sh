@@ -56,9 +56,13 @@ docker run --rm \
     $SETUP
 
     mkdir -p /work
-    tar -C /src --exclude=./node_modules --exclude=./.next \
-        --exclude=./out --exclude=./out-rs --exclude=./out-docker \
-        --exclude=./rust/target --exclude=./.git --exclude=./.mdx-backups \
+    # The excludes have to match at any depth. The repository root
+    # still has a stale my-blog/ directory with its own
+    # node_modules, .next and out, and copying 36,000 files off a
+    # Windows filesystem is slow enough to look hung.
+    tar -C /src --exclude=node_modules --exclude=.next \
+        --exclude=out --exclude=out-rs --exclude=out-docker \
+        --exclude=target --exclude=.git --exclude=.mdx-backups \
         -cf - . | tar -C /work -xf -
     cd /work
 
