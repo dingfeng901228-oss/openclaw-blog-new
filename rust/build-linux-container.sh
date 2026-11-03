@@ -19,6 +19,14 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/.." && pwd)"
 LOG="${TMPDIR:-/tmp}/frankbot-rs-linux-build.log"
 
+# The container writes the result to a second mount, so the output
+# can be compared with the local build. Docker on Windows needs a
+# native path for the mount source, not an MSYS one.
+HOST_OUT="$REPO/out-docker"
+rm -rf "$HOST_OUT"
+mkdir -p "$HOST_OUT"
+HOST_OUT="$(cd "$HOST_OUT" && pwd -W)"
+
 # --no-cc removes the C compiler, to exercise the rust-lld fallback.
 NO_CC=0
 for arg in "$@"; do
@@ -41,6 +49,7 @@ fi
 
 docker run --rm \
   -v "$REPO:/src:ro" \
+  -v "$HOST_OUT:/host-out" \
   "$IMAGE" \
   bash -c "
     set -euo pipefail
@@ -49,7 +58,8 @@ docker run --rm \
     mkdir -p /work
     tar -C /src --exclude=./node_modules --exclude=./.next \
         --exclude=./out --exclude=./out-rs --exclude=./out-docker \
-        --exclude=./.git --exclude=./.mdx-backups -cf - . | tar -C /work -xf -
+        --exclude=./rust/target --exclude=./.git --exclude=./.mdx-backups \
+        -cf - . | tar -C /work -xf -
     cd /work
 
     echo '=== node / npm ==='
@@ -73,7 +83,15 @@ docker run --rm \
     grep -o 'jsx-[a-f0-9]\{16\}' out-docker/en.html | head -1
     echo -n 'woff2 files  : '
     ls out-docker/_next/static/media/*.woff2 2>/dev/null | wc -l
+
+    # Copy the result back so it can be compared with the local
+    # build. The repository is mounted read-only, so the output goes
+    # to a second mount.
+    echo '=== copying the output back ==='
+    cp -a out-docker/. /host-out/
+    echo 'copied'
   " 2>&1 | tee "$LOG"
 
 echo
 echo "log -> $LOG"
+echo "output -> $HOST_OUT"
