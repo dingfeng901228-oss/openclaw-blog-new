@@ -27,13 +27,8 @@ rm -rf "$HOST_OUT"
 mkdir -p "$HOST_OUT"
 HOST_OUT="$(cd "$HOST_OUT" && pwd -W)"
 
-# --no-cc removes the C compiler, to exercise the musl-hosted
-# toolchain fallback.
-#
-# The musl package is still needed: the musl toolchain's binaries are
-# linked against /lib/ld-musl-x86_64.so.1, and the glibc-only image
-# does not have that loader. It is a runtime loader, not a compiler,
-# so the fallback still proves that no C toolchain is needed.
+# --no-cc removes the C compiler, to exercise the fallback that
+# installs one.
 NO_CC=0
 for arg in "$@"; do
   [ "$arg" = "--no-cc" ] && NO_CC=1
@@ -44,7 +39,7 @@ if [ "$NO_CC" = "1" ]; then
   SETUP='
     export DEBIAN_FRONTEND=noninteractive
     apt-get update -qq
-    apt-get install -y -qq --no-install-recommends ca-certificates curl git musl
+    apt-get install -y -qq --no-install-recommends ca-certificates curl git
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - >/dev/null
     apt-get install -y -qq --no-install-recommends nodejs
   '
