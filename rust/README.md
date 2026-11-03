@@ -116,13 +116,27 @@ Detected the following tools from environment: cc, gcc, ld, make, ar
 
 So the system linker is used, which is the normal path.
 
-**Do not shim `cc` to `rust-lld`.** rust-lld is not a gcc driver: it
-rejects `-Wl,...` and `-nodefaultlibs`, so the host build scripts fail
-to link. The musl-hosted toolchain is only a fallback for an image
-without a C compiler, and it is not reachable on the real image.
+If an image ever lacks a compiler, the build installs `gcc` with
+`apt-get`. Two other approaches were tried and abandoned:
 
-Run `rust/build-linux-container.sh --no-cc` to exercise that fallback
+- **Do not shim `cc` to `rust-lld`.** rust-lld is not a gcc driver:
+  it rejects `-Wl,...` and `-nodefaultlibs`, so the host build
+  scripts fail to link.
+- **A musl-hosted toolchain does not work either.** The toolchain
+  installs, but its `cargo` is dynamically linked against musl and
+  needs a musl build of `libgcc_s` for unwinding. A glibc image has
+  only the glibc one, and the symbols do not match
+  (`_Unwind_Resume: symbol not found`). Ubuntu does not ship a musl
+  libgcc.
+
+Run `rust/build-linux-container.sh --no-cc` to exercise the fallback
 in a container without a C compiler.
+
+The container script has two traps: the tar copy has to exclude the
+stale `my-blog/` tree (36,000 files, and the copy is slow enough to
+look hung), and the output has to come back through a second mount,
+because the repository is mounted read-only and Docker on Windows
+wants a native path for the mount source.
 
 ### The line endings have to be LF everywhere
 

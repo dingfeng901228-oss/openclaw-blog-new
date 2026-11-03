@@ -188,18 +188,27 @@ diag "==> 3/4 cargo build"
 # make and ar under /usr/bin, so the system linker is the normal
 # path there.
 #
-# The fallback for an image without a C compiler is a musl-HOSTED
-# Rust toolchain. The earlier attempt shimmed `cc` to rust-lld, but
-# rust-lld is not a gcc driver: it rejects -Wl,... options and
-# -nodefaultlibs, so the host build scripts failed to link. With a
-# musl host the HOST artifacts link against the musl CRT objects the
-# toolchain ships, so nothing from the system is needed at all.
+# The fallback for an image without a C compiler is to install one.
+# Two other approaches were tried and abandoned:
+#
+#   * Shimming `cc` to rust-lld. rust-lld is not a gcc driver: it
+#     rejects -Wl,... and -nodefaultlibs, so the host build scripts
+#     failed to link.
+#   * A musl-HOSTED toolchain. The toolchain installs, but its cargo
+#     is dynamically linked against musl and needs a musl build of
+#     libgcc_s for unwinding. A glibc image has only the glibc one,
+#     and the symbols do not match ("_Unwind_Resume: symbol not
+#     found"). Ubuntu does not ship a musl libgcc.
+#
+# Installing a compiler is simpler and works on any image with apt.
 #
 # On Windows the MSVC target is used instead, with rust-lld.exe as the
 # linker -- configured in rust/.cargo/config.toml, so that the build
 # works without a full Visual Studio install.
 CARGO_TARGET_ARGS=()
-CARGO_TOOLCHAIN=""
+# The cargo command is built as an array so a toolchain can be
+# prefixed without word splitting.
+CARGO_CMD=(cargo)
 case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN*)
     echo "    windows: building the MSVC target with rust-lld"
@@ -208,36 +217,31 @@ case "$(uname -s)" in
   *)
     if command -v cc >/dev/null 2>&1 || command -v gcc >/dev/null 2>&1; then
       echo "    using the system linker"
+    elif command -v apt-get >/dev/null 2>&1; then
+      echo "    no system C compiler; installing gcc and the C library headers"
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update -qq >/dev/null 2>&1 || true
+      # libc6-dev is not optional: it carries the CRT objects
+      # (Scrt1.o, crti.o, crtn.o) and the libc.so linker script.
+      # Without them the link fails with "cannot open Scrt1.o" and
+      # "unable to find library -lc", even with gcc installed.
+      apt-get install -y -qq --no-install-recommends gcc libc6-dev >/dev/null 2>&1 || true
+      if command -v cc >/dev/null 2>&1 && [ -e /usr/lib/x86_64-linux-gnu/Scrt1.o ]; then
+        echo "    using the system linker"
+      else
+        echo "    ERROR: no C compiler, and gcc could not be installed" >&2
+        echo "    Rust needs a C linker and the C runtime to build the" >&2
+        echo "    host build scripts." >&2
+        exit 1
+      fi
     else
-      echo "    no system C compiler; building with a musl-hosted toolchain"
-      # The musl-hosted toolchain makes the HOST musl as well, so the
-      # build scripts and the proc macros link against the musl CRT
-      # objects that come with the toolchain.
-      #
-      # The toolchain name is the channel with the host tuple
-      # appended: rustup rejects a bare target triple as a toolchain
-      # name ("invalid toolchain name"). The target triple is also
-      # passed to cargo, because a custom toolchain does not change
-      # the default target.
-      #
-      # `--force-non-host` is required: rustup refuses a musl host on
-      # a gnu system otherwise ("may not be able to run on this
-      # system"). The musl binaries rustup ships are statically
-      # linked, so they run on any Linux kernel.
-      #
-      # `link-self-contained=yes` is the stable spelling; the
-      # `+linker` form is unstable and needs -Z unstable-options.
-      # `linker-flavor=ld.lld` tells rustc to pass linker arguments
-      # in the lld style instead of the gcc driver style.
-      MUSL_HOST="x86_64-unknown-linux-musl"
-      rustup toolchain install "stable-${MUSL_HOST}" --profile minimal --force-non-host
-      CARGO_TOOLCHAIN="+stable-${MUSL_HOST}"
-      CARGO_TARGET_ARGS=(--target "$MUSL_HOST")
-      export RUSTFLAGS="-C link-self-contained=yes -C linker=rust-lld -C linker-flavor=ld.lld"
+      echo "    ERROR: no C compiler, and no apt-get to install one" >&2
+      echo "    Rust needs a C linker to build the host build scripts." >&2
+      exit 1
     fi
     ;;
 esac
-cargo ${CARGO_TOOLCHAIN:+$CARGO_TOOLCHAIN} build --release --locked "${CARGO_TARGET_ARGS[@]}"
+"${CARGO_CMD[@]}" build --release --locked "${CARGO_TARGET_ARGS[@]}"
 
 diag "==> 4/4 generate"
 # The generator clears the output directory, so the assets have to be
